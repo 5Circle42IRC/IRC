@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     char *isError = NULL;
     long port = std::strtol(argv[1], &isError, 10);
 
-    if (*isError || (0 > port && 65535 < port))
+    if (*isError || (0 > port || 65535 < port))
         ErrorHandle::errorHandle("port error", -1);
 
     IrcServ serv(port, argv[2]);
