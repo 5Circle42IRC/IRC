@@ -6,7 +6,9 @@
 #include <string>
 #include <iostream>
 
+#include <algorithm>
 #include <vector>
+#include <list>
 #include <map>
 
 #include <sys/socket.h>
@@ -22,14 +24,12 @@ class ErrorHandle
 {
 public:
     static void errorHandle(std::string message, int errorNum);
-
 private:
     ~ErrorHandle();
     ErrorHandle(std::string message, int errorNum);
     const ErrorHandle& operator=(const ErrorHandle& copy);
     ErrorHandle();
     ErrorHandle(const ErrorHandle& errorHandle);
-
 };
 
 #endif

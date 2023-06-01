@@ -14,10 +14,14 @@ public:
     ~IrcServ();
 
 private:
-    int         _servFd;
     int         _port;
+    std::string _passWord;
+
+    int         _servFd;
     int         _fdMax;
     int         _fdNum;
+
+    bool        _opt;
 
     fd_set      _activeReads;
     fd_set      _activeWrites;
@@ -25,9 +29,11 @@ private:
     fd_set      _cpyWrites;
 
     struct sockaddr_in          _servAddr;
-    std::string                 _passWord;
+    socklen_t                   _bsize;
     std::vector <IrcClient>     _clients;
     std::vector <IrcChannel>    _channels;
+
+    bool                        _isError;
     
     IrcServ();
     IrcServ(const IrcServ& copy);
