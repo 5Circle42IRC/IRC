@@ -1,31 +1,44 @@
 #include "../include/IRC.hpp"
 #include <arpa/inet.h>
+#include <cstring>
 
 IrcServ::IrcServ(int port, std::string passWord)
     : _port(port), _passWord(passWord)
 {
     _servFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    memset(&_servAddr, 0, sizeof(_servAddr));
+    setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, (const char*)&_servAddr, sizeof(_servAddr));
+    if (_servFd == -1) 
+        ErrorHandle::errorHandle("socket error", _servFd);
+    // setsockopt 추가
+
+    std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
     _servAddr.sin_addr.s_addr=htonl(INADDR_ANY);
     _servAddr.sin_port=htons(port);
-// setsockopt 추가
-    if (_servFd == -1) 
-        ErrorHandle::errorHandle("socket error", _servFd);
+
     if (bind(_servFd, (struct sockaddr*)&_servAddr, sizeof(_servAddr)))
         ErrorHandle::errorHandle("fail bind", -1);
     if (listen(_servFd, 5))
         ErrorHandle::errorHandle("fail listen", -1);
-
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
 }
 
 void IrcServ::run()
 {
-    while(true) {
+    struct timeval timeout;
+
+    while(true) 
+    {
         FD_SET(_servFd, &_activeReads);
         FD_SET(_servFd, &_activeWrites);
+
+        timeout.tv_sec = 2;
+        timeout.tv_usec = 0;
+        _fdNum = select(_servFd + 1, &_activeReads, &_activeWrites, 0, &timeout);
+        if (_fdNum == -1)
+            ErrorHandle::errorHandle("select error", -1);
+
 /*
         _fdMax = getFdMax();
         //check

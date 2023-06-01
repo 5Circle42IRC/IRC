@@ -1,13 +1,13 @@
 CXX			= c++
-# CXXFLAGS	= -Wall -Werror -Wextra -std=c++98 -fsanitize=address
+CXXFLAGS	= -Wall -Werror -Wextra -std=c++98 -fsanitize=address
 TARGET		= ircserv
 OBJS		= $(SRCS:.cpp=.o)
-SRCS 		= ./srcs/main.cpp \
-			./srcs/IrcServ.cpp\
-			./srcs/IrcClient.cpp \
-			./srcs/IrcChannel.cpp\
-			./srcs/IRC.cpp
-			  
+SRCS 		= ./srcs/main.cpp 		\
+			  ./srcs/IRC.cpp        \
+			  ./srcs/IrcServ.cpp	\
+			  ./srcs/IrcClient.cpp	\
+			  ./srcs/IrcChannel.cpp	\
+
 $(TARGET) : $(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $(TARGET) 
 
