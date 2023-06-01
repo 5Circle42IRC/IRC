@@ -15,7 +15,7 @@
 #define LOCAL_IP_ADDRESS "127.0.0.1"
 
 void
-setup_tcp_communication(){
+setup_tcp_communication(int fd) {
 
     /*Step 1 : Initialization*/
     /*Socket handle*/
@@ -38,7 +38,7 @@ setup_tcp_communication(){
      * Inform client about which server to send data to : All we need is port number, and server ip address. Pls note that
      * there can be many processes running on the server listening on different no of ports, 
      * our client is interested in sending data to server process which is lisetning on PORT = DEST_PORT*/ 
-    dest.sin_port = htons(DEST_PORT);
+    dest.sin_port = htons(fd);
     struct hostent *host = (struct hostent *)gethostbyname(SERVER_IP_ADDRESS);
     dest.sin_addr = *((struct in_addr *)host->h_addr);
 
@@ -67,8 +67,8 @@ setup_tcp_communication(){
     /*Step 4 : get the data to be sent to server*/
     /*Our client is now ready to send data to server. sendto() sends data to Server*/
 
-    const char *msg1 = "Nice ysungwon, ";
-    const char *msg2 = "how are you";
+    const char *msg1 = "faijafjioefjio jwwee, ";
+    const char *msg2 = "hellow";
     int len1 = strlen (msg1);
     int len2 = strlen (msg2);
 
@@ -100,7 +100,7 @@ setup_tcp_communication(){
 int
 main(int argc, char **argv){
 
-    setup_tcp_communication();
+    setup_tcp_communication(atoi(argv[1]));
     printf("application quits\n");
     return 0;
 }

@@ -24,7 +24,7 @@ IrcServ::IrcServ(int port, std::string passWord)
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
 }
-
+#include <fcntl.h>
 
 void IrcServ::run()
 {
@@ -44,7 +44,7 @@ void IrcServ::run()
         this->CopyClientFDtoFDSet(&this->_cpyReads);
         _activeReads = _cpyReads;
 
-        std::cout << "fdMax\t:" <<_fdMax << ", serverFd\t:" << _servFd << std::endl;
+        std::cout << "fdMax\t:" << _fdMax << ", serverFd\t:" << _servFd << std::endl;
         select(_fdMax + 1, &this->_activeReads, NULL, NULL, NULL);
         std::cout << "hell" << std::endl;
         printf("after select\n");
@@ -54,8 +54,7 @@ void IrcServ::run()
          {
             printf("newconnection detected\n");
             int comm_socket_fd;
-            comm_socket_fd =  accept (_servFd,
-                                                     (struct sockaddr *)&client_addr, &addr_len);
+            comm_socket_fd =  accept (_servFd, (struct sockaddr *)&client_addr, &addr_len);
             //
             if (comm_socket_fd == -1)
                 continue;
@@ -76,6 +75,8 @@ void IrcServ::run()
 */ 
          }        
         /* Iterate so that we can delete the current element while traversing */
+        if (_clients.size() == 0)
+            break;
         for (std::map<int, IrcClient>::iterator it = _clients.begin();
             it != _clients.end(); 
             it++)
@@ -97,6 +98,8 @@ void IrcServ::run()
                         /* Remove FD from fd_set otherwise, select will go in infinite loop*/
                         FD_CLR(it->second.getCommFd(), &_cpyReads);
                         // FD_CLR(ircClient->getCommFd(), &this->_cpyReads);
+                        // close(it->second._commFd);
+                        close(it->first);
                         _clients.erase(it);
                         // this->RemoveClients(ircClient);
                         _fdMax = GetMaxFd();
@@ -111,6 +114,8 @@ void IrcServ::run()
                     }
             
             std::cout << "IrcServ::run() while loop" << std::endl;
+            if (_clients.size() == 0)
+                break;
             //break;
             }
             
