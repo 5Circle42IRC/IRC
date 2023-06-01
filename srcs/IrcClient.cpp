@@ -7,8 +7,18 @@ IrcClient::IrcClient(uint32_t ipAddr, uint16_t portNo) {
     this->_portNo = portNo;
 }
 
-void
-IrcClient::Display() {
+
+IrcClient::IrcClient() {
+
+    this->_ipAddr = 0;
+    this->_portNo = 0;
+    
+}
+int IrcClient::getCommFd()
+{
+    return this->_commFd;
+}
+void IrcClient::Display() {
 
     /*
     char ipAddrStr1[16];

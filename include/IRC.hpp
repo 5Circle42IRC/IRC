@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <map>
+#include <list>
 
 #include <sys/socket.h>
 #include <sys/select.h>

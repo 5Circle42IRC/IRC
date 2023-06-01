@@ -10,15 +10,18 @@ class IrcChannel;
 
 class IrcClient {
     public:
+        IrcClient();
         IrcClient(uint32_t ipAddr, uint16_t portNo);
         void Display();
-
-    private:
+        int     getCommFd();
+        unsigned char recv_buffer[MAX_CLIENT_BUFFER_SIZE];
         uint32_t _ipAddr;
         uint16_t _portNo;
         uint32_t _serverIpAddr;
         uint16_t _serverPortNo;
-        int      _commFd;
+        int      _commFd;        
+    private:
+
         
         std::vector<IrcChannel> _registredChannels;
         std::vector<IrcChannel> _operatorChannels;        
