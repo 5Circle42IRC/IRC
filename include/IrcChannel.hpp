@@ -16,8 +16,8 @@ public:
 private:    
     std::string _channelName;
     std::string _channelTopic;
-    std::vector<IrcClient> _registredClients;
-    std::vector<IrcClient> _operatorClients;
+    std::map<std::string, IrcChannel> _registredChannels;
+    std::map<std::string, IrcChannel> _operatorChannels;
 } ;
 
 

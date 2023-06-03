@@ -28,12 +28,12 @@ private:
     fd_set      _cpyReads;
     fd_set      _cpyWrites;
 
-    struct sockaddr_in          _servAddr;
-    socklen_t                   _bsize;
-    std::vector <IrcClient>     _clients;
-    std::vector <IrcChannel>    _channels;
+    struct sockaddr_in                  _servAddr;
+    socklen_t                           _bsize;
+    std::map<int, IrcClient>            _clients;
+    std::map<std::string, IrcChannel>   _channels;
 
-    bool                        _isError;
+    bool                                _isError;
     
     IrcServ();
     IrcServ(const IrcServ& copy);

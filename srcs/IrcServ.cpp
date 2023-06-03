@@ -13,11 +13,9 @@ IrcServ::IrcServ(int port, std::string passWord)
     , _isError(0)
 {
     _servFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, (const char*)&_servAddr, sizeof(_servAddr));
-    if (_servFd == -1) 
+    if (_servFd == -1)
         ErrorHandle::errorHandle("socket error", _servFd);
-    
-    // setsockopt 추가
+
     _isError = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, _bsize);
     if (_isError)
         ErrorHandle::errorHandle("setsockopt error", _isError);
@@ -39,20 +37,22 @@ IrcServ::IrcServ(int port, std::string passWord)
 void IrcServ::run()
 {
     struct timeval timeout;
+    int acceptFd;
 
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
 
+    FD_SET(_servFd, &_activeReads);
+    FD_SET(_servFd, &_activeWrites);
+
     while(true) 
     {
-        FD_SET(_servFd, &_activeReads);
-        FD_SET(_servFd, &_activeWrites);
         _cpyReads = _activeReads;
         _cpyWrites = _activeWrites;
         
         timeout.tv_sec = 0;
         timeout.tv_usec = 100;
-        _fdMax = select(_servFd + 1, &_activeReads, &_activeWrites, 0, &timeout);
+        _fdMax = select(_servFd + 1, &_cpyReads, &_cpyWrites, 0, &timeout);
         if (_fdMax == 0)
             continue;
         else if (_fdMax == -1)
@@ -63,11 +63,19 @@ void IrcServ::run()
             {
                 if (i == _servFd)
                 {
+                    acceptFd = accept(_servFd, (struct sockaddr *)&_servAddr, &_bsize);
+                    if (acceptFd == -1)
+                        continue;
+                    FD_SET(acceptFd, &_activeReads);
+                    FD_SET(acceptFd, &_activeWrites);
+                    _clients[acceptFd] = IrcClient(acceptFd, htonl(_servAddr.sin_addr.s_addr), htons(_servAddr.sin_port));
+                }
+                else
+                {
                     
                 }
             }
         }
-
         std::cout << "IrcServ::run() while loop" << std::endl;
         break; //
     }

@@ -10,18 +10,23 @@ class IrcChannel;
 
 class IrcClient {
     public:
-        IrcClient(uint32_t ipAddr, uint16_t portNo);
+        IrcClient(const IrcClient& copy);
+        const IrcClient& operator=(const IrcClient& copy);
+        IrcClient(int commFd, uint32_t ipAddr, uint16_t portNo);
+        ~IrcClient();
         void Display();
 
     private:
+
+        IrcClient();
+        int      _commFd;
         uint32_t _ipAddr;
         uint16_t _portNo;
-        uint32_t _serverIpAddr;
-        uint16_t _serverPortNo;
-        int      _commFd;
+        // uint32_t _serverIpAddr;
+        // uint16_t _serverPortNo;
         
-        std::vector<IrcChannel> _registredChannels;
-        std::vector<IrcChannel> _operatorChannels;        
+        std::map<std::string, IrcChannel> _registredChannels;
+        std::map<std::string, IrcChannel> _operatorChannels;
 } ;
 
 
