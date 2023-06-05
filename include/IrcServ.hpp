@@ -4,7 +4,7 @@
 #include "IRC.hpp"
 
 class IrcClient;
-class IrcChannel;
+// class IrcChannel;
 
 class IrcServ
 {
@@ -14,27 +14,26 @@ public:
     ~IrcServ();
 
 private:
+    bool        _isError;
+
     int         _port;
     std::string _passWord;
 
     int         _servFd;
     int         _fdMax;
     int         _fdNum;
-
-    bool        _opt;
+    int         _opt;
 
     fd_set      _activeReads;
     fd_set      _activeWrites;
     fd_set      _cpyReads;
     fd_set      _cpyWrites;
 
-    struct sockaddr_in                  _servAddr;
-    socklen_t                           _bsize;
+    sockaddr_in                         _servAddr;
+    socklen_t                           _servAddrLen;
     std::map<int, IrcClient>            _clients;
     std::map<std::string, IrcChannel>   _channels;
 
-    bool                                _isError;
-    
     IrcServ();
     IrcServ(const IrcServ& copy);
     const IrcServ& operator=(const IrcServ& copy);

@@ -1,6 +1,8 @@
 #ifndef __IRC_hpp__
 #define __IRC_hpp__
 
+#define BUFFER_SIZE 1024
+
 #include <cstdlib>
 
 #include <string>
@@ -19,6 +21,7 @@
 #include "IrcChannel.hpp"
 #include "IrcClient.hpp"
 #include "IrcServ.hpp"
+
 
 class ErrorHandle 
 {

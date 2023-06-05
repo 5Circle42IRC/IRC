@@ -10,15 +10,18 @@ class IrcClient;
 
 class IrcChannel {
 public:
+    IrcChannel();
     IrcChannel(std::string channelName);
+    ~IrcChannel();
+    const IrcChannel& operator=(const IrcChannel& copy);
+    IrcChannel(const IrcChannel& copy);
     void Display();
 
 private:    
     std::string _channelName;
     std::string _channelTopic;
-    std::map<std::string, IrcChannel> _registredChannels;
-    std::map<std::string, IrcChannel> _operatorChannels;
+    // std::map<std::string, IrcChannel> _registredChannels;
+    // std::map<std::string, IrcChannel> _operatorChannels;
 } ;
-
 
 #endif

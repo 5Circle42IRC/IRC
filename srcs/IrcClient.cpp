@@ -1,24 +1,27 @@
 #include <arpa/inet.h>
 #include "../include/IRC.hpp"
 
-IrcClient::IrcClient(int commFd, uint32_t ipAddr, uint16_t portNo)
-    : _commFd(commFd), _ipAddr(ipAddr), _portNo(portNo)
+IrcClient::IrcClient(int commFd, sockaddr_in addr, socklen_t addrLen)
+    : _commFd(commFd), _addr(addr), _addrLen(addrLen)
+{ }
+
+IrcClient::IrcClient()
+    : _commFd(0)
 { }
 
 IrcClient::~IrcClient() { }
 
 IrcClient::IrcClient(const IrcClient& copy)
-{
-    *this = copy;
-}
+    : _commFd(copy._commFd), _addr(copy._addr), _addrLen(copy._addrLen)
+{ }
 
 const IrcClient& IrcClient::operator=(const IrcClient& copy)
 {
     if (this == &copy)
     {
         this->_commFd = copy._commFd;
-        this->_ipAddr= copy._ipAddr;
-        this->_portNo= copy._portNo;
+        this->_addr = copy._addr;
+        this->_addrLen = copy._addrLen;
     }
     return (*this);
 }
