@@ -40,7 +40,7 @@ setup_tcp_communication(char **argv){
      * our client is interested in sending data to server process which is lisetning on PORT = DEST_PORT*/ 
 	printf("befre port\n");
 	int port = atoi(argv[1]);
-	printf("after port\n");
+	pritnf("after port\n");
 	dest.sin_port = htons(port);
 	printf("after destport\n");
     struct hostent *host = (struct hostent *)gethostbyname(SERVER_IP_ADDRESS);

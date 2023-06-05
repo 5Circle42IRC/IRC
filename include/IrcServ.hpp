@@ -16,6 +16,11 @@ public:
     void CopyClientFDtoFDSet(fd_set *fdset);
     void RemoveClients(IrcClient *ircClient);
     void AddClients(IrcClient *ircClient);
+    void CommandHandler(IrcClient *ircClient);
+    void nick_command(IrcClient *ircClient, std::string argus); 
+    void user_command(IrcClient *ircClient, std::string argus); 
+    void pass_command(IrcClient *ircClient, std::string argus);
+    std::string getPassword(); 
 private:
     int         _servFd;
     int         _port;

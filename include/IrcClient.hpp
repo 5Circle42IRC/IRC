@@ -12,17 +12,49 @@ class IrcClient {
     public:
         IrcClient();
         IrcClient(uint32_t ipAddr, uint16_t portNo);
-        void Display();
-        int     getCommFd();
-        unsigned char recv_buffer[MAX_CLIENT_BUFFER_SIZE];
+        
+        char recv_buffer[MAX_CLIENT_BUFFER_SIZE];
         uint32_t _ipAddr;
         uint16_t _portNo;
         uint32_t _serverIpAddr;
         uint16_t _serverPortNo;
-        int      _commFd;        
+        int      _commFd;   
+
+        void Display();
+        int     getCommFd();
+
+        void setNick(std::string nick);
+        std::string getNick();
+        bool getNickFlag();
+
+        void setUsername(std::string username);
+        std::string getUsername();
+        void setHostname(std::string username);
+        std::string getHostname();
+        void setServername(std::string username);
+        std::string getServername();
+        void setRealname(std::string username);
+        std::string getRealname();
+        void setUserFlag();
+        bool getUserFlag();
+        
+        bool checkPASS(std::string pass, std::string serverpass);
+        void setPassFlag();
+        bool getPassFlag();
+
+        void setRegistFlag();
+        bool getRegistFlag();
     private:
 
-        
+        std::string nick;
+        std::string username;
+        std::string hostname;
+        std::string servername;
+        std::string realname;
+        bool        userFlag;
+        bool        nickFlag;
+        bool        passFlag;
+        bool        registFlag;
         std::vector<IrcChannel> _registredChannels;
         std::vector<IrcChannel> _operatorChannels;        
 } ;
