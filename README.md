@@ -1,11 +1,6 @@
 # IRC
 
-* void parser(const string ori, enum Command command, string& option, string& etc) -jwee
-* 명령어, 인자 검사해서
-* enum Command irc.hpp 추가
-* enum Command -1 에러
-* option은 데시(-) 때고 옵션값만 묶어서
-
+* parser 추가 예정
 
 *server
 
@@ -15,19 +10,20 @@ channel
 
 
 
-## 명령어
-NICK
-PASS
-USER
-private message
-:ysungwon
+## 명령어 :ysungwon
+* NICK
+* PASS
+* USER
+* Private message
+* PART //채널만 나가기
+* PONG // 핑 받고 다시 날리기
 
 ## channel
 명령어
-JOIN jwee
-
+* JOIN jwee
 * KICK jwee
-* INVITE juha
+
+* INVITE jwee
 * TOPIC juha
 
 * MODE juha
