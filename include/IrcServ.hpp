@@ -9,10 +9,14 @@ class IrcClient;
 class IrcServ
 {
 public:
-    IrcServ(int port, std::string passWord);
-    void run();
     ~IrcServ();
+    IrcServ(int port, std::string passWord);
 
+    void run();
+    int GetMaxFd();
+    void CopyClientFDtoFDSet(fd_set *fdset);
+    void RemoveClients(IrcClient *ircClient);
+    void AddClients(IrcClient *ircClient);
 private:
     bool        _isError;
 
@@ -33,6 +37,7 @@ private:
     socklen_t                           _servAddrLen;
     std::map<int, IrcClient>            _clients;
     std::map<std::string, IrcChannel>   _channels;
+
 
     IrcServ();
     IrcServ(const IrcServ& copy);

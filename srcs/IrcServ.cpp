@@ -35,13 +35,13 @@ IrcServ::IrcServ(int port, std::string passWord)
     if (_isError)
         ErrorHandle::errorHandle("fail listen", _isError);
 }
+#include <fcntl.h>
 
 void IrcServ::run()
 {
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);
-    FD_SET(_servFd, &_activeWrites);
     struct timeval  timeout;
     int             acceptFd;
 
@@ -113,4 +113,3 @@ void IrcServ::run()
     close(_servFd);
 }
 
-IrcServ::~IrcServ() {};

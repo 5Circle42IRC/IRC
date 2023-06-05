@@ -24,6 +24,7 @@ class IrcClient {
         socklen_t   _addrLen;
         // uint32_t _serverIpAddr;
         // uint16_t _serverPortNo;
+
         
         // std::map<std::string, IrcChannel> _registredChannels;
         // std::map<std::string, IrcChannel> _operatorChannels;

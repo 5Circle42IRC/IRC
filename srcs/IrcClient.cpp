@@ -26,7 +26,6 @@ const IrcClient& IrcClient::operator=(const IrcClient& copy)
     return (*this);
 }
 
-
 void IrcClient::Display() {
 
     /*
