@@ -12,7 +12,7 @@ class IrcChannel {
 public:
     IrcChannel(std::string channelName);
     void Display();
-
+    std::string getChannelName();
 private:    
     std::string _channelName;
     std::string _channelTopic;

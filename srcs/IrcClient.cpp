@@ -150,3 +150,27 @@ bool IrcClient::getRegistFlag()
     return this->registFlag;
 }
 
+
+bool IrcClient::checkPart(std::string channelname)
+{
+    std::vector<IrcChannel>::iterator it;
+    
+    for (it = this->_registredChannels.begin();
+            it != this->_registredChannels.end();
+            it++)
+        if (it->getChannelName() == channelname)
+            return true;
+            
+    return false;
+}
+
+void IrcClient::doPart(std::string channelname)
+{
+    std::vector<IrcChannel>::iterator it;
+    
+    for (it = this->_registredChannels.begin();
+            it != this->_registredChannels.end();
+            it++)
+        if (it->getChannelName() == channelname)
+            return ;
+}

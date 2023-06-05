@@ -287,3 +287,15 @@ void IrcServ::AddClients(IrcClient *ircClient){
 
      this->_clients.push_back(ircClient);
 }
+
+void IrcServ::part_command(IrcClient *ircClient, std::string argus) 
+{
+    std::cout << "in <PART> command" << std::endl;
+    std::cout << "argus : <" << argus << ">" << std::endl;
+    if (argus.find(" ") != std::string::npos) 
+        std::cout << "No need SPACE in PART, find : " << argus.find(" ") << std::endl;
+    else
+        if (ircClient->checkPart(argus) == true)
+            ircClient->doPart(argus);               
+};
+

@@ -20,6 +20,7 @@ public:
     void nick_command(IrcClient *ircClient, std::string argus); 
     void user_command(IrcClient *ircClient, std::string argus); 
     void pass_command(IrcClient *ircClient, std::string argus);
+    void part_command(IrcClient *ircClient, std::string argus);
     std::string getPassword(); 
 private:
     int         _servFd;

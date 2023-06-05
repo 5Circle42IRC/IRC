@@ -44,6 +44,9 @@ class IrcClient {
 
         void setRegistFlag();
         bool getRegistFlag();
+
+        bool checkPart(std::string channelname);
+        void doPart(std::string channelname);
     private:
 
         std::string nick;
