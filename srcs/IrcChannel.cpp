@@ -1,5 +1,5 @@
 #include <arpa/inet.h>
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
 IrcChannel::IrcChannel() 
     : _channelName("no Name"), _channelTopic("any thing")

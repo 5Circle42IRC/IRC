@@ -1,5 +1,5 @@
 #include <arpa/inet.h>
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
 IrcClient::IrcClient(int commFd, sockaddr_in addr, socklen_t addrLen)
     : _commFd(commFd), _addr(addr), _addrLen(addrLen)

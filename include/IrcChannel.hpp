@@ -1,7 +1,7 @@
 #ifndef __IrcCHANNEL__
 #define __IrcCHANNEL__
 
-#include "IRC.hpp"
+#include "Irc.hpp"
 
 class IrcServ;
 class IrcClient;

@@ -1,4 +1,4 @@
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
 #include <arpa/inet.h>
 #include <cstring>
@@ -41,7 +41,7 @@ void IrcServ::run()
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);
-    FD_SET(_servFd, &_activeWrites);
+
     struct timeval  timeout;
     int             acceptFd;
 
@@ -49,14 +49,13 @@ void IrcServ::run()
 
     while(true) 
     {
-        _cpyReads = _activeReads;
-        _cpyWrites = _activeWrites;
-        // FD_COPY(&_cpyReads, &_activeReads);
-        // FD_COPY(&_cpyWrites, &_activeWrites);
+        FD_COPY(&_activeReads, &_cpyReads);
+        FD_COPY(&_activeWrites, &_cpyWrites);
+        // _cpyReads = _activeReads;
+        // _cpyWrites = _activeWrites;
         timeout.tv_sec = 0;
         timeout.tv_usec = 100;
 
-        std::cout << _fdMax << std::endl;
         _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &timeout);
         if (_fdNum == -1)
             ErrorHandle::errorHandle("select error", -1);
@@ -95,7 +94,6 @@ void IrcServ::run()
                     readLen = read(i, message, BUFFER_SIZE);
                     if (readLen == 0)
                     {
-                        std::cout << "IrcServ::run() while loop" << std::endl;
                         FD_CLR(i, &_activeReads);
                         FD_CLR(i, &_activeWrites);
                         close(i);

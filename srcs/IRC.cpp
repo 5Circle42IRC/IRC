@@ -1,4 +1,4 @@
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
 void ErrorHandle::errorHandle(std::string message, int errorNum)
 {
