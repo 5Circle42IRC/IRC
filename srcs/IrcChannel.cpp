@@ -7,15 +7,15 @@ IrcChannel::IrcChannel()
 
 IrcChannel::IrcChannel(std::string channelName)
     : _channelName(channelName), _channelTopic("any thing")
-{
-
-}
+{ }
 
 IrcChannel::~IrcChannel() {};
 
 IrcChannel::IrcChannel(const IrcChannel& copy)
     : _channelName(copy._channelName), _channelTopic(copy._channelTopic)
 {
+    if (this != &copy)
+        throw CopyError();
 }
 
 const IrcChannel& IrcChannel::operator=(const IrcChannel& copy)

@@ -10,9 +10,7 @@
 
 #include <algorithm>
 #include <vector>
-#include <list>
 #include <map>
-#include <list>
 
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -23,17 +21,22 @@
 #include "IrcClient.hpp"
 #include "IrcServ.hpp"
 
-
-class ErrorHandle 
+class Function 
 {
 public:
     static void errorHandle(std::string message, int errorNum);
 private:
-    ~ErrorHandle();
-    ErrorHandle(std::string message, int errorNum);
-    const ErrorHandle& operator=(const ErrorHandle& copy);
-    ErrorHandle();
-    ErrorHandle(const ErrorHandle& errorHandle);
+    ~Function();
+    Function(std::string message, int errorNum);
+    const Function& operator=(const Function& copy);
+    Function();
+    Function(const Function& errorHandle);
+};
+
+class CopyError : public std::exception
+{
+public:
+    virtual const char* what() const throw();
 };
 
 #endif

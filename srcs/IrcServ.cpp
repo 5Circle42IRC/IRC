@@ -4,7 +4,6 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <unistd.h>
-#include <fcntl.h>
 
 IrcServ::IrcServ(int port, std::string passWord)
     : _isError(0)
@@ -22,19 +21,19 @@ IrcServ::IrcServ(int port, std::string passWord)
     _servFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (_servFd == -1)
-        ErrorHandle::errorHandle("socket error", _servFd);
+        Function::errorHandle("socket error", _servFd);
 
     _isError = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, static_cast<socklen_t>(sizeof(_opt)));
     if (_isError)
-        ErrorHandle::errorHandle("setsockopt error", _isError);
+        Function::errorHandle("setsockopt error", _isError);
 
     _isError = bind(_servFd, (struct sockaddr*)&_servAddr, sizeof(_servAddr));
     if (_isError)
-        ErrorHandle::errorHandle("fail bind", _isError);
+        Function::errorHandle("fail bind", _isError);
 
-    _isError = listen(_servFd, 5);
+    _isError = listen(_servFd, 5);// 이해  필요.
     if (_isError)
-        ErrorHandle::errorHandle("fail listen", _isError);
+        Function::errorHandle("fail listen", _isError);
 }
 
 void IrcServ::run()
@@ -59,7 +58,7 @@ void IrcServ::run()
 
         _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &timeout);
         if (_fdNum == -1)
-            ErrorHandle::errorHandle("select error", -1);
+            Function::errorHandle("select error", -1);
 
         char               message[BUFFER_SIZE];
         int                readLen;
@@ -83,7 +82,7 @@ void IrcServ::run()
                     if (acceptFd == -1)
                         continue;
                     if (fcntl(acceptFd, O_NONBLOCK) == -1)
-                        ErrorHandle::errorHandle("fcntl", -1);
+                        Function::errorHandle("fcntl", -1);
                     _clients[acceptFd] = IrcClient(acceptFd, clientAddr, clientAddrLen);
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
@@ -112,3 +111,4 @@ void IrcServ::run()
     close(_servFd);
 }
 
+IrcServ::~IrcServ(){};

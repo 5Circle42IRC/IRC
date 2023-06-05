@@ -13,7 +13,10 @@ IrcClient::~IrcClient() { }
 
 IrcClient::IrcClient(const IrcClient& copy)
     : _commFd(copy._commFd), _addr(copy._addr), _addrLen(copy._addrLen)
-{ }
+{ 
+    if (this != &copy)
+        throw CopyError();
+}
 
 const IrcClient& IrcClient::operator=(const IrcClient& copy)
 {

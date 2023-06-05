@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Irc
-=======
 # IRC
 
 * parser 추가 예정
@@ -35,4 +32,3 @@ channel
     k
     t
     l
->>>>>>> 04e972f7356eb39bede22f24fba4192e501db893
