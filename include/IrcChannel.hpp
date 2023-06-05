@@ -3,7 +3,7 @@
 
 #include "Irc.hpp"
 
-class IrcServ;
+// class IrcServ;
 class IrcClient;
 
 #define MAX_CLIENT_BUFFER_SIZE 1024

@@ -1,5 +1,6 @@
 #include "../include/Irc.hpp"
 
+#include <fcntl.h>
 #include <arpa/inet.h>
 #include <cstring>
 #include <unistd.h>
@@ -111,4 +112,3 @@ void IrcServ::run()
     close(_servFd);
 }
 
-IrcServ::~IrcServ() {};
