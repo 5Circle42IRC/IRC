@@ -10,18 +10,20 @@ static void checkValidCommand(std::vector<std::string> command) {
 		throw new Error();
 }
 
-void ACommand::parser(char *str){
-	size_t						start;
-	size_t						end;
-	std::string					delim = " ";
+void Parser::parse(char *ori){
+	std::string	comm = ori;
+	size_t		start;
+	size_t		end;
+	std::string	delim = " ";
 
-	command = str;
-	end = ori.find(delim)
+	end = comm.find(delim);
+	std::cout << end << std::endl;
 	start = 0;
-	for (end; end != std::string::npos; end = ori.find(delim)){
-		command.push_back(ori.substr(start, end));
+	for (end; end != -1; end = comm.find(delim)){
+		command.push_back(comm.substr(start, end));
+		comm.erase(start, end + 1);
 		start = end + 1;
 	}
-	command.push_back(ori.substr(start, ori.length()));
+	command.push_back(comm);
 	checkValidCommand(command);
 }
