@@ -47,9 +47,12 @@ class IrcClient {
 
         bool checkPart(std::string channelname);
         void doPart(std::string channelname);
-    private:
+        std::vector<IrcChannel> _registredChannels;
 
         std::string nick;
+    private:
+
+        
         std::string username;
         std::string hostname;
         std::string servername;
@@ -58,7 +61,7 @@ class IrcClient {
         bool        nickFlag;
         bool        passFlag;
         bool        registFlag;
-        std::vector<IrcChannel> _registredChannels;
+
         std::vector<IrcChannel> _operatorChannels;        
 } ;
 

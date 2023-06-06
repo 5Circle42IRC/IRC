@@ -29,6 +29,13 @@ IrcServ::IrcServ(int port, std::string passWord)
 
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
+
+    std::string chname1 = "#test_ch_name1";
+    std::string chname2 = "#test_ch_name2";
+    IrcChannel testchannel1(chname1);
+    IrcChannel testchannel2(chname2);
+    _channels.push_back(chname1);
+    _channels.push_back(chname2);
 }
 
 
@@ -69,8 +76,17 @@ void IrcServ::run()
             printf("ircClient_commfd in newconnect : %d  comm_socket_fd : %d\n", ircClient->_commFd, comm_socket_fd);
             ircClient->_ipAddr = htonl(client_addr.sin_addr.s_addr);
             ircClient->_portNo = htons(client_addr.sin_port);
+            
+            //channel test
+            ircClient->_registredChannels.push_back(_channels[0]);
+            _channels[0]._registredClients.push_back(ircClient);
+            ircClient->_registredChannels.push_back(_channels[1]);
+            _channels[1]._registredClients.push_back(ircClient);
+
+
             FD_SET(ircClient->_commFd, &_cpyReads);
             AddClients(ircClient);
+            std::cout << "when clinet made, address : " << ircClient << std::endl;
          }        
         /* Iterate so that we can delete the current element while traversing */
 
@@ -152,6 +168,10 @@ void IrcServ::CommandHandler(IrcClient *ircClient)
             user_command(ircClient, argus);
         else if (command_name == "PASS")
             pass_command(ircClient, argus);
+        else if (command_name == "PART")
+            part_command(ircClient, argus);            
+        else if (command_name == "PRIVMSG")
+            priv_command(ircClient, argus);               
         else
             std::cout << "not invalid command" << std::endl;
     }
@@ -232,7 +252,103 @@ void IrcServ::pass_command(IrcClient *ircClient, std::string argus)
                
 };
 
+void IrcServ::part_command(IrcClient *ircClient, std::string argus) 
+{
+    std::cout << "in <PART> command" << std::endl;
+    std::cout << "argus : <" << argus << ">" << std::endl;
+    if (argus.find(" ") != std::string::npos) 
+        std::cout << "No need SPACE in PART, find : " << argus.find(" ") << std::endl;
+    else
+        if (ircClient->checkPart(argus) == true)
+        {
+            std::cout << "checkPart : " << ircClient->checkPart(argus) << std::endl;
+            ircClient->doPart(argus);               
+        }
+};
 
+void IrcServ::priv_command(IrcClient *ircClient, std::string argus) 
+{
+    std::cout << "in <PRIVMSG> command" << std::endl;
+    std::cout << "argus : <" << argus << ">" << std::endl;
+    std::string space_delimiter = " ";
+    std::vector<std::string> words;
+
+    size_t pos = 0;
+    size_t count = 0;
+
+    std::string target;
+    std::string msg;
+
+    if ((pos = argus.find(space_delimiter)) != std::string::npos)
+    {
+        target = argus.substr(0, pos);
+        if (target.empty())
+        {
+            std::cout << "taget is empty" << std::endl;
+            return ;
+        }
+        argus.erase(0, pos + space_delimiter.length());
+        msg = argus;
+        if (msg.empty())
+        {
+            std::cout << "msg is empty" << std::endl;
+            return ;
+        }        
+        std::cout << "target : " << target << std::endl;
+        std::cout << "msg : " << msg << std::endl;
+        if (target.at(0) == '#')
+        {
+            std::cout << "target is # start, so CHANNEL" << std::endl;
+            std::vector<IrcChannel>::iterator it;
+            for(it = this->_channels.begin();
+                it != this->_channels.end();
+                it++)
+                {
+                    if (it->getChannelName() == target)
+                    {
+                        std::cout << "We found target : " << target << " channel_name : " << it->getChannelName() << std::endl;
+                        std::cout << " channel client size : " << it->_registredClients.size() << std::endl;
+                        std::vector<IrcClient*>::iterator it2;
+                        for (it2 = it->_registredClients.begin();
+                                it2 != it->_registredClients.end();
+                            it2++)
+                        {
+                            std::cout << "in channel : " << it->getChannelName() << std::endl;
+                            std::cout << "client address : " << *it2 << std::endl;
+                            std::cout << "    client : " << (*it2)->getNick() << std::endl;
+                            std::cout << " direct client : " << (*it2)->nick << std::endl;
+                            if ((*it2)->getCommFd() != ircClient->getCommFd())
+                            {
+                                send((*it2)->getCommFd(), msg.c_str(), msg.size()+1, 0);
+                                std::cout << "send msg : " << msg << std::endl;
+                            }
+                        }
+                    }
+
+                }
+            
+        }
+        else
+        {
+            std::cout << "target is client" << std::endl;
+            std::list<IrcClient *>::iterator it3;
+            for(it3 = this->_clients.begin();
+                it3 != this->_clients.end();
+                it3++)
+                {
+                    if ((*it3)->getNick() == target)
+                        send((*it3)->getCommFd(), &msg, msg.size()+1, 0);
+                }
+        }
+    }
+    else
+    {
+            std::cout << "at list 2 arguments need but : " << count << std::endl;
+            std::cout << "argus : " << argus << std::endl;
+            return ;
+    }
+           
+};
 
 IrcServ::~IrcServ() {};
 
@@ -288,14 +404,4 @@ void IrcServ::AddClients(IrcClient *ircClient){
      this->_clients.push_back(ircClient);
 }
 
-void IrcServ::part_command(IrcClient *ircClient, std::string argus) 
-{
-    std::cout << "in <PART> command" << std::endl;
-    std::cout << "argus : <" << argus << ">" << std::endl;
-    if (argus.find(" ") != std::string::npos) 
-        std::cout << "No need SPACE in PART, find : " << argus.find(" ") << std::endl;
-    else
-        if (ircClient->checkPart(argus) == true)
-            ircClient->doPart(argus);               
-};
 

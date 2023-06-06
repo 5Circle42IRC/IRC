@@ -21,7 +21,9 @@ public:
     void user_command(IrcClient *ircClient, std::string argus); 
     void pass_command(IrcClient *ircClient, std::string argus);
     void part_command(IrcClient *ircClient, std::string argus);
+    void priv_command(IrcClient *ircClient, std::string argus);
     std::string getPassword(); 
+    std::vector <IrcChannel>    _channels;
 private:
     int         _servFd;
     int         _port;
@@ -38,7 +40,7 @@ private:
     std::list <IrcClient*>     _clients;//참조를 넣어서 쓰는 법 모르겠음
                                         //vector는 배열이라서 삭제가 불편함
                                         //list는 remove로 바로 삭제 가능
-    std::list <IrcChannel*>    _channels;
+
     
     IrcServ();
     IrcServ(const IrcServ& copy);

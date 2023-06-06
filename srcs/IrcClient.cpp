@@ -9,6 +9,7 @@ IrcClient::IrcClient(uint32_t ipAddr, uint16_t portNo) {
     this->userFlag = false;
     this->passFlag = false;
     this->registFlag = false;
+    
     bzero(this->recv_buffer, MAX_CLIENT_BUFFER_SIZE);
 }
 
@@ -28,8 +29,8 @@ int IrcClient::getCommFd()
     return this->_commFd;
 }
 void IrcClient::Display() {
-
     std::cout << "IN Display" << std::endl;
+    std::cout << "object address : " << this << std::endl;
     std::cout << "NICK : " << getNick() << std::endl;
     std::cout << "USER username  : " << getUsername() << std::endl;
     std::cout << "HOST username  : " << getHostname() << std::endl;
@@ -39,6 +40,17 @@ void IrcClient::Display() {
     std::cout << "PASS flag : " << getPassFlag() << std::endl;
     std::cout << "NICK flag : " << getNickFlag() << std::endl;
     std::cout << "Regs flag : " << getRegistFlag() << std::endl;
+    std::cout << " --------Channel-------" << std::endl;
+    std::cout << "channel size : " << this->_registredChannels.size() << std::endl;
+    std::vector<IrcChannel>::iterator it;
+    int i = 0;
+    for (it = this->_registredChannels.begin();
+        it != this->_registredChannels.end();
+        it++)
+        {
+            i++;
+            std::cout << "_registredChannels[" << i << "].name : " << it->getChannelName() << std::endl;
+        }
     /*
     char ipAddrStr1[16];
     char ipAddrStr2[16];
@@ -168,9 +180,17 @@ void IrcClient::doPart(std::string channelname)
 {
     std::vector<IrcChannel>::iterator it;
     
+
     for (it = this->_registredChannels.begin();
-            it != this->_registredChannels.end();
-            it++)
+        it != this->_registredChannels.end(); it++)
+    {
+        // remove odd numbers
         if (it->getChannelName() == channelname)
-            return ;
+        {
+            // Notice that the iterator is decremented after it is passed
+            // to `erase()` but before `erase()` is executed
+            std::cout << "here i delete : " << it->getChannelName() << std::endl;
+            this->_registredChannels.erase(it--);
+        }
+    }
 }

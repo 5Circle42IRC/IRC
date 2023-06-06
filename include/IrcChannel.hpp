@@ -13,11 +13,12 @@ public:
     IrcChannel(std::string channelName);
     void Display();
     std::string getChannelName();
+    std::vector<IrcClient*> _registredClients;
 private:    
     std::string _channelName;
     std::string _channelTopic;
-    std::vector<IrcClient> _registredClients;
-    std::vector<IrcClient> _operatorClients;
+    
+    std::vector<IrcClient*> _operatorClients;
 } ;
 
 
