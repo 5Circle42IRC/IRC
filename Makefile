@@ -7,6 +7,7 @@ SRCS 		= ./srcs/main.cpp 		\
 			  ./srcs/IrcServ.cpp	\
 			  ./srcs/IrcClient.cpp	\
 			  ./srcs/IrcChannel.cpp	\
+			  ./srcs/IrcCommand.cpp
 
 $(TARGET) : $(OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o $(TARGET) 

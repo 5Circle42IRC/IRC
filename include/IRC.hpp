@@ -20,6 +20,7 @@
 #include "IrcChannel.hpp"
 #include "IrcClient.hpp"
 #include "IrcServ.hpp"
+#include "IrcCommand.hpp"
 
 class Function 
 {
