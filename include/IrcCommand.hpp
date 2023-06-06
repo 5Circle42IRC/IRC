@@ -7,9 +7,14 @@ class ACommand {
 		virtual ~ACommand();
 
 		virtual void run() = 0;
-		virtual void parser(char *str);
-	private:
+	protected:
 		std::vector<std::string> command;
 };
+
+class Parser : public ACommand {
+	public:
+		void run();
+		
+}
 
 #endif
