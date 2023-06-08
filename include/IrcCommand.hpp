@@ -8,11 +8,14 @@ class IrcCommand: public ICommand {
 		IrcCommand();
 		virtual ~IrcCommand();
 
-		void	foreach(T);
-		void	execute(vector<std::string>args);
+		virtual void	foreach(std::map<int, IClient&>& client) = 0;
+		virtual void	foreach(std::map<std::string, IChannel&> channel) = 0;
+		virtual void	execute(int ClientFd, std::vector<std::string>args) = 0;
 
-		const	vector<std::string>& getArgs() const;
-		void	setArgs();
+
+		virtual const	std::vector<std::string>& getArgs() const = 0;
+		virtual void	setArgs() = 0;
+
 };
 
 #endif;
