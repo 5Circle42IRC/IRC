@@ -28,7 +28,6 @@ public:
     virtual void setGrant(typeMode grant, bool on) = 0;
     virtual void setOperator(const int clientFd, const int target) = 0;
     virtual void setTopic(std::string& newTopic) = 0;
-    virtual void setName(std::string& newName) = 0;
     virtual void setPassword(std::string& newPassword) = 0;
 
     virtual const int getGrant() const = 0;

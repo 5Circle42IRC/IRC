@@ -1,14 +1,10 @@
 #include "../../include/IrcCommand.hpp"
 
+
+//맞춰서 추가해야 함. jwee가 수정할거임???
+
 NICK::NICK(){}
 NICK::~NICK(){}
-
-void NICK::execute(vector<std::string> args){
-
-	if (args.size() != 1)
-		throw std::exception(); //
-	_nickname = args[0];
-}
 
 void execute(Vector<std::string> args, Client& target){
 	target.setNickname(args[0]);

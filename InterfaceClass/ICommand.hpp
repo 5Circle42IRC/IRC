@@ -16,7 +16,7 @@ template<typename T>
 class ICommand: public IDB{
 	public:
 		virtual void	foreach(T) = 0;
-		virtual void	execute(vector<std::string>args) = 0;
+		virtual void	execute(int ClientFd, vector<std::string>args) = 0;
 
 		virtual const	vector<std::string>& getArgs() const = 0;
 		virtual void	setArgs() = 0;
