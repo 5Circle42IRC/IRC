@@ -35,15 +35,6 @@ public:
     virtual const std::string& getTopic() const = 0;
     virtual const std::string& getName() const = 0;
     virtual const std::string& getPassword() const = 0;
-
-protected:
-    std::string _topic;
-    std::string _name;
-    std::string _password;
-
-    int         _grant;
-
-    std::map<int, bool> _user;
 };
 
 #endif
