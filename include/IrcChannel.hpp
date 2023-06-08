@@ -9,8 +9,8 @@ public:
     IrcChannel();
     IrcChannel(std::string channelName);
     virtual ~IrcChannel();
-    virtual const bool addUser(const int clientFd);
-    virtual const bool deleteUser(const int clientFd, const int target);
+    virtual const void addUser(const int clientFd);
+    virtual const void deleteUser(const int target);
     virtual const bool isJoinedUser(const int clientFd);
 
     virtual void setGrant(typeMode grant, bool on);

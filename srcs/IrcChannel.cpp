@@ -8,19 +8,11 @@ IrcChannel::IrcChannel(std::string name)
 IrcChannel::~IrcChannel() {}
 
 //addUser시 이미 존재하는 user는 add하지 않음
-const bool IrcChannel::addUser(const int clientFd) {
-    if (isJoinedUser(clientFd)){
-	    _user[clientFd] = false;
-        return true;
-    }
-    return false;
+const void IrcChannel::addUser(const int clientFd) {
+	_user[clientFd] = false;
 }
-const bool IrcChannel::deleteUser(const int clientFd, const int target) {
-    if (isOperator(clientFd)){
-        _user.erase(target);
-        return true;
-    }
-    return false;
+const void IrcChannel::deleteUser(const int target) {
+    _user.erase(target);
 }
 const bool IrcChannel::isJoinedUser(const int clientFd) {
     return _user.count(clientFd) != 0;
