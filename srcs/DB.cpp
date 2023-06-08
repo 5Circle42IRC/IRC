@@ -3,7 +3,10 @@
 DB::DB() { }
 DB::~DB()
 {
-    for()
+    for(std::map<int, IClient>::iterator it = _client.begin; it != _client.end();it++)
+        delete it->second;
+    for(std::map<int, IChannel>::iterator it = _channel.begin; it != _client.end();it++)
+        delete it->second;
 };
 const IClient& DB::find(const int clientFd) const
 {
