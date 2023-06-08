@@ -1,12 +1,9 @@
 #ifndef __IrcServ_hpp__
 #define __IrcServ_hpp__
 
-#include "Irc.hpp"
+#include "../InterfaceClass/ICommand.hpp"
 
-class IrcClient;
-// class IrcChannel;
-
-class IrcServ
+class IrcServ : ICommand
 {
 public:
     ~IrcServ();

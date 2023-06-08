@@ -19,6 +19,7 @@ public:
 private:
     const DB& operator=(const DB& copy);
     const DB& DB(const DB& copy);
+
 }
 
 #endif
