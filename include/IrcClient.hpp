@@ -1,34 +1,28 @@
 #ifndef __IrcCLIENT__
 #define __IrcCLIENT__
 
-#include "Irc.hpp"
+#include "../InterfaceClass/IClient.hpp"
 
-class IrcServ;
-// class IrcChannel;
+class IrcClient : private IClient
+{
+public:
+    IrcClient();
+    IrcClient(int fd, std::string nickname, std::string passWord, std::string buffer);
+    ~IrcClient();
 
-#define MAX_CLIENT_BUFFER_SIZE 1024
+    virtual const int getFd() const;
+    virtual const std::string &getNickname() const;
+    virtual const std::string &getPassword() const;
+    virtual const std::string &getBuffer() const;
 
-class IrcClient {
-    public:
-        IrcClient();
-        IrcClient(const IrcClient& copy);
-        const IrcClient& operator=(const IrcClient& copy);
-        IrcClient(int commFd, sockaddr_in _addr, socklen_t _ipAddrLen);
-        ~IrcClient();
-        void Display();
+    virtual void setNickname(std::string &newNickname);
+    virtual void setPassword(std::string &newPassword);
+    virtual void addBackBuffer(std::string &str);
+    virtual void reduceBuffer(int result);
 
-    private:
-
-        int         _commFd;
-        sockaddr_in _addr;
-        socklen_t   _addrLen;
-        // uint32_t _serverIpAddr;
-        // uint16_t _serverPortNo;
-
-        
-        // std::map<std::string, IrcChannel> _registredChannels;
-        // std::map<std::string, IrcChannel> _operatorChannels;
-} ;
-
+private :
+    IrcClient(const IrcClient &copy);
+    const IrcClient &operator=(const IrcClient &copy);
+};
 
 #endif
