@@ -11,9 +11,10 @@ public:
 	virtual const IClient& find(const int clientFd) const;
 	virtual const IChannel& find(const std::string channelName) const;
 	virtual void deleteChannel(const std::string channelName);
-	virtual void deleteTargetInChannel(const std::string& channel, const int targetFd);
-	virtual void addTargetInChannel(const std::string& Channel, const int targetFd);
+	virtual void deleteTargetInChannel(const std::string& channelName, const int targetFd);
+	virtual void addTargetInChannel(const std::string& channelName, const int targetFd);
 	virtual void registerClient(const int& fd);
+	virtual void registerChannel(const std::string& channel);
 
 private:
     const DB& operator=(const DB& copy);

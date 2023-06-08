@@ -1,7 +1,10 @@
 #include "../include/IrcDB.hpp"
 
 DB::DB() { }
-DB::~DB(){};
+DB::~DB()
+{
+    for()
+};
 const IClient& DB::find(const int clientFd) const
 {
     const IClient& client = _client.find(clientFd) 
@@ -25,17 +28,28 @@ void DB::deleteChannel(const std::string channelName)
     _channel.erase(channelName);
 }
 
-virtual void deleteTargetInChannel(const std::string& channel, const int targetFd)
+void DB::deleteTargetInChannel(const std::string& channel, const int targetFd)
 {
-    
+    IChannel temp = _channel.find(channel);
+
+    if (temp != _channel.end())
+        temp._user.erase(targetFd);
 }
 
-virtual void addTargetInChannel(const std::string& Channel, const int targetFd)
+void DB::addTargetInChannel(const std::string& channel, const int targetFd)
 {
+    IChannel temp = _channel.find(channel);
 
+    if (temp != _channel.end())
+        temp.addUser(clientFd);
 }
 
-virtual void registerClient(const int& fd)
+void DB::registerClient(const int& fd)
 {
+    _client[fd] = new IClient();
+}
 
+void DB::registerChannel(const std::string& channel)
+{
+    _channel[fd] = new IChannel();
 }
