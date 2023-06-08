@@ -3,20 +3,21 @@
 
 #include "../InterfaceClass/IDB.hpp"
 
-template <typename T, typename S>
 class DB : private IDB
 {
 public:
     DB();
     ~DB();
-    virtual const S &find(const T &t) const;
-    virtual void deleteTarget(const int targetFd);
-    virtual void addTarget(const int targetFd);
+	virtual const IClient& find(const int clientFd) const;
+	virtual const IChannel& find(const std::string channelName) const;
+	virtual void deleteChannel(const std::string channelName);
+	virtual void deleteTargetInChannel(const std::string& channel, const int targetFd);
+	virtual void addTargetInChannel(const std::string& Channel, const int targetFd);
+	virtual void registerClient(const int& fd);
+
 private:
     const DB& operator=(const DB& copy);
     const DB& DB(const DB& copy);
-
-
 }
 
 #endif
