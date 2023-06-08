@@ -1,18 +1,29 @@
 #include <arpa/inet.h>
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
-IrcChannel::IrcChannel(std::string channelName) {
+IrcChannel::IrcChannel() 
+    : _channelName("no Name"), _channelTopic("any thing")
+{ }
 
-    this->_channelName = channelName;
-}
+IrcChannel::IrcChannel(std::string channelName)
+    : _channelName(channelName), _channelTopic("any thing")
+{ }
 
+IrcChannel::~IrcChannel() {};
 
-std::string IrcChannel::getChannelName()
+IrcChannel::IrcChannel(const IrcChannel& copy)
+    : _channelName(copy._channelName), _channelTopic(copy._channelTopic)
 {
-    return this->_channelName;
+    if (this != &copy)
+        throw CopyError();
 }
 
-void
-IrcChannel::Display() {
-
+const IrcChannel& IrcChannel::operator=(const IrcChannel& copy)
+{
+    if (this != &copy)
+    {
+        _channelName = copy._channelName;
+        _channelTopic = copy._channelTopic;
+    }
+    return *this;
 }

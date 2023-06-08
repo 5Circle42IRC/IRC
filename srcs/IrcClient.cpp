@@ -1,56 +1,85 @@
 #include <arpa/inet.h>
-#include "../include/IRC.hpp"
+#include "../include/Irc.hpp"
 
-IrcClient::IrcClient(uint32_t ipAddr, uint16_t portNo) {
+IrcClient::IrcClient(int commFd, sockaddr_in addr, socklen_t addrLen)
+    : _commFd(commFd), _addr(addr), _addrLen(addrLen)
+{ }
 
-    this->_ipAddr = ipAddr;
-    this->_portNo = portNo;
-    this->nickFlag = false;
-    this->userFlag = false;
-    this->passFlag = false;
-    this->registFlag = false;
-    
-    bzero(this->recv_buffer, MAX_CLIENT_BUFFER_SIZE);
+IrcClient::IrcClient()
+    : _commFd(0)
+{ }
+
+IrcClient::~IrcClient() { }
+
+IrcClient::IrcClient(const IrcClient& copy)
+    : _commFd(copy._commFd), _addr(copy._addr), _addrLen(copy._addrLen)
+{ 
+    if (this != &copy)
+        throw CopyError();
 }
 
-
-IrcClient::IrcClient() {
-
-    this->_ipAddr = 0;
-    this->_portNo = 0;
-    this->nickFlag = false;
-    this->userFlag = false;
-    this->passFlag = false;
-    this->registFlag = false;
-    bzero(this->recv_buffer, MAX_CLIENT_BUFFER_SIZE);
-}
-int IrcClient::getCommFd()
+const IrcClient& IrcClient::operator=(const IrcClient& copy)
 {
-    return this->_commFd;
+    if (this == &copy)
+    {
+        this->_commFd = copy._commFd;
+        this->_addr = copy._addr;
+        this->_addrLen = copy._addrLen;
+    }
+    return (*this);
 }
+		int 		_fd;
+		std::string _nickname;
+		std::string	_passWord;
+		std::string _buffer;
+
+
+const int			IrcClient::getFd()
+{
+    return _fd;
+}
+
+const std::string&	IrcClient::getNickname()
+{
+    return _nickname;
+}
+
+const std::string&	IrcClient::getPassword()
+{
+    return _passWord;
+}
+
+const std::string&	IrcClient::getBuffer()
+{
+    return _buffer;
+}
+
+void		IrcClient::setNickname(std::string& newNickname)
+{
+    _nickname = newNickname;
+    return ;
+}
+
+void		IrcClient::setPassword(std::string& newPassword)
+{
+    _passWord = newPassword;
+    return ;
+}
+
+void		IrcClient::addBackBuffer(std::string& str)
+{
+    return ;
+}
+
+void		IrcClient::reduceBuffer(int result)
+{
+    return ;
+}
+
+
+
 void IrcClient::Display() {
-    std::cout << "IN Display" << std::endl;
-    std::cout << "object address : " << this << std::endl;
-    std::cout << "NICK : " << getNick() << std::endl;
-    std::cout << "USER username  : " << getUsername() << std::endl;
-    std::cout << "HOST username  : " << getHostname() << std::endl;
-    std::cout << "SERVER username  : " << getServername() << std::endl;
-    std::cout << "REAL username  : " << getRealname() << std::endl;
-    std::cout << "USER flag : " << getUserFlag() << std::endl;    
-    std::cout << "PASS flag : " << getPassFlag() << std::endl;
-    std::cout << "NICK flag : " << getNickFlag() << std::endl;
-    std::cout << "Regs flag : " << getRegistFlag() << std::endl;
-    std::cout << " --------Channel-------" << std::endl;
-    std::cout << "channel size : " << this->_registredChannels.size() << std::endl;
-    std::vector<IrcChannel>::iterator it;
-    int i = 0;
-    for (it = this->_registredChannels.begin();
-        it != this->_registredChannels.end();
-        it++)
-        {
-            i++;
-            std::cout << "_registredChannels[" << i << "].name : " << it->getChannelName() << std::endl;
-        }
+
     /*
     char ipAddrStr1[16];
     char ipAddrStr2[16];
@@ -64,133 +93,3 @@ void IrcClient::Display() {
     */
 }
 
-void IrcClient::setNick(std::string nick)
-{
-    
-    this->nick = nick;
-    this->nickFlag = true;
-}
-
-std::string IrcClient::getNick()
-{
-    return this->nick;
-}
-
-bool IrcClient::getNickFlag()
-{
-    return this->nickFlag;
-}
-
-
-void IrcClient::setUsername(std::string username)
-{
-    this->username = username;
-}
-
-std::string IrcClient::getUsername()
-{
-    return this->username;
-}
-
-void IrcClient::setHostname(std::string hostname)
-{
-    this->hostname = hostname;
-}
-
-std::string IrcClient::getHostname()
-{
-    return this->hostname;
-}
-
-void IrcClient::setServername(std::string servername)
-{
-    this->servername = servername;
-}
-
-std::string IrcClient::getServername()
-{
-    return this->servername;
-}
-
-void IrcClient::setRealname(std::string realname)
-{
-    this->realname = realname;
-}
-
-std::string IrcClient::getRealname()
-{
-    return this->realname;
-}
-
-void IrcClient::setUserFlag()
-{
-    this->userFlag = true;
-
-}
-
-bool IrcClient::getUserFlag()
-{
-    return this->userFlag;
-}
-
-bool IrcClient::checkPASS(std::string pass, std::string serverpass)
-{
-    std::cout << "      pass : <" << pass       << ">" << std::endl;
-    std::cout << "serverpass : <" << serverpass << ">" << std::endl;
-    if (pass == serverpass)
-        return true;
-    return false;
-}
-
-void IrcClient::setPassFlag()
-{
-    this->passFlag = true;
-}
-
-bool IrcClient::getPassFlag()
-{
-    return this->passFlag;
-}
-
-void IrcClient::setRegistFlag()
-{
-    this->registFlag = true;
-}
-
-bool IrcClient::getRegistFlag()
-{
-    return this->registFlag;
-}
-
-
-bool IrcClient::checkPart(std::string channelname)
-{
-    std::vector<IrcChannel>::iterator it;
-    
-    for (it = this->_registredChannels.begin();
-            it != this->_registredChannels.end();
-            it++)
-        if (it->getChannelName() == channelname)
-            return true;
-            
-    return false;
-}
-
-void IrcClient::doPart(std::string channelname)
-{
-    std::vector<IrcChannel>::iterator it;
-    
-
-    for (it = this->_registredChannels.begin();
-        it != this->_registredChannels.end(); it++)
-    {
-        // remove odd numbers
-        if (it->getChannelName() == channelname)
-        {
-            // Notice that the iterator is decremented after it is passed
-            // to `erase()` but before `erase()` is executed
-            std::cout << "here i delete : " << it->getChannelName() << std::endl;
-            this->_registredChannels.erase(it--);
-        }
-    }
-}
