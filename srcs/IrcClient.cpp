@@ -4,6 +4,7 @@
 IrcClient::IrcClient(int commFd, sockaddr_in addr, socklen_t addrLen)
     : _commFd(commFd), _addr(addr), _addrLen(addrLen)
 { }
+<<<<<<< HEAD
 
 IrcClient::IrcClient()
     : _commFd(0)
@@ -28,8 +29,14 @@ const IrcClient& IrcClient::operator=(const IrcClient& copy)
     }
     return (*this);
 }
+=======
+>>>>>>> 37ddfd7eb53da24f168babb4e1f4ca82c1175692
 
+IrcClient::IrcClient()
+    : _commFd(0)
+{ }
 
+<<<<<<< HEAD
 
 const int			IrcClient::getFd()
 {
@@ -75,6 +82,28 @@ void		IrcClient::reduceBuffer(int result)
 
 
 
+=======
+IrcClient::~IrcClient() { }
+
+IrcClient::IrcClient(const IrcClient& copy)
+    : _commFd(copy._commFd), _addr(copy._addr), _addrLen(copy._addrLen)
+{ 
+    if (this != &copy)
+        throw CopyError();
+}
+
+const IrcClient& IrcClient::operator=(const IrcClient& copy)
+{
+    if (this == &copy)
+    {
+        this->_commFd = copy._commFd;
+        this->_addr = copy._addr;
+        this->_addrLen = copy._addrLen;
+    }
+    return (*this);
+}
+
+>>>>>>> 37ddfd7eb53da24f168babb4e1f4ca82c1175692
 void IrcClient::Display() {
 
     /*

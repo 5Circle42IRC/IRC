@@ -15,4 +15,8 @@ class IrcCommand: public ICommand {
 		void	setArgs();
 };
 
+<<<<<<< HEAD
 #endif;
+=======
+#endif;
+>>>>>>> 37ddfd7eb53da24f168babb4e1f4ca82c1175692
