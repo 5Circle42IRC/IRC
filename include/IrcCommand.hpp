@@ -1,24 +1,18 @@
-#ifndef IRCCOMMAND_H
-# define IRCCOMMAND_H
+#ifndef __IRCCOMMAND_HPP__
+# define __IRCCOMMAND_HPP__
 
-# include "Irc.hpp"
+# include "../InterfaceClass/ICommand.hpp"
 
-class ACommand {
-	public:
-		ACommand();
-		virtual ~ACommand();
+class IrcCommand: public ICommand {
+	public :
+		IrcCommand();
+		virtual ~IrcCommand();
 
-		virtual void run() = 0;
-	protected:
-		std::vector<std::string> command;
+		void	foreach(T);
+		void	execute(vector<std::string>args);
+
+		const	vector<std::string>& getArgs() const;
+		void	setArgs();
 };
 
-class Parser : public ACommand {
-	public:
-		void run();
-		void parse(const char *ori);
-		void checkValidCommand();
-		
-};
-
-#endif
+#endif;
