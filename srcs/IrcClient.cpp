@@ -28,10 +28,7 @@ const IrcClient& IrcClient::operator=(const IrcClient& copy)
     }
     return (*this);
 }
-		int 		_fd;
-		std::string _nickname;
-		std::string	_passWord;
-		std::string _buffer;
+
 
 
 const int			IrcClient::getFd()
