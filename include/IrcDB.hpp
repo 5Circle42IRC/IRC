@@ -19,7 +19,10 @@ public:
 private:
     const DB& operator=(const DB& copy);
     const DB& DB(const DB& copy);
-
+	class notFindClient : public std::exception
+	{
+		virtual const char* what() const throw();
+	}
 }
 
 #endif
