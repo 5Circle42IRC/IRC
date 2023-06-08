@@ -8,6 +8,7 @@ class IrcChannel
 public:
     IrcChannel();
     IrcChannel(std::string channelName);
+    const IrcChannel& operator=(const IrcChannel& copy);
     virtual ~IrcChannel();
     virtual const void addUser(const int clientFd);
     virtual const void deleteUser(const int target);
@@ -26,8 +27,15 @@ public:
     virtual const std::string& getPassword() const;
 
 private:
-    const IrcChannel& operator=(const IrcChannel& copy);
     IrcChannel(const IrcChannel& copy);
+    std::string         _topic;
+    std::string         _name;
+    std::string         _password;
+
+    int					_grant;
+
+    std::map<int, bool>	_user;
+
     class InvalidGrant {
         public:
             virtual const char *what() const throw();
@@ -35,13 +43,6 @@ private:
     class InvalidClientFd : public std::exception {
         virtual const char *what() const throw() { return "invalidClientFd"; }
     };
-    std::string _topic;
-    std::string _name;
-    std::string _password;
-
-    int         _grant;
-
-    std::map<int, bool> _user;
 };
 
 #endif
