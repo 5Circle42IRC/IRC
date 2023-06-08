@@ -1,7 +1,7 @@
 #ifndef __ICHANNEL_HPP__
 #define __ICHANNEL_HPP__
 
-#include <string>
+#include <iostream>
 #include <map>
 
 typedef enum 

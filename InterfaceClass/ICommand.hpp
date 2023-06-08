@@ -3,6 +3,7 @@
 
 # include <iostream>
 # include <vector>
+# include <map>
 # include "./IDB.hpp"
 
 /*
@@ -12,17 +13,17 @@
 */
 
 
-template<typename T>
 class ICommand: public IDB{
 	public:
-		virtual void	foreach(T) = 0;
-		virtual void	execute(int ClientFd, vector<std::string>args) = 0;
+		virtual void	foreach(std::map<int, IClient&>& client) = 0;
+		virtual void	foreach(std::map<std::string, IChannel&> channel) = 0;
+		virtual void	execute(int ClientFd, std::vector<std::string>args) = 0;
 
-		virtual const	vector<std::string>& getArgs() const = 0;
+		virtual const	std::vector<std::string>& getArgs() const = 0;
 		virtual void	setArgs() = 0;
 
 	protected:
-		vector<std::string>  _args;
+		std::vector<std::string>  _args;
 };
 
 #endif
