@@ -1,7 +1,7 @@
 #ifndef __IrcCHANNEL__
 #define __IrcCHANNEL__
 
-#include "IRC.hpp"
+#include "Irc.hpp"
 
 // class IrcServ;
 class IrcClient;
@@ -10,15 +10,18 @@ class IrcClient;
 
 class IrcChannel {
 public:
+    IrcChannel();
     IrcChannel(std::string channelName);
+    ~IrcChannel();
+    const IrcChannel& operator=(const IrcChannel& copy);
+    IrcChannel(const IrcChannel& copy);
     void Display();
 
 private:    
     std::string _channelName;
     std::string _channelTopic;
-    std::vector<IrcClient> _registredClients;
-    std::vector<IrcClient> _operatorClients;
+    // std::map<std::string, IrcChannel> _registredChannels;
+    // std::map<std::string, IrcChannel> _operatorChannels;
 } ;
-
 
 #endif

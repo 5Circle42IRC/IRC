@@ -1,30 +1,33 @@
 #ifndef __IrcCLIENT__
 #define __IrcCLIENT__
 
-#include "IRC.hpp"
+#include "Irc.hpp"
 
 class IrcServ;
-class IrcChannel;
+// class IrcChannel;
 
 #define MAX_CLIENT_BUFFER_SIZE 1024
 
 class IrcClient {
     public:
         IrcClient();
-        IrcClient(uint32_t ipAddr, uint16_t portNo);
+        IrcClient(const IrcClient& copy);
+        const IrcClient& operator=(const IrcClient& copy);
+        IrcClient(int commFd, sockaddr_in _addr, socklen_t _ipAddrLen);
+        ~IrcClient();
         void Display();
-        int     getCommFd();
-        unsigned char recv_buffer[MAX_CLIENT_BUFFER_SIZE];
-        uint32_t _ipAddr;
-        uint16_t _portNo;
-        uint32_t _serverIpAddr;
-        uint16_t _serverPortNo;
-        int      _commFd;        
+
     private:
 
+        int         _commFd;
+        sockaddr_in _addr;
+        socklen_t   _addrLen;
+        // uint32_t _serverIpAddr;
+        // uint16_t _serverPortNo;
+
         
-        std::vector<IrcChannel> _registredChannels;
-        std::vector<IrcChannel> _operatorChannels;        
+        // std::map<std::string, IrcChannel> _registredChannels;
+        // std::map<std::string, IrcChannel> _operatorChannels;
 } ;
 
 
