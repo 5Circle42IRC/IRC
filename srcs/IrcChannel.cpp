@@ -7,6 +7,16 @@ IrcChannel::IrcChannel(std::string name)
 
 IrcChannel::~IrcChannel() {}
 
+const IrcChannel& IrcChannel::operator=(const IrcChannel& copy){
+    if (this == &copy)
+        return *this;
+    _topic = copy._topic;
+    _name = copy._name;
+    _password = copy._password;
+    _grant = copy._grant;
+    _user = copy._user;
+}
+
 //addUser시 이미 존재하는 user는 add하지 않음
 const void IrcChannel::addUser(const int clientFd) {
 	_user[clientFd] = false;
