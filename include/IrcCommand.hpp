@@ -14,20 +14,20 @@ class IrcCommand: protected IrcDB {
 
 		const	std::vector<std::string>& getArgs() const;
 
-		void KICK();
-		void INVITE();
+		void KICK(int clientFd);
+		void INVITE(int clientFd);
 
 		void JOIN(int clientFd);
-		void NICK();
-		void PASS();
-		void NAME();
-		void PRIVMSG();
+		void NICK(int clientFd);
+		void PASS(int clientFd);
+		void NAME(int clientFd);
+		void PRIVMSG(int clientFd);
 
-		void TOPIC();
-		void MODE();
+		void TOPIC(int clientFd);
+		void MODE(int clientFd);
 
-		void PART();
-		void PONG();
+		void PART(int clientFd);
+		void PONG(int clientFd);
 
 	protected:
 		std::vector<std::string>  _args;
