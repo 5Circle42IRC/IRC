@@ -1,20 +1,20 @@
 #include "../include/IrcDB.hpp"
 
-const char* DB::notFindClient::what() const throw()
+const char* IrcDB::notFindClient::what() const throw()
 {
     return "not find Client";
 }
 
-const char* DB::notFindClient::what() const throw()
+const char* IrcDB::notFindClient::what() const throw()
 {
     return "not find channel";
 }
 
-DB::DB() { }
+IrcDB::IrcDB() { }
 
-DB::~DB() { };
+IrcDB::~IrcDB() { };
 
-const IrcClient& DB::find(const int clientFd) 
+const IrcClient& IrcDB::find(const int clientFd) 
 {
     std::map<int, IrcClient&>::iterator client = _client.find(clientFd);
 
@@ -23,7 +23,7 @@ const IrcClient& DB::find(const int clientFd)
     return client->second;
 }
 
-const IrcChannel& DB::find(const std::string channelName) 
+const IrcChannel& IrcDB::find(const std::string channelName) 
 {
     std::map<std::string, IrcChannel&>::iterator channel = _channel.find(channelName);
 
@@ -32,12 +32,12 @@ const IrcChannel& DB::find(const std::string channelName)
     return channel->second;
 }
 
-void DB::deleteChannel(const std::string channelName)
+void IrcDB::deleteChannel(const std::string channelName)
 {
     _channel.erase(channelName);
 }
 
-void DB::deleteTargetInChannel(const std::string& channel, const int targetFd)
+void IrcDB::deleteTargetInChannel(const std::string& channel, const int targetFd)
 {
     std::map<std::string, IrcChannel&>::iterator temp = _channel.find(channel);
 
@@ -46,7 +46,7 @@ void DB::deleteTargetInChannel(const std::string& channel, const int targetFd)
     temp->second.deleteUser(targetFd);
 }
 
-void DB::addTargetInChannel(const std::string& channel, const int targetFd)
+void IrcDB::addTargetInChannel(const std::string& channel, const int targetFd)
 {
     std::map<std::string, IrcChannel&>::iterator temp = _channel.find(channel);
 
@@ -58,7 +58,7 @@ void DB::addTargetInChannel(const std::string& channel, const int targetFd)
 /**
  * 기본 client만 만들어주기
 */
-void DB::registerClient(const int& fd)
+void IrcDB::registerClient(const int& fd)
 {
     _client[fd] = IrcClient(fd, "plz make nickname", "plz make passwd", "");
 }
@@ -66,7 +66,7 @@ void DB::registerClient(const int& fd)
 /**
  * 기본 channel만 만들어주기
 */
-void DB::registerChannel(const std::string& channel)
+void IrcDB::registerChannel(const std::string& channel)
 {
     _channel[channel] = IrcChannel(channel);// 안되면 깊은 복사 필요.
 }

@@ -6,11 +6,11 @@
 #include "../include/IrcClient.hpp"
 #include <exception>
 
-class DB : private IrcClient, private IrcChannel
+class IrcDB : private IrcClient, private IrcChannel
 {
 public:
-    DB();
-    ~DB();
+    IrcDB();
+    ~IrcDB();
 	virtual const IrcClient& find(const int clientFd);
 	virtual const IrcChannel& find(const std::string channelName);
 	virtual void deleteChannel(const std::string channelName);
@@ -32,8 +32,8 @@ private:
 
 	std::map<int, IrcClient &> _client;
 	std::map<std::string, IrcChannel &> _channel;
-    const DB& operator=(const DB& copy);
-	DB(const DB& copy);
+    const IrcDB& operator=(const IrcDB& copy);
+	IrcDB(const IrcDB& copy);
 
 };
 
