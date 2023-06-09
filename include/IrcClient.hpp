@@ -29,6 +29,11 @@ public:
 protected:
 	int         _fd;
 	std::string _nickname;
+    std::string _username;
+    std::string _hostname;
+    std::string _servername;
+    std::string _realname;
+
 	std::string _password;
 	std::string _buffer;
 
