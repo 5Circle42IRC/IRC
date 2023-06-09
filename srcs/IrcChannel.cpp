@@ -15,16 +15,17 @@ const IrcChannel& IrcChannel::operator=(const IrcChannel& copy){
     _password = copy._password;
     _grant = copy._grant;
     _user = copy._user;
+    return *this;
 }
 
 //addUser시 이미 존재하는 user는 add하지 않음
-const void IrcChannel::addUser(const int clientFd) {
+void IrcChannel::addUser(const int clientFd) {
 	_user[clientFd] = false;
 }
-const void IrcChannel::deleteUser(const int target) {
+void IrcChannel::deleteUser(const int target) {
     _user.erase(target);
 }
-const bool IrcChannel::isJoinedUser(const int clientFd) {
+bool IrcChannel::isJoinedUser(const int clientFd) const {
     return _user.count(clientFd) != 0;
 }
 
@@ -44,10 +45,10 @@ void IrcChannel::setOperator(const int clientFd, const int target) {
 void IrcChannel::setTopic(std::string& newTopic) { _topic = newTopic; }
 void IrcChannel::setPassword(std::string& newPassword) { _password = newPassword; }
 
-const int IrcChannel::getGrant() const { return _grant; }
-const bool IrcChannel::isOperator(const int clientFd){
+int IrcChannel::getGrant() const { return _grant; }
+bool IrcChannel::isOperator(const int clientFd) const {
     if (isJoinedUser(clientFd))
-        return static_cast<const bool>(_user[clientFd]);
+        return _user.find(clientFd)->second;
     throw InvalidClientFd();
 }
 

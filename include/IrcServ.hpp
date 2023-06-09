@@ -4,6 +4,7 @@
 #define BUFFER_SIZE 1024
 
 #include "../include/IrcCommand.hpp"
+#include <arpa/inet.h>
 
 class IrcServ : protected IrcCommand
 {
@@ -15,7 +16,7 @@ public:
     void run();
 
 protected:
-    bool _isError;
+    int _error;
 
     int _port;
     std::string _passWord;
