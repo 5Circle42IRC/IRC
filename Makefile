@@ -65,4 +65,5 @@ clean:
 fclean: clean
 	@rm -f $(TARGET)
 
-re: fclean all
+re: fclean
+	@make -j4 all

@@ -82,7 +82,7 @@ void IrcServ::run()
                     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
                     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
                         continue;
-                    send(acceptFd, "input password", 14, 0);
+                    send(acceptFd, "input password :", 16, 0);
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
                     if (_fdMax < acceptFd)
@@ -91,8 +91,14 @@ void IrcServ::run()
                 else
                 {
                     readLen = recv(i, message, BUFFER_SIZE, 0);
+
+                    if (readLen == 1) continue;
+                    else if (readLen > 1) message[readLen - 1] = '\0';
+
+                    std::string test(message);
                     std::cerr << "message : " << message << std::endl;
-                    std::cerr << "message len : " << std::endl;
+                    std::cerr << "message len : " << test.length()  << std::endl;
+                    std::cerr << "message readlen : " << readLen << std::endl;
 
                     if (readLen == 0)
                     {
