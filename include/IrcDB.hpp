@@ -6,7 +6,7 @@
 #include "../include/IrcClient.hpp"
 #include <exception>
 
-class IrcDB : private IrcClient, private IrcChannel
+class IrcDB : protected IrcClient, protected IrcChannel
 {
 public:
     IrcDB();
