@@ -7,7 +7,7 @@
 
 //vector<std::string> jwee, hello, world
 
-void IrcCommand::PRIVMSG(){
+void IrcCommand::PRIVMSG(int clinetFd){
     std::cout << "in <PRIVMSG> command" << std::endl;
     //std::cout << "argus : <" << _args << ">" << std::endl;
 
