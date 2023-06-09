@@ -26,6 +26,9 @@ class IrcCommand: protected IrcDB {
 		void TOPIC();
 		void MODE();
 
+		void PART();
+		void PONG();
+
 	protected:
 		std::vector<std::string>  _args;
 
