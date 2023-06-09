@@ -4,6 +4,8 @@
 #include <cstring>
 #include <unistd.h>
 
+IrcServ::IrcServ(){};
+
 IrcServ::IrcServ(int port, std::string passWord)
     : _isError(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
 {
@@ -35,7 +37,7 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 void IrcServ::run()
 {
-    // IrcCommand command(); // 왜 안됨?
+    IrcCommand command(); // 왜 안됨?
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);

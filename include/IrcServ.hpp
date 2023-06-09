@@ -5,15 +5,16 @@
 
 #include "../include/IrcCommand.hpp"
 
-class IrcServ : private IrcCommand
+class IrcServ : protected IrcCommand
 {
 public:
+    IrcServ();
     ~IrcServ();
     IrcServ(int port, std::string passWord);
 
     void run();
 
-private:
+protected:
     bool _isError;
 
     int _port;
@@ -32,7 +33,7 @@ private:
     sockaddr_in _servAddr;
     socklen_t _servAddrLen;
 
-    IrcServ();
+private:
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);
 

@@ -4,7 +4,7 @@
 # include "./IrcDB.hpp"
 # include <vector>
 
-class IrcCommand: private DB {
+class IrcCommand: protected IrcDB {
 	public :
 		IrcCommand();
 		virtual ~IrcCommand();
@@ -14,8 +14,7 @@ class IrcCommand: private DB {
 		virtual void	execute(int ClientFd, std::vector<std::string>args) = 0;
 
 
-		virtual const	std::vector<std::string>& getArgs() const = 0;
-		virtual void	setArgs() = 0;
+		virtual const	std::vector<std::string>& getArgs() const;
 
 	private:
 		std::vector<std::string>  _args;

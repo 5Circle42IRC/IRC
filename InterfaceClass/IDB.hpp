@@ -16,9 +16,6 @@ public:
 	virtual void registerClient(const int& fd) = 0;
 	virtual void registerChannel(const std::string& channel) = 0;
 
-protected:
-	std::map<int, IClient &> _client;
-	std::map<std::string, IChannel &> _channel;
 };
 
 #endif
