@@ -1,13 +1,11 @@
 #ifndef __IrcCLIENT__
 #define __IrcCLIENT__
 
-#include "../InterfaceClass/IClient.hpp"
-
-class IrcClient : private IClient
+class IrcClient
 {
 public:
     IrcClient();
-    IrcClient(int fd, std::string nickname, std::string passWord, std::string buffer);
+    IrcClient(int fd, std::string nickname, std::string password, std::string buffer);
     ~IrcClient();
 
     virtual const int getFd() const;
@@ -19,10 +17,18 @@ public:
     virtual void setPassword(std::string &newPassword);
     virtual void addBackBuffer(std::string &str);
     virtual void reduceBuffer(int result);
+    
+
+protected:
+	int         _fd;
+	std::string _nickname;
+	std::string _password;
+	std::string _buffer;
 
 private :
     IrcClient(const IrcClient &copy);
     const IrcClient &operator=(const IrcClient &copy);
+    
 };
 
 #endif

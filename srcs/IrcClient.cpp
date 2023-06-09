@@ -1,37 +1,78 @@
-#include <arpa/inet.h>
-#include "../include/Irc.hpp"
+#include "../include/IrcClient.hpp"
+#include <string>
 
-IrcClient::IrcClient(int commFd, sockaddr_in addr, socklen_t addrLen)
-    : _commFd(commFd), _addr(addr), _addrLen(addrLen)
+IrcClient::IrcClient(int fd, std::string nickname, std::string password, std::string buffer)
+    : _fd(fd), _nickname(nickname), _password(password), _buffer(buffer)
 { }
 
 IrcClient::IrcClient()
-    : _commFd(0)
+    : _fd(0)
 { }
 
 IrcClient::~IrcClient() { }
 
 IrcClient::IrcClient(const IrcClient& copy)
-    : _commFd(copy._commFd), _addr(copy._addr), _addrLen(copy._addrLen)
-{ 
-    if (this != &copy)
-        throw CopyError();
-}
+    : _fd(copy._fd), _nickname(copy._nickname), _password(copy._password), _buffer(copy._buffer)
+{ }
 
 const IrcClient& IrcClient::operator=(const IrcClient& copy)
 {
     if (this == &copy)
     {
-        this->_commFd = copy._commFd;
-        this->_addr = copy._addr;
-        this->_addrLen = copy._addrLen;
+        this->_fd = copy._fd;
+        this->_nickname = copy._nickname;
+        this->_password = copy._password;
+        this->_buffer = copy._buffer;
     }
     return (*this);
 }
 
+const int			IrcClient::getFd() const
+{
+    return _fd;
+}
+
+const std::string&	IrcClient::getNickname() const
+{
+    return _nickname;
+}
+
+const std::string&	IrcClient::getPassword() const
+{
+    return _password;
+}
+
+const std::string&	IrcClient::getBuffer() const
+{
+    return _buffer;
+}
+
+void		IrcClient::setNickname(std::string& newNickname)
+{
+    _nickname = newNickname;
+    return ;
+}
+
+void		IrcClient::setPassword(std::string& newPassword)
+{
+    _password = newPassword;
+    return ;
+}
+
+void		IrcClient::addBackBuffer(std::string& str)
+{
+    return ;
+}
+
+void		IrcClient::reduceBuffer(int result)
+{
+    return ;
+}
+
+/*
 void IrcClient::Display() {
 
-    /*
+
     char ipAddrStr1[16];
     char ipAddrStr2[16];
     
@@ -41,6 +82,7 @@ void IrcClient::Display() {
         network_convert_ip_n_to_p(this->server_ip_addr, ip_addr_str2),
         (this->server_port_no)
         );
-    */
 }
+ */
+   
 
