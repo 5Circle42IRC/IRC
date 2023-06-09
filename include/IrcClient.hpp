@@ -16,6 +16,10 @@ public:
     const std::string &getBuffer() const;
 
     void setNickname(std::string &newNickname);
+    void setUsername(std::string &newUsername);
+    void setHostname(std::string &newHostname);
+    void setServername(std::string &newServername);
+    void setRealname(std::string &newRealname);
     void setPassword(std::string &newPassword);
     void addBackBuffer(std::string &str);
     void reduceBuffer(int result);

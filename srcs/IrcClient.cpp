@@ -53,6 +53,30 @@ void		IrcClient::setNickname(std::string& newNickname)
     return ;
 }
 
+void IrcClient::setUsername(std::string &newUsername)
+{
+    _username = newUsername;
+    return ;
+}
+
+void IrcClient::setHostname(std::string &newHostname)
+{
+    _hostname = newHostname;
+    return ;
+}
+
+void IrcClient::setServername(std::string &newServername)
+{
+    _servername = newServername;
+    return ;
+}
+
+void IrcClient::setRealname(std::string &newRealname)
+{
+    _realname = newRealname;
+    return ;
+}
+
 void		IrcClient::setPassword(std::string& newPassword)
 {
     _password = newPassword;
