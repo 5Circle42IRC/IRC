@@ -19,7 +19,7 @@ public:
 	virtual void registerClient(const int& fd);
 	virtual void registerChannel(const std::string& channel);
 
-private:
+protected:
 	class notFindClient : public std::exception
 	{
 		virtual const char* what() const throw();
