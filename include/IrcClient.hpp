@@ -6,7 +6,7 @@ class IrcClient
 public:
     IrcClient();
     IrcClient(int fd, std::string nickname, std::string password, std::string buffer);
-    ~IrcClient();
+    virtual ~IrcClient();
 
     virtual const int getFd() const;
     virtual const std::string &getNickname() const;
