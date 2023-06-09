@@ -21,9 +21,6 @@ class ICommand: public IDB{
 
 		virtual const	std::vector<std::string>& getArgs() const = 0;
 		virtual void	setArgs() = 0;
-
-	protected:
-		std::vector<std::string>  _args;
 };
 
 #endif
