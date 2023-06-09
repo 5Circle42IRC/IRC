@@ -27,7 +27,7 @@ const IrcClient& IrcClient::operator=(const IrcClient& copy)
     return (*this);
 }
 
-const int			IrcClient::getFd() const
+int			IrcClient::getFd() const
 {
     return _fd;
 }
@@ -61,11 +61,13 @@ void		IrcClient::setPassword(std::string& newPassword)
 
 void		IrcClient::addBackBuffer(std::string& str)
 {
+    (void)str;
     return ;
 }
 
 void		IrcClient::reduceBuffer(int result)
 {
+    (void)result;
     return ;
 }
 

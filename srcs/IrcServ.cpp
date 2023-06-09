@@ -7,7 +7,7 @@
 IrcServ::IrcServ(){};
 
 IrcServ::IrcServ(int port, std::string passWord)
-    : _isError(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
+    : _error(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
 {
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
@@ -18,20 +18,20 @@ IrcServ::IrcServ(int port, std::string passWord)
     if (_servFd == -1)
         throw IrcServ::socketException();
 
-    _isError = fcntl(_servFd, O_NONBLOCK);
-    if (_isError == -1)
+    _error = fcntl(_servFd, O_NONBLOCK);
+    if (_error == -1)
         throw IrcServ::fcntlException();
 
-    _isError = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, static_cast<socklen_t>(sizeof(_opt)));
-    if (_isError)
+    _error = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, static_cast<socklen_t>(sizeof(_opt)));
+    if (_error)
         throw IrcServ::setsockoptException();
 
-    _isError = bind(_servFd, (struct sockaddr *)&_servAddr, sizeof(_servAddr));
-    if (_isError)
+    _error = bind(_servFd, (struct sockaddr *)&_servAddr, sizeof(_servAddr));
+    if (_error)
         throw IrcServ::bindException();
 
-    _isError = listen(_servFd, 5); // 이해  필요.
-    if (_isError)
+    _error = listen(_servFd, 5); // 이해  필요.
+    if (_error)
         throw IrcServ::listenException();
 }
 
