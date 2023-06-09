@@ -5,7 +5,7 @@ const char* IrcDB::notFindClient::what() const throw()
     return "not find Client";
 }
 
-const char* IrcDB::notFindClient::what() const throw()
+const char* IrcDB::notFindChannel::what() const throw()
 {
     return "not find channel";
 }

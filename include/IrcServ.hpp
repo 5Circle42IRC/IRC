@@ -33,7 +33,6 @@ protected:
     sockaddr_in _servAddr;
 
 private:
-    bool addClient(const int i);
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);
 

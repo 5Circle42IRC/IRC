@@ -34,7 +34,7 @@ void IrcCommand::PRIVMSG(){
     {
         std::cout << "target is # start, so CHANNEL" << std::endl;
         std::map<int, IrcClient &>::iterator it2;
-		IrcChannel& channel = find(target);
+		const IrcChannel& channel = find(target);
         for(it2 = channel._user.begin();
             it2 != channel._user.end();
             it2++)      

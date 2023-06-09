@@ -11,8 +11,8 @@ class IrcDB : protected IrcClient, protected IrcChannel
 public:
     IrcDB();
     virtual ~IrcDB();
-	virtual const IrcClient& find(const int clientFd);
-	virtual const IrcChannel& find(const std::string channelName);
+	virtual IrcClient& find(const int clientFd);
+	virtual IrcChannel& find(const std::string channelName);
 	virtual void deleteChannel(const std::string channelName);
 	virtual void deleteTargetInChannel(const std::string& channelName, const int targetFd);
 	virtual void addTargetInChannel(const std::string& channelName, const int targetFd);
