@@ -9,15 +9,30 @@ class IrcCommand: protected IrcDB {
 		IrcCommand();
 		virtual ~IrcCommand();
 
-		virtual void	foreach(std::map<int, IrcClient&>& client);
-		virtual void	foreach(std::map<std::string, IrcChannel&> channel);
-		virtual void	execute(int ClientFd, std::vector<std::string>args);
+		void	foreach(std::map<int, IrcClient&>& client);
+		void	foreach(std::map<std::string, IrcChannel&> channel);
 
+		const	std::vector<std::string>& getArgs() const;
 
-		virtual const	std::vector<std::string>& getArgs() const;
+		void KICK();
+		void INVITE();
+
+		void JOIN(int clientFd);
+		void NICK();
+		void PASS();
+		void NAME();
+		void PRIVMSG();
+
+		void TOPIC();
+		void MODE();
 
 	protected:
 		std::vector<std::string>  _args;
+
+	private:
+		class InvalidArguments: public std::exception {
+			virtual const char *what() const throw();
+		};
 
 };
 
