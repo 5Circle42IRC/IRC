@@ -17,15 +17,15 @@ public:
     virtual void setPassword(std::string &newPassword);
     virtual void addBackBuffer(std::string &str);
     virtual void reduceBuffer(int result);
-
+    IrcClient(const IrcClient &copy);
+    const IrcClient &operator=(const IrcClient &copy);
 
 protected:
 	int         _fd;
 	std::string _nickname;
 	std::string _password;
 	std::string _buffer;
-    IrcClient(const IrcClient &copy);
-    const IrcClient &operator=(const IrcClient &copy);
+
 private :
 
     
