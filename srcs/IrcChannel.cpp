@@ -51,6 +51,8 @@ const bool IrcChannel::isOperator(const int clientFd){
     throw InvalidClientFd();
 }
 
+const std::map<int, bool>& IrcChannel::getUser() const { return _user; }
+
 const std::string& IrcChannel::getTopic() const { return _topic; }
 const std::string& IrcChannel::getName() const { return _name; }
 const std::string& IrcChannel::getPassword() const { return _password; }

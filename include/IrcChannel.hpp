@@ -26,6 +26,8 @@ public:
     virtual const std::string& getName() const;
     virtual const std::string& getPassword() const;
 
+    virtual const std::map<int, bool>& getUser() const;
+
 protected:
     IrcChannel(const IrcChannel& copy);
     std::string         _topic;
