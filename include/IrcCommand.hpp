@@ -28,6 +28,7 @@ class IrcCommand: protected IrcDB {
 
 		void PART(int clientFd);
 		void PONG(int clientFd);
+		void USER(int clientFd);
 
 	protected:
 		std::vector<std::string>  _args;
