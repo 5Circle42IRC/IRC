@@ -26,7 +26,7 @@ public:
     virtual const std::string& getName() const;
     virtual const std::string& getPassword() const;
 
-private:
+protected:
     IrcChannel(const IrcChannel& copy);
     std::string         _topic;
     std::string         _name;
@@ -35,6 +35,8 @@ private:
     int					_grant;
 
     std::map<int, bool>	_user;
+
+private:
 
     class InvalidGrant {
         public:
