@@ -1,7 +1,17 @@
 #ifndef __IRC_CHANNEL_HPP__
 #define __IRC_CHANNEL_HPP__
 
-#include "../InterfaceClass/IChannel.hpp"
+#include <map>
+#include <iostream>
+
+typedef enum 
+{
+    OPERATOR = 1,
+    INVITE = 2,
+    TOPIC = 4,
+    KEY = 8,
+    LIMIT = 16,
+}typeMode;
 
 class IrcChannel
 {
