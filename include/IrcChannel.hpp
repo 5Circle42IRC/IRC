@@ -1,8 +1,6 @@
 #ifndef __IRC_CHANNEL_HPP__
 #define __IRC_CHANNEL_HPP__
 
-#include "../InterfaceClass/IChannel.hpp"
-
 class IrcChannel
 {
 public:
