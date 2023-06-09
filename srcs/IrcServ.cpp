@@ -91,6 +91,9 @@ void IrcServ::run()
                 else
                 {
                     readLen = recv(i, message, BUFFER_SIZE, 0);
+                    std::cerr << "message : " << message << std::endl;
+                    std::cerr << "message len : " << std::endl;
+
                     if (readLen == 0)
                     {
                         FD_CLR(i, &_activeReads);
