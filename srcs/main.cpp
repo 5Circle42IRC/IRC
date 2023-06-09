@@ -1,4 +1,5 @@
 #include "../include/IrcServ.hpp"
+#include <cstdlib>
 
 static void errorHandle(std::string message, int exitCode)
 {
