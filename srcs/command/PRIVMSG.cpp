@@ -11,7 +11,7 @@ void IrcCommand::PRIVMSG(){
     std::cout << "in <PRIVMSG> command" << std::endl;
     //std::cout << "argus : <" << _args << ">" << std::endl;
 
-    if (_args.size() < 2)
+    if (_args.size() != 2)
         return ;
 
     std::string target;
@@ -21,7 +21,8 @@ void IrcCommand::PRIVMSG(){
     it = _args.begin();
     target = *it;
 
-    std::string msg;
+    std::string msg = *(_args.end());
+	/*
     for (it = std::next(_args.begin());
         it != _args.end();
         it++)
@@ -29,7 +30,7 @@ void IrcCommand::PRIVMSG(){
             msg += *it;
             msg += " ";
         }
-
+	*/
     std::cout << "msg : " << msg << std::endl;
     if (target.at(0) == '#')
     {
