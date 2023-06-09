@@ -80,8 +80,7 @@ void IrcServ::run()
                     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
                     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
                         continue;
-                    registerClient(acceptFd);
-                    // send message : set nickname set password
+                    // 비밀번호를 적어주세요. 메세지 보냄
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
                     if (_fdMax < acceptFd)
@@ -105,6 +104,25 @@ void IrcServ::run()
                     }
                     else
                     {
+                        try
+                        {
+                            find(i);
+                        }
+                        catch(const std::exception& e)
+                        {
+                            if (_passWord.compare(message))
+                            {
+
+                                continue;
+                            }
+                            registerClient(acceptFd);
+                            
+                        }
+                        
+                        // 레지스터에 해당 fd가 없으면, 비밀번호 확인
+                        // 비밀 번호 확인
+
+                        // send message : set nickname set password
                         std::cout << message << std::endl; // char??? std::string???
                     }
                 }
