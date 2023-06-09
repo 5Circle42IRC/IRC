@@ -1,7 +1,6 @@
 #ifndef __IRC_DB_HPP__
 #define __IRC_DB_HPP__
 
-#include "../InterfaceClass/IDB.hpp"
 #include "../include/IrcChannel.hpp"
 #include "../include/IrcClient.hpp"
 #include <exception>

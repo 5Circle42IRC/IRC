@@ -14,7 +14,7 @@ IrcDB::IrcDB() { }
 
 IrcDB::~IrcDB() { };
 
-const IrcClient& IrcDB::find(const int clientFd) 
+IrcClient& IrcDB::find(const int clientFd) 
 {
     std::map<int, IrcClient&>::iterator client = _client.find(clientFd);
 
@@ -23,7 +23,7 @@ const IrcClient& IrcDB::find(const int clientFd)
     return client->second;
 }
 
-const IrcChannel& IrcDB::find(const std::string channelName) 
+IrcChannel& IrcDB::find(const std::string channelName) 
 {
     std::map<std::string, IrcChannel&>::iterator channel = _channel.find(channelName);
 

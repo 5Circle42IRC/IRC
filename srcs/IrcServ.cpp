@@ -65,6 +65,8 @@ void IrcServ::run()
         socklen_t clientAddrLen;
 
         std::memset(message, 0, sizeof(message));
+        int len;
+        IrcClient client;
 
         sleep(1);//
 
@@ -80,7 +82,7 @@ void IrcServ::run()
                     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
                     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
                         continue;
-                    // 비밀번호를 적어주세요. 메세지 보냄
+                    send(acceptFd, "input password", 14, 0);
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
                     if (_fdMax < acceptFd)
@@ -88,7 +90,7 @@ void IrcServ::run()
                 }
                 else
                 {
-                    readLen = read(i, message, BUFFER_SIZE);
+                    readLen = recv(i, message, BUFFER_SIZE, 0);
                     if (readLen == 0)
                     {
                         FD_CLR(i, &_activeReads);
@@ -104,24 +106,23 @@ void IrcServ::run()
                     }
                     else
                     {
-                        try
-                        {
-                            find(i);
-                        }
-                        catch(const std::exception& e)
-                        {
+                        try {
+                            client = find(i);
+                        } catch(const std::exception& e) {
                             if (_passWord.compare(message))
                             {
-
+                                FD_CLR(i, &_activeReads);
+                                FD_CLR(i, &_activeWrites);
+                                close(i);
                                 continue;
                             }
                             registerClient(acceptFd);
-                            
+                            continue;
                         }
-                        
-                        // 레지스터에 해당 fd가 없으면, 비밀번호 확인
-                        // 비밀 번호 확인
-
+                        len = send(i, client.getBuffer().c_str(), client.getBuffer().length(), 0);
+                        if (len == -1)
+                            continue;
+                        client.reduceBuffer(len);
                         // send message : set nickname set password
                         std::cout << message << std::endl; // char??? std::string???
                     }
