@@ -9,7 +9,7 @@ class IrcServ : protected IrcCommand
 {
 public:
     IrcServ();
-    ~IrcServ();
+    virtual ~IrcServ();
     IrcServ(int port, std::string passWord);
 
     void run();
@@ -31,9 +31,9 @@ protected:
     fd_set _cpyWrites;
 
     sockaddr_in _servAddr;
-    socklen_t _servAddrLen;
 
 private:
+    bool addClient(const int i);
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);
 

@@ -84,5 +84,3 @@ void IrcClient::Display() {
         );
 }
  */
-   
-

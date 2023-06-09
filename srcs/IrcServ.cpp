@@ -37,7 +37,6 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 void IrcServ::run()
 {
-    IrcCommand command(); // 왜 안됨?
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);
@@ -67,7 +66,7 @@ void IrcServ::run()
 
         std::memset(message, 0, sizeof(message));
 
-        sleep(1);
+        sleep(1);//
 
         for (int i = 0; i < _fdMax + 1; i++)
         {
@@ -81,9 +80,8 @@ void IrcServ::run()
                     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
                     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
                         continue;
-                    // getclient를 해야함.
-                    // command.setCommand("PASS");
-                    // _clients[acceptFd] = IrcClient(acceptFd, clientAddr, clientAddrLen);
+                    registerClient(acceptFd);
+                    // send message : set nickname set password
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
                     if (_fdMax < acceptFd)
@@ -97,7 +95,13 @@ void IrcServ::run()
                         FD_CLR(i, &_activeReads);
                         FD_CLR(i, &_activeWrites);
                         close(i);
-                        //;delete _client를 해야함.
+                        try {
+                            for (std::map<std::string, IrcChannel&>::iterator it = _channel.begin(); it != _channel.end(); i++)
+                                it->second.deleteUser(i);
+                            _client.erase(i);
+                        } catch(const std::exception& e) {
+                            std::cerr << e.what() << std::endl;
+                        }
                     }
                     else
                     {
@@ -106,7 +110,6 @@ void IrcServ::run()
                 }
             }
         }
-        // std::cout << std::endl;
     }
     close(_servFd);
 }

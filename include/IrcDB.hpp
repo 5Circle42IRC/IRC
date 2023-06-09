@@ -10,7 +10,7 @@ class IrcDB : protected IrcClient, protected IrcChannel
 {
 public:
     IrcDB();
-    ~IrcDB();
+    virtual ~IrcDB();
 	virtual const IrcClient& find(const int clientFd);
 	virtual const IrcChannel& find(const std::string channelName);
 	virtual void deleteChannel(const std::string channelName);
@@ -32,6 +32,8 @@ protected:
 
 	std::map<int, IrcClient &> _client;
 	std::map<std::string, IrcChannel &> _channel;
+
+private:
     const IrcDB& operator=(const IrcDB& copy);
 	IrcDB(const IrcDB& copy);
 
