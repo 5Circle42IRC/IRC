@@ -1,47 +1,83 @@
 #ifndef __IrcServ_hpp__
 #define __IrcServ_hpp__
 
-#include "Irc.hpp"
+#define BUFFER_SIZE 1024
 
-class IrcClient;
-// class IrcChannel;
+#include "../include/IrcCommand.hpp"
 
-class IrcServ
+class IrcServ : protected IrcCommand
 {
 public:
+    IrcServ();
     ~IrcServ();
     IrcServ(int port, std::string passWord);
 
     void run();
-    int GetMaxFd();
-    void CopyClientFDtoFDSet(fd_set *fdset);
-    void RemoveClients(IrcClient *ircClient);
-    void AddClients(IrcClient *ircClient);
-private:
-    bool        _isError;
 
-    int         _port;
+protected:
+    bool _isError;
+
+    int _port;
     std::string _passWord;
 
-    int         _servFd;
-    int         _fdMax;
-    int         _fdNum;
-    int         _opt;
+    int _servFd;
+    int _fdMax;
+    int _fdNum;
+    int _opt;
 
-    fd_set      _activeReads;
-    fd_set      _activeWrites;
-    fd_set      _cpyReads;
-    fd_set      _cpyWrites;
+    fd_set _activeReads;
+    fd_set _activeWrites;
+    fd_set _cpyReads;
+    fd_set _cpyWrites;
 
-    sockaddr_in                         _servAddr;
-    socklen_t                           _servAddrLen;
-    std::map<int, IrcClient>            _clients;
-    std::map<std::string, IrcChannel>   _channels;
+    sockaddr_in _servAddr;
+    socklen_t _servAddrLen;
 
+private:
+    IrcServ(const IrcServ &copy);
+    const IrcServ &operator=(const IrcServ &copy);
 
-    IrcServ();
-    IrcServ(const IrcServ& copy);
-    const IrcServ& operator=(const IrcServ& copy);
+    class socketException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class bindException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class listenException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class selectException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class acceptException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class fcntlException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
+
+    class setsockoptException : public std::exception
+    {
+    public:
+        virtual const char *what() const throw();
+    };
 };
 
 #endif
