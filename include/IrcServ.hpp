@@ -4,18 +4,19 @@
 #define BUFFER_SIZE 1024
 
 #include "../include/IrcCommand.hpp"
+#include <arpa/inet.h>
 
 class IrcServ : protected IrcCommand
 {
 public:
     IrcServ();
-    ~IrcServ();
+    virtual ~IrcServ();
     IrcServ(int port, std::string passWord);
 
     void run();
 
 protected:
-    bool _isError;
+    int _error;
 
     int _port;
     std::string _passWord;
@@ -31,7 +32,6 @@ protected:
     fd_set _cpyWrites;
 
     sockaddr_in _servAddr;
-    socklen_t _servAddrLen;
 
 private:
     IrcServ(const IrcServ &copy);

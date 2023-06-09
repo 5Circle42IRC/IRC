@@ -27,7 +27,7 @@ const IrcClient& IrcClient::operator=(const IrcClient& copy)
     return (*this);
 }
 
-const int			IrcClient::getFd() const
+int			IrcClient::getFd() const
 {
     return _fd;
 }
@@ -53,6 +53,30 @@ void		IrcClient::setNickname(std::string& newNickname)
     return ;
 }
 
+void IrcClient::setUsername(std::string &newUsername)
+{
+    _username = newUsername;
+    return ;
+}
+
+void IrcClient::setHostname(std::string &newHostname)
+{
+    _hostname = newHostname;
+    return ;
+}
+
+void IrcClient::setServername(std::string &newServername)
+{
+    _servername = newServername;
+    return ;
+}
+
+void IrcClient::setRealname(std::string &newRealname)
+{
+    _realname = newRealname;
+    return ;
+}
+
 void		IrcClient::setPassword(std::string& newPassword)
 {
     _password = newPassword;
@@ -61,11 +85,13 @@ void		IrcClient::setPassword(std::string& newPassword)
 
 void		IrcClient::addBackBuffer(std::string& str)
 {
+    (void)str;
     return ;
 }
 
 void		IrcClient::reduceBuffer(int result)
 {
+    (void)result;
     return ;
 }
 
@@ -84,5 +110,3 @@ void IrcClient::Display() {
         );
 }
  */
-   
-

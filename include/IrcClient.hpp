@@ -1,6 +1,8 @@
 #ifndef __IrcCLIENT__
 #define __IrcCLIENT__
 
+#include <string>
+
 class IrcClient
 {
 public:
@@ -8,26 +10,35 @@ public:
     IrcClient(int fd, std::string nickname, std::string password, std::string buffer);
     ~IrcClient();
 
-    virtual const int getFd() const;
-    virtual const std::string &getNickname() const;
-    virtual const std::string &getPassword() const;
-    virtual const std::string &getBuffer() const;
+    int getFd() const;
+    const std::string &getNickname() const;
+    const std::string &getPassword() const;
+    const std::string &getBuffer() const;
 
-    virtual void setNickname(std::string &newNickname);
-    virtual void setPassword(std::string &newPassword);
-    virtual void addBackBuffer(std::string &str);
-    virtual void reduceBuffer(int result);
-    
+    void setNickname(std::string &newNickname);
+    void setUsername(std::string &newUsername);
+    void setHostname(std::string &newHostname);
+    void setServername(std::string &newServername);
+    void setRealname(std::string &newRealname);
+    void setPassword(std::string &newPassword);
+    void addBackBuffer(std::string &str);
+    void reduceBuffer(int result);
+    IrcClient(const IrcClient &copy);
+    const IrcClient &operator=(const IrcClient &copy);
 
 protected:
 	int         _fd;
 	std::string _nickname;
+    std::string _username;
+    std::string _hostname;
+    std::string _servername;
+    std::string _realname;
+
 	std::string _password;
 	std::string _buffer;
 
 private :
-    IrcClient(const IrcClient &copy);
-    const IrcClient &operator=(const IrcClient &copy);
+
     
 };
 

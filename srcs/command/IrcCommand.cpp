@@ -1,4 +1,4 @@
-#include "../include/IrcCommand.hpp"
+#include "../../include/IrcCommand.hpp"
 
 IrcCommand::IrcCommand(){}
 IrcCommand::~IrcCommand(){}

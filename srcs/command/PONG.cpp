@@ -7,22 +7,22 @@
 
 //vector<std::string> jwee, hello, world
 
-void IrcCommand::NICK(int clientFd){
-    std::cout << "in <NICK> command" << std::endl;
+void IrcCommand::PONG(int clientFd){
+    std::cout << "in <PONG> command" << std::endl;
     //std::cout << "argus : <" << _args << ">" << std::endl;
 
     if (_args.size() != 1)
         return ;
 
-    std::string newNickname;
+    std::string pongMsg("Pong MSG");
     
     
-    newNickname = *(_args.begin());
+    
     
     
     
     IrcClient& client = find(clientFd);
-    client.setNickname(newNickname);
+    client.addBackBuffer(pongMsg);
 
     return ;
 }

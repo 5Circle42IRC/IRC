@@ -1,7 +1,6 @@
 #ifndef __IRC_DB_HPP__
 #define __IRC_DB_HPP__
 
-#include "../InterfaceClass/IDB.hpp"
 #include "../include/IrcChannel.hpp"
 #include "../include/IrcClient.hpp"
 #include <exception>
@@ -10,9 +9,9 @@ class IrcDB : protected IrcClient, protected IrcChannel
 {
 public:
     IrcDB();
-    ~IrcDB();
-	virtual const IrcClient& find(const int clientFd);
-	virtual const IrcChannel& find(const std::string channelName);
+    virtual ~IrcDB();
+	virtual IrcClient& find(const int clientFd);
+	virtual IrcChannel& find(const std::string channelName);
 	virtual void deleteChannel(const std::string channelName);
 	virtual void deleteTargetInChannel(const std::string& channelName, const int targetFd);
 	virtual void addTargetInChannel(const std::string& channelName, const int targetFd);
@@ -32,6 +31,8 @@ protected:
 
 	std::map<int, IrcClient &> _client;
 	std::map<std::string, IrcChannel &> _channel;
+
+private:
     const IrcDB& operator=(const IrcDB& copy);
 	IrcDB(const IrcDB& copy);
 

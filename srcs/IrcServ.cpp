@@ -7,7 +7,7 @@
 IrcServ::IrcServ(){};
 
 IrcServ::IrcServ(int port, std::string passWord)
-    : _isError(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
+    : _error(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
 {
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
@@ -18,26 +18,25 @@ IrcServ::IrcServ(int port, std::string passWord)
     if (_servFd == -1)
         throw IrcServ::socketException();
 
-    _isError = fcntl(_servFd, O_NONBLOCK);
-    if (_isError == -1)
+    _error = fcntl(_servFd, O_NONBLOCK);
+    if (_error == -1)
         throw IrcServ::fcntlException();
 
-    _isError = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, static_cast<socklen_t>(sizeof(_opt)));
-    if (_isError)
+    _error = setsockopt(_servFd, SOL_SOCKET, SO_REUSEADDR, &_opt, static_cast<socklen_t>(sizeof(_opt)));
+    if (_error)
         throw IrcServ::setsockoptException();
 
-    _isError = bind(_servFd, (struct sockaddr *)&_servAddr, sizeof(_servAddr));
-    if (_isError)
+    _error = bind(_servFd, (struct sockaddr *)&_servAddr, sizeof(_servAddr));
+    if (_error)
         throw IrcServ::bindException();
 
-    _isError = listen(_servFd, 5); // 이해  필요.
-    if (_isError)
+    _error = listen(_servFd, 5); // 이해  필요.
+    if (_error)
         throw IrcServ::listenException();
 }
 
 void IrcServ::run()
 {
-    IrcCommand command(); // 왜 안됨?
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);
@@ -66,8 +65,10 @@ void IrcServ::run()
         socklen_t clientAddrLen;
 
         std::memset(message, 0, sizeof(message));
+        int len;
+        IrcClient client;
 
-        sleep(1);
+        sleep(1);//
 
         for (int i = 0; i < _fdMax + 1; i++)
         {
@@ -81,9 +82,7 @@ void IrcServ::run()
                     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
                     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
                         continue;
-                    // getclient를 해야함.
-                    // command.setCommand("PASS");
-                    // _clients[acceptFd] = IrcClient(acceptFd, clientAddr, clientAddrLen);
+                    send(acceptFd, "input password :", 16, 0);
                     FD_SET(acceptFd, &_activeReads);
                     FD_SET(acceptFd, &_activeWrites);
                     if (_fdMax < acceptFd)
@@ -91,22 +90,54 @@ void IrcServ::run()
                 }
                 else
                 {
-                    readLen = read(i, message, BUFFER_SIZE);
+                    readLen = recv(i, message, BUFFER_SIZE, 0);
+
+                    if (readLen == 1) continue;
+                    else if (readLen > 1) message[readLen - 1] = '\0';
+
+                    std::string test(message);
+                    std::cerr << "message : " << message << std::endl;
+                    std::cerr << "message len : " << test.length()  << std::endl;
+                    std::cerr << "message readlen : " << readLen << std::endl;
+
                     if (readLen == 0)
                     {
                         FD_CLR(i, &_activeReads);
                         FD_CLR(i, &_activeWrites);
                         close(i);
-                        //;delete _client를 해야함.
+                        try {
+                            for (std::map<std::string, IrcChannel&>::iterator it = _channel.begin(); it != _channel.end(); i++)
+                                it->second.deleteUser(i);
+                            _client.erase(i);
+                        } catch(const std::exception& e) {
+                            std::cerr << e.what() << std::endl;
+                        }
                     }
                     else
                     {
+                        try {
+                            client = find(i);
+                        } catch(const std::exception& e) {
+                            if (_passWord.compare(message))
+                            {
+                                FD_CLR(i, &_activeReads);
+                                FD_CLR(i, &_activeWrites);
+                                close(i);
+                                continue;
+                            }
+                            registerClient(acceptFd);
+                            continue;
+                        }
+                        len = send(i, client.getBuffer().c_str(), client.getBuffer().length(), 0);
+                        if (len == -1)
+                            continue;
+                        client.reduceBuffer(len);
+                        // send message : set nickname set password
                         std::cout << message << std::endl; // char??? std::string???
                     }
                 }
             }
         }
-        // std::cout << std::endl;
     }
     close(_servFd);
 }
