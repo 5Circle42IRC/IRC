@@ -34,6 +34,9 @@ protected:
     sockaddr_in _servAddr;
 
 private:
+    void initFd();
+    void initSocket();
+    void initServAddr();
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);
 
