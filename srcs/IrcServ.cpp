@@ -87,6 +87,7 @@ void IrcServ::run()
     int readLen(0);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen;
+    //DB선언 DB db;
 
     while (42)
     {
@@ -129,13 +130,12 @@ void IrcServ::run()
                             deleteClient(clientFd);
                             continue;
                         }
-                        // command자리
+                        // xcommand자리
                         std::cout << _message << std::endl; // char??? std::string???
                     }
                 }
             }
         }
-
     }
 }
 
