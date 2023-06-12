@@ -25,6 +25,8 @@ class IrcCommand {
 		// void PART(int clientFd);
 		// void PONG(int clientFd);
 		// void USER(int clientFd);
+		std::deque<std::string>& getArgs();
+		std::string getCommand();
 
 	private:
 		IrcCommand();

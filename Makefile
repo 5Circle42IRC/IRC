@@ -1,11 +1,14 @@
 CXX			= c++
-CXXFLAGS	= -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
+CXXFLAGS	= #-Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
 TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
 OBJCMDDIR	= ./objs/command
-SRCS		= main.cpp \
-			  IrcServ.cpp
+SRCS		= mainjwee.cpp \
+			  IrcCommand.cpp \
+			  IrcClient.cpp \
+			  IrcChannel.cpp \
+			  IrcDB.cpp
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)

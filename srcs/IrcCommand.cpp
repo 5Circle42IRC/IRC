@@ -3,22 +3,26 @@
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {}
 IrcCommand::~IrcCommand(){}
 
-void parsing(std::string message){
-	// size_t		start;
-	// size_t		end;
-	// std::string	delim = " ";
+void IrcCommand::parsing(std::string message){
+	size_t		start;
+	size_t		end;
+	std::string	delim = " ";
 
-	// end = message.find(delim);
-	// std::cout << end << std::endl;
-	// start = 0;
-	// for (end; end != -1; end = message.find(delim)){
-	// 	_args.push_back(message.substr(start, end));
-	// 	message.erase(start, end + 1);
-	// 	start = end + 1;
-	// } 
-	// _args.push_back(message);
-	// _command = _args[0];
+	_args.clear();
+	end = message.find(delim);
+	start = 0;
+	for (end; end != -1; end = message.find(delim)){
+		_args.push_back(message.substr(start, end));
+		message.erase(start, end + 1);
+		start = end + 1;
+	} 
+	_args.push_back(message);
+	_command = _args[0];
+	_args.pop_front();
 }
+
+std::deque<std::string>& IrcCommand::getArgs(){ return _args; }
+std::string IrcCommand::getCommand(){return _command;}
 
 // void Parser::parse(char *ori){
 // 	std::string	comm = ori;
