@@ -25,7 +25,7 @@ IrcClient* IrcDB::findClientByFd(int clientFd){
 }
 
 IrcChannel* IrcDB::findChannel(std::string name){
-	std::map<std::string &, IrcChannel *>::iterator it = _channels.find(name);
+	std::map<std::string, IrcChannel *>::iterator it = _channels.find(name);
 	if (it == _channels.end())
 		throw std::exception();
 	return it->second;
@@ -38,7 +38,10 @@ void IrcDB::insertClient(IrcClient *client){
 	_clients[client->getFd()] = client;
 }
 void IrcDB::insertChannel(IrcChannel *channel){
-	_channels.insert(std::pair<std::string, IrcChannel *>(channel->getName(), channel));
+	//std::string teststring("tttt");
+	std::string teststring = channel->getName();
+	(_channels).insert(std::make_pair(teststring, (channel)));
+
 }
 
 void IrcDB::deleteClient(int clientFd){
