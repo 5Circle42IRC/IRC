@@ -23,15 +23,7 @@ int main(int argc, char **argv)
     try {
         IrcServ serv(port, argv[2]);
         hostFd = serv.on();
-        if (false == serv.setSelect())
-        {
-            // handling
-        }
-        while (42)
-        {
-            serv.setSelect();
-
-        }
+        serv.run();
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
     } catch (...) {

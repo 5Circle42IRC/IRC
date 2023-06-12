@@ -14,10 +14,10 @@ public:
     IrcServ(int port, std::string passWord);
 
     int on();
-    bool setSelect();
-    int response()
+    void run();
 
 private:
+    bool initSelect();
     int _error;
 
     int _port;
@@ -33,9 +33,9 @@ private:
     fd_set _cpyReads;
     fd_set _cpyWrites;
 
+    char _message[BUFFER_SIZE];
     sockaddr_in _servAddr;
     struct timeval _timeout;
-    char _message[BUFFER_SIZE];
 
 
     IrcServ(const IrcServ &copy);
