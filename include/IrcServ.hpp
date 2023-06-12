@@ -17,7 +17,6 @@ public:
     void run();
 
 private:
-    bool initSelect();
     int _error;
 
     int _port;
@@ -36,6 +35,11 @@ private:
     char _message[BUFFER_SIZE];
     sockaddr_in _servAddr;
     struct timeval _timeout;
+
+    bool initSelect();
+    int acceptClinet();
+    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen);
+    void deleteClient(int fd);
 
 
     IrcServ(const IrcServ &copy);

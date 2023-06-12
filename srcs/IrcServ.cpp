@@ -59,44 +59,59 @@ bool IrcServ::initSelect()
     return false;
 }
 
+bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen)
+{
+    std::memset(&clientAddr, 0, sizeof(clientAddr));
+    clientAddrLen = sizeof(clientAddr);
+    acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
+    if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
+        return false;
+    send(acceptFd, "input password : ", 17, 0);
+    FD_SET(acceptFd, &_activeReads);
+    FD_SET(acceptFd, &_activeWrites);
+    if (_fdMax < acceptFd)
+        _fdMax = acceptFd;
+    return true;
+}
+
+void IrcServ::deleteClient(int fd)
+{
+    FD_CLR(fd, &_activeReads);
+    FD_CLR(fd, &_activeWrites);
+    close(fd);
+}
+
 void IrcServ::run()
 {
-    int acceptFd;
+    int acceptFd(0);
+    int readLen(0);
+    struct sockaddr_in clientAddr;
+    socklen_t clientAddrLen;
 
     while (42)
     {
         initSelect();
 
-        int readLen(0);
-        struct sockaddr_in clientAddr;
-        socklen_t clientAddrLen;
-
         sleep(1);
 
-        for (int i = 0; i < _fdMax + 1; i++)
+        for (int clientFd = 0; clientFd < _fdMax + 1; clientFd++)
         {
-            // std::cout << i << "debugs" << std::endl;
-            if (FD_ISSET(i, &_cpyReads))
+            // std::cout << clientFd << "debugs" << std::endl;
+            if (FD_ISSET(clientFd, &_cpyReads))
             {
-                if (i == _servFd)
+                if (clientFd == _servFd)
                 {
-                    std::memset(&clientAddr, 0, sizeof(clientAddr));
-                    clientAddrLen = sizeof(clientAddr);
-                    acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
-                    if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
-                        continue;
-                    send(acceptFd, "input password : ", 17, 0);
-                    FD_SET(acceptFd, &_activeReads);
-                    FD_SET(acceptFd, &_activeWrites);
-                    if (_fdMax < acceptFd)
-                        _fdMax = acceptFd;
+                    if (!acceptClient(acceptFd, clientAddr, clientAddrLen))
+                        continue ;
                 }
                 else
                 {
-                    readLen = recv(i, _message, BUFFER_SIZE, 0);
+                    readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
 
-                    if (readLen == 1) continue;
-                    else if (readLen > 1) _message[readLen - 1] = '\0';
+                    if (readLen == 1) 
+                        continue ;
+                    else if (readLen > 1) 
+                        _message[readLen - 1] = '\0';
 
                     std::string test(_message);
                     std::cerr << "_message : " << _message << std::endl;
@@ -105,19 +120,16 @@ void IrcServ::run()
 
                     if (readLen == 0)
                     {
-                        FD_CLR(i, &_activeReads);
-                        FD_CLR(i, &_activeWrites);
-                        close(i);
+                        deleteClient(clientFd);
                     }
                     else
                     {
                         if (_passWord.compare(_message))
                         {
-                            FD_CLR(i, &_activeReads);
-                            FD_CLR(i, &_activeWrites);
-                            close(i);
+                            deleteClient(clientFd);
                             continue;
                         }
+                        // command자리
                         std::cout << _message << std::endl; // char??? std::string???
                     }
                 }
