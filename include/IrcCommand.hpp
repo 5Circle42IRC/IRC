@@ -9,8 +9,6 @@ class IrcCommand {
 		IrcCommand(IrcDB *db);
 		~IrcCommand();
 
-		const	std::vector<std::string>& getArgs() const; //삭제 예정
-
 		void parsing(std::string message);
 		// void KICK(int clientFd);
 		// void INVITE(int clientFd);

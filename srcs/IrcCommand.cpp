@@ -38,6 +38,3 @@ void Parser::parse(char *ori){
 	command.push_back(comm);
 	checkValidCommand(command);
 }
-
-
-const	std::vector<std::string>& IrcCommand::getArgs() const{} // 삭제예정
