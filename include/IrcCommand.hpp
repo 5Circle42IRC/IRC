@@ -4,16 +4,14 @@
 # include "./IrcDB.hpp"
 # include <vector>
 
-class IrcCommand: protected IrcDB {
+class IrcCommand {
 	public :
-		IrcCommand();
-		virtual ~IrcCommand();
-
-		void	foreach(std::map<int, IrcClient&>& client);
-		void	foreach(std::map<std::string, IrcChannel&> channel);
+		IrcCommand(IrcDB *db);
+		~IrcCommand();
 
 		const	std::vector<std::string>& getArgs() const;
 
+		void parsing(std::string message);
 		// void KICK(int clientFd);
 		// void INVITE(int clientFd);
 
@@ -30,10 +28,13 @@ class IrcCommand: protected IrcDB {
 		// void PONG(int clientFd);
 		// void USER(int clientFd);
 
-	protected:
-		std::vector<std::string>  _args;
-
 	private:
+		IrcCommand();
+
+		IrcDB* 						_db;
+		std::vector<std::string>	_args;
+		std::string 				_command;
+
 		class InvalidArguments: public std::exception {
 			virtual const char *what() const throw();
 		};
