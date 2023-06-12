@@ -40,11 +40,7 @@ OBJDIR		= ./objs
 OBJCMDDIR	= ./objs/command
 SRCS		= main.cpp \
 			  IrcServ.cpp \
-			  IrcClient.cpp \
-			  IrcChannel.cpp \
-			  IrcDB.cpp\
-			  command/IrcCommand.cpp \
-			  command/NICK.cpp
+
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)
