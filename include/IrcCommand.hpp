@@ -22,9 +22,9 @@ class IrcCommand {
 		// void TOPIC(int clientFd);
 		// void MODE(int clientFd);
 
-		// void PART(int clientFd);
-		// void PONG(int clientFd);
-		// void USER(int clientFd);
+		void PART(int clientFd);
+		void PONG(int clientFd);
+		void USER(int clientFd);
 		std::deque<std::string>& getArgs();
 		std::string getCommand();
 

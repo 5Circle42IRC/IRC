@@ -12,7 +12,4 @@ int main(){
 	command.parsing(message);
 	std::cout << command.getCommand() << std::endl;
 	std::cout << command.getArgs()[0] << std::endl;
-
-
-
 }
