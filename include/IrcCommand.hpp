@@ -2,14 +2,14 @@
 # define __IRCCOMMAND_HPP__
 
 # include "./IrcDB.hpp"
-# include <vector>
+# include <deque>
 
 class IrcCommand {
 	public :
 		IrcCommand(IrcDB *db);
 		~IrcCommand();
 
-		const	std::vector<std::string>& getArgs() const;
+		const	std::vector<std::string>& getArgs() const; //삭제 예정
 
 		void parsing(std::string message);
 		// void KICK(int clientFd);
@@ -32,7 +32,7 @@ class IrcCommand {
 		IrcCommand();
 
 		IrcDB* 						_db;
-		std::vector<std::string>	_args;
+		std::deque<std::string>		_args;
 		std::string 				_command;
 
 		class InvalidArguments: public std::exception {
