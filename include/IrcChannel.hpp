@@ -33,7 +33,7 @@ public:
     int getGrant() const;
 
     const std::string& getTopic() const;
-    const std::string& getName() const;
+    std::string& getName();
     const std::string& getPassword() const;
 
     const std::map<int, bool>& getUser() const;

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <utility>
 
 class IrcClient;
 class IrcChannel;

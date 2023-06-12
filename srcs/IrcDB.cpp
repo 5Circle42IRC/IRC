@@ -2,6 +2,7 @@
 #include "../include/IrcClient.hpp"
 #include "../include/IrcChannel.hpp"
 
+
 IrcDB::IrcDB(){}
 IrcDB::~IrcDB(){}
 
@@ -37,7 +38,7 @@ void IrcDB::insertClient(IrcClient *client){
 	_clients[client->getFd()] = client;
 }
 void IrcDB::insertChannel(IrcChannel *channel){
-	_channels[channel->getName()] = channel;
+	_channels.insert(std::pair<std::string, IrcChannel *>(channel->getName(), channel));
 }
 
 void IrcDB::deleteClient(int clientFd){
