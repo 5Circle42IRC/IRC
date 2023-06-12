@@ -1,6 +1,6 @@
 #include "../include/IrcClient.hpp"
 #include <string>
-
+#include <iostream>
 IrcClient::IrcClient(int fd, std::string nickname, std::string password, std::string buffer)
     : _fd(fd), _nickname(nickname), _password(password), _buffer(buffer)
 { }
@@ -95,18 +95,10 @@ void		IrcClient::reduceBuffer(int result)
     return ;
 }
 
-/*
+
 void IrcClient::Display() {
 
 
-    char ipAddrStr1[16];
-    char ipAddrStr2[16];
-    
-    printf ("Irc Client : [%s , %d] connected to [%s, %d]\n", 
-        network_convert_ip_n_to_p(this->ip_addr, ip_addr_str1),
-        (this->port_no),
-        network_convert_ip_n_to_p(this->server_ip_addr, ip_addr_str2),
-        (this->server_port_no)
-        );
+    std::cout << "------------Display -------" << std::endl;
+    std::cout << "Nick : " << getNickname() << std::endl;
 }
- */

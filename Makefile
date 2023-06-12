@@ -4,11 +4,12 @@ TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
 OBJCMDDIR	= ./objs/command
-SRCS		= mainjwee.cpp \
+SRCS		= mainysungwon.cpp \
 			  IrcCommand.cpp \
 			  IrcClient.cpp \
 			  IrcChannel.cpp \
-			  IrcDB.cpp
+			  IrcDB.cpp \
+			  command/NICK.cpp
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)

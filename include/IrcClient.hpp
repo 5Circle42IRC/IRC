@@ -23,6 +23,9 @@ public:
     void setPassword(std::string &newPassword);
     void addBackBuffer(std::string &str);
     void reduceBuffer(int result);
+
+    void Display();
+    
     IrcClient(const IrcClient &copy);
     const IrcClient &operator=(const IrcClient &copy);
 
