@@ -40,7 +40,7 @@ void IrcDB::insertClient(IrcClient *client){
 void IrcDB::insertChannel(IrcChannel *channel){
 	//std::string teststring("tttt");
 	std::string teststring = channel->getName();
-	(_channels).insert(std::make_pair(teststring, (channel)));
+	_channels.insert(std::make_pair(teststring, channel));
 
 }
 

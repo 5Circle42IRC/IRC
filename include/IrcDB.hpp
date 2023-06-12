@@ -25,7 +25,7 @@ public:
 	void deleteClient(int clientFd);
 	void deleteChannel(std::string name);
 private:
-	std::map<std::string& , IrcChannel*> _channels;
+	std::map<std::string , IrcChannel*> _channels;
 	std::map<int, IrcClient *> _clients;
 };
 
