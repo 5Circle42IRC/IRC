@@ -17,7 +17,7 @@ class IrcCommand {
 		void NICK(int clientFd);
 		// void PASS(int clientFd);
 		// void NAME(int clientFd);
-		// void PRIVMSG(int clientFd);
+		void PRIVMSG(int clientFd);
 
 		// void TOPIC(int clientFd);
 		// void MODE(int clientFd);
