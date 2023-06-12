@@ -26,6 +26,7 @@ int main(int argc, char **argv)
         serv.run();
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
+        return -1;
     } catch (...) {
         std::cout << "unkown exception" << std::endl;
     }
