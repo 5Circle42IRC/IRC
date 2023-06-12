@@ -6,18 +6,19 @@
 
 IrcServ::IrcServ(){};
 
-IrcServ::IrcServ(int port, std::string passWord)
-    : _error(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
+void IrcServ::initServAddr()
 {
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
     _servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    _servAddr.sin_port = htons(port);
+    _servAddr.sin_port = htons(_port);
     _servFd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
     if (_servFd == -1)
         throw IrcServ::socketException();
+}
 
+void IrcServ::initSocket()
+{
     _error = fcntl(_servFd, O_NONBLOCK);
     if (_error == -1)
         throw IrcServ::fcntlException();
@@ -33,18 +34,27 @@ IrcServ::IrcServ(int port, std::string passWord)
     _error = listen(_servFd, 5); // 이해  필요.
     if (_error)
         throw IrcServ::listenException();
+
 }
 
-void IrcServ::run()
+IrcServ::IrcServ(int port, std::string passWord)
+    : _error(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
+{ }
+
+void IrcServ::initFd()
 {
     FD_ZERO(&_activeReads);
     FD_ZERO(&_activeWrites);
     FD_SET(_servFd, &_activeReads);
+    _fdMax = _servFd;
+}
 
+void IrcServ::run()
+{
+    initServAddr();
+    initSocket();
     struct timeval timeout;
     int acceptFd;
-
-    _fdMax = _servFd;
 
     while (true)
     {
