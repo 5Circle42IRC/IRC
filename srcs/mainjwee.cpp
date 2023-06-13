@@ -5,11 +5,13 @@
 
 int main(){
 	IrcDB db;
-	std::string message = "NICK juha";
-	IrcClient *juha = new IrcClient(4, "juha", "1234", "");
+	std::string message = "PRIVMSG juha #123,#123";
 	IrcCommand command(&db);
 
 	command.parsing(message);
-	std::cout << command.getCommand() << std::endl;
-	std::cout << command.getArgs()[0] << std::endl;
+
+	std::deque<std::string> ar = command.getArgs();
+	
+	for (std::deque<std::string>::iterator it = ar.begin(); it != ar.end(); it++)
+		std::cout << *it << std::endl;
 }
