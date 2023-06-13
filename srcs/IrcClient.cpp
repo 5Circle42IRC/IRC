@@ -37,6 +37,25 @@ const std::string&	IrcClient::getNickname() const
     return _nickname;
 }
 
+const std::string&	IrcClient::getUsername() const
+{
+    return _username;
+}
+
+const std::string&	IrcClient::getHostname() const
+{
+    return _hostname;
+}
+
+const std::string&	IrcClient::getServername() const
+{
+    return _servername;
+}
+
+const std::string&	IrcClient::getRealname() const
+{
+    return _realname;
+}
 const std::string&	IrcClient::getPassword() const
 {
     return _password;
@@ -101,4 +120,9 @@ void IrcClient::Display() {
 
     std::cout << "------------Display -------" << std::endl;
     std::cout << "Nick : " << getNickname() << std::endl;
+    std::cout << "UserName : " << getUsername() << std::endl;
+    std::cout << "HostName : " << getHostname() << std::endl;
+    std::cout << "ServerName : " << getServername() << std::endl;
+    std::cout << "RealName : " << getRealname() << std::endl;
+
 }

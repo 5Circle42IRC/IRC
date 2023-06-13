@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
 
     c1.Display();
-    
+    c2.Display();
     db.insertClient(&c1);
     db.insertClient(&c2);
     db.insertClient(&c3);
@@ -40,6 +40,13 @@ int main(int argc, char **argv)
     commandHandler.NICK(5);
 
     c1.Display();
-
+    std::cout << "before message2" << std::endl;
+    std::string message2 = "USER yuser yhost yserver yreal";
+    std::cout << "after message2" << std::endl;
+    commandHandler.parsing(message2);
+    std::cout << "after parsing message2" << std::endl;
+    commandHandler.USER(5);
+    std::cout << "after USER message2" << std::endl;
+    c2.Display();
     return 0;
 }

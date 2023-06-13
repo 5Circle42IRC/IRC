@@ -12,6 +12,10 @@ public:
 
     int getFd() const;
     const std::string &getNickname() const;
+    const std::string &getUsername() const;
+    const std::string &getHostname() const;
+    const std::string &getServername() const;
+    const std::string &getRealname() const;
     const std::string &getPassword() const;
     const std::string &getBuffer() const;
 
