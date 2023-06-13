@@ -62,6 +62,16 @@ int main(int argc, char **argv)
     print_users_in_ch(testch);
     std::cout << "not registered client call part" << std::endl;
     commandHandler.PART(8);
+
+    std::string message_part2 = "PART testch";
+    commandHandler.parsing(message_part2);    
+    std::cout << "wrong part name" << std::endl;
+    commandHandler.PART(9);
+
+    std::string message_part3 = "PART #";
+    commandHandler.parsing(message_part3);    
+    std::cout << "only #" << std::endl;
+    commandHandler.PART(9);    
     
 /*
     c1.Display();
