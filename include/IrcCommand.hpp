@@ -4,6 +4,8 @@
 # include "./IrcDB.hpp"
 # include <deque>
 
+//_clientFd 또는 _clientPtr을 멤버변수로 추가하는 건에 대하여...
+
 class IrcCommand {
 	public :
 		IrcCommand(IrcDB *db);
@@ -29,6 +31,8 @@ class IrcCommand {
 		std::deque<std::string>& getArgs();
 		std::string getCommand();
 
+
+
 	private:
 		IrcCommand();
 
@@ -36,13 +40,18 @@ class IrcCommand {
 		std::deque<std::string>		_args;
 		std::string 				_command;
 
+		void joinChannel(std::map<std::string, std::string>& keypair, int clientFd);
+
 		class InvalidArguments: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class wrongPassword: public std::exception {
+		
+		class ERR_INVALIDPASSWORD: public std::exception {
 			virtual const char *what() const throw();
-		}
-
+		};
+		class ERR_USERONCHANNEL: public std::exception {
+			virtual const char *what() const throw();
+		};
 };
 
 #endif
