@@ -22,8 +22,8 @@ const IrcChannel& IrcChannel::operator=(const IrcChannel& copy){
 void IrcChannel::addUser(const int clientFd) {
 	_user[clientFd] = false;
 }
-void IrcChannel::deleteUser(const int target) {
-    _user.erase(target);
+bool IrcChannel::deleteUser(const int target) {
+    return _user.erase(target);
 }
 bool IrcChannel::isJoinedUser(const int clientFd) const {
     return _user.count(clientFd) != 0;

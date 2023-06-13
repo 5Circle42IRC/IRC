@@ -36,5 +36,3 @@ test/
 .vscode/
 
 mycommands.cpp
-
-main.cpp
