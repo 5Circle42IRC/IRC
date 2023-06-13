@@ -14,7 +14,11 @@ SRCS		= mainysungwon.cpp \
 			  command/JOIN.cpp \
 			  command/PART.cpp \
 			  command/PRIVMSG.cpp \
+<<<<<<< Updated upstream
 			  command/TOPIC.cpp
+=======
+			  command/INVITE.cpp
+>>>>>>> Stashed changes
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)

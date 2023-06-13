@@ -21,6 +21,7 @@ class IrcCommand {
 
 		void TOPIC(int clientFd);
 		// void MODE(int clientFd);
+		void INVITE(int clientFd);
 
 		void PART(int clientFd);
 		void PONG(int clientFd);
