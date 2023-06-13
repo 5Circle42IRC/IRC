@@ -10,7 +10,7 @@ typedef enum
     M_INVITE = 2,
     M_TOPIC = 4,
     M_KEY = 8,
-    M-LIMIT = 16,
+    M_LIMIT = 16,
 }typeMode;
 
 class IrcChannel
