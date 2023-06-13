@@ -3,8 +3,6 @@
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {}
 IrcCommand::~IrcCommand(){}
 
-static void PRIVMSG(){}
-
 void IrcCommand::parsing(std::string message){
 	int		start;
 	int		end;
@@ -26,6 +24,7 @@ void IrcCommand::parsing(std::string message){
 }
 
 std::deque<std::string>& IrcCommand::getArgs(){ return _args; }
-std::string IrcCommand::getCommand(){return _command;}
+std::string IrcCommand::getCommand(){ return _command; }
 
-const char* IrcCommand::wrongPassword::what() const throw() { return "ERR_INVALIDPASSWORD"; }
+const char* IrcCommand::ERR_INVALIDPASSWORD::what() const throw() { return "ERR_INVALIDPASSWORD"; }
+const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }

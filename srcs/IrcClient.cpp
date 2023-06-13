@@ -108,6 +108,13 @@ void		IrcClient::addBackBuffer(const std::string& str)
     return ;
 }
 
+void        IrcClient::addBackCarriageBuffer(const std::string&str)
+{
+    _buffer = str;
+    _buffer = _buffer + "\r\n";
+    return ;
+}
+
 void		IrcClient::reduceBuffer(int result)
 {
     (void)result;
