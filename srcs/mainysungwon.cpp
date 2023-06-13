@@ -43,13 +43,15 @@ int main(int argc, char **argv)
         db.insertClient(&c3);
         db.insertClient(&c4);
         db.insertClient(&c5);
-
+        std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
         std::string message_ch = "JOIN #testch";
         commandHandler.parsing(message_ch);
         commandHandler.JOIN(5);
         commandHandler.JOIN(6);
         commandHandler.JOIN(7);
+        std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
 /*
+        ""
         ////////////////PART test/////////////////
 
 
@@ -126,12 +128,22 @@ int main(int argc, char **argv)
     /////////////////////////PRIVMSG test///////////////////
 
     
+    ////wrong target name : #testch
+    /*
     std::string message_PRIVMSG = "PRIVMSG #testch testmsg";
     c2.Display();
     commandHandler.parsing(message_PRIVMSG);
     commandHandler.PRIVMSG(6);
     c2.Display();
     
+    ////goood target name : ysungwon1
+*/
+    std::string message_PRIVMSG2 = "PRIVMSG ysungwon1 testmsg";
+    c2.Display();
+    commandHandler.parsing(message_PRIVMSG2);
+    commandHandler.PRIVMSG(6);
+    std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
+    c2.Display();    
     }
    catch (const std::exception& e)
     {

@@ -11,4 +11,8 @@ void IrcCommand::PRIVMSG(int clientfd){
     IrcClient *client = _db->findClientByName(firstArg);
     std::cout << "client fd : <" << client->getFd() << ">  nickname : <" << client->getNickname() << ">" << std::endl;
 
+
+    //:Angel PRIVMSG Wiz :Hello are you receiving this message ?
+    std::cout << client->getBuffer() << std::endl;
+    client->addBackBuffer(":" + client->getNickname() + " PRIVMSG " + client->getNickname() + " :" + msg);
 }

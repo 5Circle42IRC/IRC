@@ -15,7 +15,7 @@ IrcClient* IrcDB::findClientByName(std::string name){
 			if (it->second->getNickname() == name)
 				return it->second; 
 		}
-	return NULL;
+	throw std::exception();
 }
 IrcClient* IrcDB::findClientByFd(int clientFd){
 	std::map<int, IrcClient *>::iterator it = _clients.find(clientFd);

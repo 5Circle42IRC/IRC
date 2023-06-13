@@ -19,7 +19,7 @@ class IrcCommand {
 		// void NAME(int clientFd);
 		void PRIVMSG(int clientFd);
 
-		// void TOPIC(int clientFd);
+		void TOPIC(int clientFd);
 		// void MODE(int clientFd);
 
 		void PART(int clientFd);
