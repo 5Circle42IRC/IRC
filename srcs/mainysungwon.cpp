@@ -50,12 +50,13 @@ int main(int argc, char **argv)
         commandHandler.JOIN(6);
         commandHandler.JOIN(7);
         std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
-        std::string message_PRIVMSG2 = "PRIVMSG ysungwon1 testmsg";
-        c2.Display();
-        commandHandler.parsing(message_PRIVMSG2);
-        commandHandler.PRIVMSG(6);
-        std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
-        c2.Display();    
+
+    std::string message_PRIVMSG2 = "PRIVMSG ysungwon1 testmsg";
+    c2.Display();
+    commandHandler.parsing(message_PRIVMSG2);
+    commandHandler.PRIVMSG(6);
+    std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
+    c2.Display();    
     }
    catch (const std::exception& e)
     {

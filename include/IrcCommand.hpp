@@ -38,6 +38,9 @@ class IrcCommand {
 		class InvalidArguments: public std::exception {
 			virtual const char *what() const throw();
 		};
+		class wrongPassword: public std::exception {
+			virtual const char *what() const throw();
+		}
 
 };
 

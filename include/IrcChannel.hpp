@@ -6,11 +6,11 @@
 
 typedef enum 
 {
-    OPERATOR = 1,
-    INVITE = 2,
-    TOPIC = 4,
-    KEY = 8,
-    LIMIT = 16,
+    M_OPERATOR = 1,
+    M_INVITE = 2,
+    M_TOPIC = 4,
+    M_KEY = 8,
+    M-LIMIT = 16,
 }typeMode;
 
 class IrcChannel
