@@ -13,7 +13,17 @@ static void errorHandle(std::string message, int exitCode)
     std::cout << message << std::endl;
     exit(exitCode);
 }
-
+void print_users_in_ch(IrcChannel* testch)
+{
+    std::map<int, bool> users = testch->getUser();
+    std::map<int, bool>::iterator it;
+    for (it = users.begin();
+        it != users.end();
+        it++)    
+        {
+            std::cout << "it->first : <" << it->first << ">" << std::endl;
+        }
+}
 
 int main(int argc, char **argv)
 {
@@ -44,18 +54,12 @@ int main(int argc, char **argv)
     commandHandler.JOIN(7);
 
     IrcChannel* testch = db.findChannel("#testch");
-    std::map<int, bool> users = testch->getUser();
-    std::map<int, bool>::iterator it;
-    for (it = users.begin();
-        it != users.end();
-        it++)    
-        {
-            std::cout << "it->first : <" << it->first << ">" << std::endl;
-        }
-
+    print_users_in_ch(testch);
     std::string message_part = "PART #testch";
     commandHandler.parsing(message_part);
-    //commandHandler.PART(5);
+    commandHandler.PART(5);
+    std::cout << "after client5 exit #testch" << std::endl;
+    print_users_in_ch(testch);
 
     
 /*
