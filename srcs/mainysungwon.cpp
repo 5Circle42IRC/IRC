@@ -14,39 +14,76 @@ static void errorHandle(std::string message, int exitCode)
     exit(exitCode);
 }
 
+
 int main(int argc, char **argv)
 {
     
     IrcDB      db;
     IrcCommand commandHandler(&db);
-    std::string message = "NICK ytyy";
 
-    commandHandler.parsing(message);
     IrcClient c1(5, "ysungwon1", "password", "");
     IrcClient c2(6, "ysungwon2", "password", "");
     IrcClient c3(7, "ysungwon3", "password", "");
     IrcClient c4(8, "ysungwon4", "password", "");
     IrcClient c5(9, "ysungwon5", "password", "");
-
-
-    c1.Display();
-    c2.Display();
     db.insertClient(&c1);
     db.insertClient(&c2);
     db.insertClient(&c3);
     db.insertClient(&c4);
     db.insertClient(&c5);
 
-    commandHandler.NICK(5);
 
+    IrcChannel ch1("testchannel1");
+    IrcChannel ch2("testchannel2");
+
+    std::string message_ch = "JOIN #testch";
+    commandHandler.parsing(message_ch);
+    commandHandler.JOIN(5);
+    std::cout << "c1 getbuffer : <" << c1.getBuffer() << ">" << std::endl;
+    commandHandler.JOIN(6);
+    commandHandler.JOIN(7);
+
+    IrcChannel* testch = db.findChannel("#testch");
+    std::map<int, bool> users = testch->getUser();
+    std::map<int, bool>::iterator it;
+    for (it = users.begin();
+        it != users.end();
+        it++)    
+        {
+            std::cout << "it->first : <" << it->first << ">" << std::endl;
+        }
+
+    std::string message_part = "PART #testch";
+    commandHandler.parsing(message_part);
+    //commandHandler.PART(5);
+
+    
+/*
     c1.Display();
-    std::cout << "before message2" << std::endl;
+    std::string message = "NICK ytyys";
+    commandHandler.parsing(message);
+    commandHandler.NICK(5);
+    c1.Display();
+
+    std::string message3 = "NICK nictest sdgsdg";
+    c3.Display();
+    commandHandler.parsing(message3);
+    commandHandler.NICK(7);
+    c3.Display();
+
     std::string message2 = "USER yuser yhost yserver yreal";
-    std::cout << "after message2" << std::endl;
-    commandHandler.parsing(message2);
-    std::cout << "after parsing message2" << std::endl;
-    commandHandler.USER(5);
-    std::cout << "after USER message2" << std::endl;
     c2.Display();
+    commandHandler.parsing(message2);
+    commandHandler.USER(6);
+    c2.Display();
+    
+    std::string message4 = "NICK hanmool";
+    commandHandler.parsing(message4);
+    commandHandler.NICK(6);
+    c2.Display();
+*/
+
+
+
     return 0;
 }

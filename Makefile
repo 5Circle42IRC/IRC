@@ -10,7 +10,8 @@ SRCS		= mainysungwon.cpp \
 			  IrcChannel.cpp \
 			  IrcDB.cpp \
 			  command/NICK.cpp \
-			  command/USER.cpp
+			  command/USER.cpp \
+			  command/JOIN.cpp
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)
