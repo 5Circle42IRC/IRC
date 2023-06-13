@@ -1,8 +1,10 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
+#include "../../include/IrcClient.hpp"
 
 void IrcCommand::JOIN(int clientFd) {
 	IrcChannel *channel;
+	IrcClient *client = _db->findClientByFd(clientFd);
 	//인자 개수 확인 (오류시 throw invalid error)
 	try {
 		channel =_db->findChannel(_args[0]);
@@ -14,4 +16,5 @@ void IrcCommand::JOIN(int clientFd) {
 		_db->insertChannel(channel);
 	}
 	channel->addUser(clientFd);
+	client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
 }

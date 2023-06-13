@@ -102,9 +102,9 @@ void		IrcClient::setPassword(std::string& newPassword)
     return ;
 }
 
-void		IrcClient::addBackBuffer(std::string& str)
+void		IrcClient::addBackBuffer(const std::string& str)
 {
-    (void)str;
+    _buffer = str;
     return ;
 }
 

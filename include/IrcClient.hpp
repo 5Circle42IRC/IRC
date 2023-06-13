@@ -25,7 +25,7 @@ public:
     void setServername(std::string &newServername);
     void setRealname(std::string &newRealname);
     void setPassword(std::string &newPassword);
-    void addBackBuffer(std::string &str);
+    void addBackBuffer(const std::string &str);
     void reduceBuffer(int result);
 
     void Display();
