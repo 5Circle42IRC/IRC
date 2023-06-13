@@ -21,7 +21,7 @@ public:
     const IrcChannel& operator=(const IrcChannel& copy);
     ~IrcChannel();
     void addUser(const int clientFd);
-    void deleteUser(const int target);
+    bool deleteUser(const int target);
     bool isJoinedUser(const int clientFd) const;
 
     void setGrant(typeMode grant, bool on);
