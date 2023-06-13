@@ -4,16 +4,14 @@
 
 //다중 join 로직 필요함 -> 파서에서 해결
 
-
-static void joinChannel(IrcDB *_db, const std::string& name, const std::string& key, int clientFd) {
-
+void IrcCommand::JOIN(int clientFd){
 	IrcChannel *channel;
 	IrcClient *client = _db->findClientByFd(clientFd);
 	//인자 개수 확인 (오류시 throw invalid error)
 	try {
-		channel =_db->findChannel(name);
+		channel =_db->findChannel(_args[0]);
 	} catch(std::exception &e){
-		channel = new IrcChannel(name);
+		channel = new IrcChannel(_args[0]);
 		channel->addUser(clientFd);
 		channel->setGrant(OPERATOR, 1);
 		channel->setOperator(clientFd, clientFd);
@@ -21,11 +19,4 @@ static void joinChannel(IrcDB *_db, const std::string& name, const std::string& 
 	}
 	channel->addUser(clientFd);
 	client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
-}
-
-void IrcCommand::JOIN(int clientFd){
-	for(int i = 0; i < _args.size() / 2; i++){
-		
-	}
-
 }
