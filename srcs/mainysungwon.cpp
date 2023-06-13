@@ -43,18 +43,14 @@ int main(int argc, char **argv)
         db.insertClient(&c3);
         db.insertClient(&c4);
         db.insertClient(&c5);
-
-
-        IrcChannel ch1("testchannel1");
-        IrcChannel ch2("testchannel2");
-
+/*
         std::string message_ch = "JOIN #testch";
         commandHandler.parsing(message_ch);
         commandHandler.JOIN(5);
-        std::cout << "c1 getbuffer : <" << c1.getBuffer() << ">" << std::endl;
         commandHandler.JOIN(6);
         commandHandler.JOIN(7);
 
+        std::cout << "c1 getbuffer : <" << c1.getBuffer() << ">" << std::endl;
         std::cout << "find #testch" << std::endl;
         IrcChannel* testch = db.findChannel("#testch");
         std::cout << " print user in ch testch" << std::endl;
@@ -76,7 +72,13 @@ int main(int argc, char **argv)
         commandHandler.parsing(message_part3);    
         std::cout << "only #" << std::endl;
         commandHandler.PART(9);    
-        
+*/
+
+        c1.Display();
+        std::string message = "NICK ysungwon2";
+        commandHandler.parsing(message);
+        commandHandler.NICK(5);
+        c1.Display();        
     /*
         c1.Display();
         std::string message = "NICK ytyys";

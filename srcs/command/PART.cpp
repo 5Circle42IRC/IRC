@@ -27,26 +27,18 @@ static int checkValidPART(std::deque<std::string>		args)
 }
 
 void IrcCommand::PART(int clientFd){
-    try
-    {
-        IrcChannel *channel;
-        IrcClient *client;
-        std::string chname = _args[0]; 
+    IrcChannel *channel;
+    IrcClient *client;
+    std::string chname = _args[0]; 
 
-        client = _db->findClientByFd(clientFd);
-        channel =_db->findChannel(chname);
-        if (checkValidPART(_args))//check chname valid
-        {
-            channel = _db->findChannel(chname);
-            if (channel->deleteUser(clientFd) == false)
-                throw std::exception();
-        }
-        client->addBackBuffer(client->getNickname() + ": PART " + channel->getName());
-        return ;
-    }
-    catch (const std::exception& e)
+    client = _db->findClientByFd(clientFd);
+    channel =_db->findChannel(chname);
+    if (checkValidPART(_args))//check chname valid
     {
-        std::cout << "Exception in PART: < " << e.what() << ">" << std::endl;
-        return ;
-    }   
+        channel = _db->findChannel(chname);
+        if (channel->deleteUser(clientFd) == false)
+            throw std::exception();
+    }
+    client->addBackBuffer(client->getNickname() + ": PART " + channel->getName());
+    return ;
 }
