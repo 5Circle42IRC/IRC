@@ -43,12 +43,16 @@ int main(int argc, char **argv)
         db.insertClient(&c3);
         db.insertClient(&c4);
         db.insertClient(&c5);
-/*
+
         std::string message_ch = "JOIN #testch";
         commandHandler.parsing(message_ch);
         commandHandler.JOIN(5);
         commandHandler.JOIN(6);
         commandHandler.JOIN(7);
+/*
+        ////////////////PART test/////////////////
+
+
 
         std::cout << "c1 getbuffer : <" << c1.getBuffer() << ">" << std::endl;
         std::cout << "find #testch" << std::endl;
@@ -74,12 +78,18 @@ int main(int argc, char **argv)
         commandHandler.PART(9);    
 */
 
+/*   
+        ////////////////////////NICK test//////////////////////
+
+        ////same nick test/////
         c1.Display();
         std::string message = "NICK ysungwon2";
         commandHandler.parsing(message);
         commandHandler.NICK(5);
         c1.Display();        
-    /*
+ 
+        
+        ////nick working test///
         c1.Display();
         std::string message = "NICK ytyys";
         commandHandler.parsing(message);
@@ -92,6 +102,14 @@ int main(int argc, char **argv)
         commandHandler.NICK(7);
         c3.Display();
 
+
+
+*/
+
+
+/*
+        /////////////////////USER test/////////////////
+
         std::string message2 = "USER yuser yhost yserver yreal";
         c2.Display();
         commandHandler.parsing(message2);
@@ -102,9 +120,19 @@ int main(int argc, char **argv)
         commandHandler.parsing(message4);
         commandHandler.NICK(6);
         c2.Display();
-    */
+*/
 
-    } 
+
+    /////////////////////////PRIVMSG test///////////////////
+
+    
+    std::string message_PRIVMSG = "PRIVMSG #testch testmsg";
+    c2.Display();
+    commandHandler.parsing(message_PRIVMSG);
+    commandHandler.PRIVMSG(6);
+    c2.Display();
+    
+    }
    catch (const std::exception& e)
     {
         //std::fprintf(stderr, "Error: %s\n", e.what());
