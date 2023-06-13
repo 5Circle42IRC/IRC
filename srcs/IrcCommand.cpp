@@ -14,7 +14,6 @@ void IrcCommand::parsing(std::string message){
 	for (end; end != -1; end = message.find(delim)){
 		_args.push_back(message.substr(start, end));
 		message.erase(start, end + 1);
-		start = end + 1;
 	} 
 	_args.push_back(message);
 	_command = _args[0];
