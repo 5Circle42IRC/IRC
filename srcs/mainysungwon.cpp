@@ -60,7 +60,8 @@ int main(int argc, char **argv)
     commandHandler.PART(5);
     std::cout << "after client5 exit #testch" << std::endl;
     print_users_in_ch(testch);
-
+    std::cout << "not registered client call part" << std::endl;
+    commandHandler.PART(8);
     
 /*
     c1.Display();
