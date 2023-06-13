@@ -50,100 +50,12 @@ int main(int argc, char **argv)
         commandHandler.JOIN(6);
         commandHandler.JOIN(7);
         std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
-/*
-        ""
-        ////////////////PART test/////////////////
-
-
-
-        std::cout << "c1 getbuffer : <" << c1.getBuffer() << ">" << std::endl;
-        std::cout << "find #testch" << std::endl;
-        IrcChannel* testch = db.findChannel("#testch");
-        std::cout << " print user in ch testch" << std::endl;
-        print_users_in_ch(testch);
-        std::string message_part = "PART #testch";
-        commandHandler.parsing(message_part);
-        commandHandler.PART(5);
-        std::cout << "after client5 exit #testch" << std::endl;
-        print_users_in_ch(testch);
-        std::cout << "not registered client call part" << std::endl;
-        commandHandler.PART(8);
-
-        std::string message_part2 = "PART testch";
-        commandHandler.parsing(message_part2);    
-        std::cout << "wrong part name" << std::endl;
-        commandHandler.PART(9);
-
-        std::string message_part3 = "PART #";
-        commandHandler.parsing(message_part3);    
-        std::cout << "only #" << std::endl;
-        commandHandler.PART(9);    
-*/
-
-/*   
-        ////////////////////////NICK test//////////////////////
-
-        ////same nick test/////
-        c1.Display();
-        std::string message = "NICK ysungwon2";
-        commandHandler.parsing(message);
-        commandHandler.NICK(5);
-        c1.Display();        
- 
-        
-        ////nick working test///
-        c1.Display();
-        std::string message = "NICK ytyys";
-        commandHandler.parsing(message);
-        commandHandler.NICK(5);
-        c1.Display();
-
-        std::string message3 = "NICK nictest sdgsdg";
-        c3.Display();
-        commandHandler.parsing(message3);
-        commandHandler.NICK(7);
-        c3.Display();
-
-
-
-*/
-
-
-/*
-        /////////////////////USER test/////////////////
-
-        std::string message2 = "USER yuser yhost yserver yreal";
+        std::string message_PRIVMSG2 = "PRIVMSG ysungwon1 testmsg";
         c2.Display();
-        commandHandler.parsing(message2);
-        commandHandler.USER(6);
-        c2.Display();
-        
-        std::string message4 = "NICK hanmool";
-        commandHandler.parsing(message4);
-        commandHandler.NICK(6);
-        c2.Display();
-*/
-
-
-    /////////////////////////PRIVMSG test///////////////////
-
-    
-    ////wrong target name : #testch
-    /*
-    std::string message_PRIVMSG = "PRIVMSG #testch testmsg";
-    c2.Display();
-    commandHandler.parsing(message_PRIVMSG);
-    commandHandler.PRIVMSG(6);
-    c2.Display();
-    
-    ////goood target name : ysungwon1
-*/
-    std::string message_PRIVMSG2 = "PRIVMSG ysungwon1 testmsg";
-    c2.Display();
-    commandHandler.parsing(message_PRIVMSG2);
-    commandHandler.PRIVMSG(6);
-    std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
-    c2.Display();    
+        commandHandler.parsing(message_PRIVMSG2);
+        commandHandler.PRIVMSG(6);
+        std::cout << "c2.buffer : <" << c2.getBuffer() << ">" << std::endl;
+        c2.Display();    
     }
    catch (const std::exception& e)
     {

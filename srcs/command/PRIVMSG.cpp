@@ -16,11 +16,12 @@ void IrcCommand::PRIVMSG(int clientfd){
 
 
     //:Angel PRIVMSG Wiz :Hello are you receiving this message ?
-    std::cout << "client buffer : <" << client->getBuffer() << ">" << std::endl;
-    std::cout << "target buffer : <" << target->getBuffer() << ">" << std::endl;
+    std::cout << "bf client buffer : <" << client->getBuffer() << ">" << std::endl;
+    std::cout << "bf target buffer : <" << target->getBuffer() << ">" << std::endl;
     target->addBackBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
 
     //PRIVMSG Angel :
     client->addBackBuffer("PRIVMSG " + target->getNickname() + " :" + msg);
-
+    std::cout << "af client buffer : <" << client->getBuffer() << ">" << std::endl;
+    std::cout << "af target buffer : <" << target->getBuffer() << ">" << std::endl;
 }

@@ -3,18 +3,24 @@
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {}
 IrcCommand::~IrcCommand(){}
 
+static void PRIVMSG(){}
+
 void IrcCommand::parsing(std::string message){
-	size_t		start;
-	size_t		end;
-	std::string	delim = " ";
+	int		start;
+	int		end;
+	std::string	delim = " ,\t\n\v\f\r";
 
 	_args.clear();
-	end = message.find(delim);
-	start = 0;
-	for (end; end != -1; end = message.find(delim)){
-		_args.push_back(message.substr(start, end));
+	end = message.find_first_of(delim);
+	for (end; end != -1; end = message.find_first_of(delim)){
+		_args.push_back(message.substr(0, end));
 		message.erase(start, end + 1);
-	} 
+		if (_args[0] == "PRIVMSG"){
+			_args[1] = message;
+			break;
+		}
+			
+	}
 	_args.push_back(message);
 	_command = _args[0];
 	_args.pop_front();
