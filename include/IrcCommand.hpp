@@ -13,7 +13,7 @@ class IrcCommand {
 		// void KICK(int clientFd);
 		// void INVITE(int clientFd);
 
-		// void JOIN(int clientFd);
+		void JOIN(int clientFd);
 		void NICK(int clientFd);
 		// void PASS(int clientFd);
 		// void NAME(int clientFd);
