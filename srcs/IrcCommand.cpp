@@ -63,18 +63,19 @@ void IrcCommand::parsing(std::string message){
 	int		end;
 	std::string	delim = " ,\t\n\v\f\r";
 
+	if (message.size() > 512)
+		throw ERR_OUT_OF_BOUND_MESSAGE();
 	_args.clear();
+	message.erase(0, message.find_first_not_of(delim));
+	std::cout << "message after whitespace: " << message << std::endl;
 	for (end = message.find_first_of(delim); end != -1; end = message.find_first_of(delim)){
 		_args.push_back(message.substr(0, end));
 		message.erase(start, end + 1);
-		if (_args[0] == "PRIVMSG"){
-			_args[1] = message;
-			break;
-		}
-			
 	}
 	_args.push_back(message);
 	_command = _args[0];
+	std::cout << "command: " << _command << std::endl;
+	std::cout << "args:" << _args[0] << "abd" << std::endl;
 	_args.pop_front();
 	checkRunCMD();
 }
