@@ -16,7 +16,9 @@ void IrcCommand::joinChannel(std::map<std::string, std::string>& keypair){
 		channel->setOperator(_clientFd, _clientFd);
 		if (key.size() != 0)
 			channel->setPassword(key);
+		_db->insertChannel(channel);
 		client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
+		return ;
 	}
 	if (channel->isJoinedUser(_clientFd))
 			throw ERR_USER_ON_CHANNEL();

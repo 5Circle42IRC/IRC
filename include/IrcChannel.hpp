@@ -51,7 +51,7 @@ protected:
 
 private:
 
-    class InvalidGrant {
+    class InvalidGrant : public std::exception {
         public:
             virtual const char *what() const throw();
     };

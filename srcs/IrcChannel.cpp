@@ -39,8 +39,10 @@ void IrcChannel::setGrant(typeMode grant, bool on) {
 }
 
 void IrcChannel::setOperator(const int clientFd, const int target) {
-    if (_user.size() == 0)
+    if (_user.size() == 1 && isJoinedUser(clientFd)) {
         _user[target] = true;
+        return ;
+    }
     if (isOperator(clientFd))
         _user[target] = true;
 }
