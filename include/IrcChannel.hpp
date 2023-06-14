@@ -6,7 +6,6 @@
 
 typedef enum 
 {
-    M_OPERATOR = 1,
     M_INVITE = 2,
     M_TOPIC = 4,
     M_KEY = 8,

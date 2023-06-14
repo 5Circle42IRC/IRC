@@ -65,6 +65,9 @@ class IrcCommand {
 		class ERR_INVALID_COMMAND: public std::exception {
 			virtual const char *what() const throw();
 		};
+		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
+			virtual const char *what() const throw();
+		};
 };
 
 #endif
