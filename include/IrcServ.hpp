@@ -44,7 +44,7 @@ private:
     struct timeval _timeout;
 
     bool initSelect();
-    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen);
+    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd);
 
 

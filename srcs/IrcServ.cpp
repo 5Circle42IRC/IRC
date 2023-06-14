@@ -68,13 +68,14 @@ bool IrcServ::initSelect()
     return false;
 }
 
-bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen)
+bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db)
 {
     std::memset(&clientAddr, 0, sizeof(clientAddr));
     clientAddrLen = sizeof(clientAddr);
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
         return false;
+    db.insertClient(new IrcClient(acceptFd, "", "", ""));
     send(acceptFd, "input password : ", 17, 0);
     FD_SET(acceptFd, &_activeReads);
     FD_SET(acceptFd, &_activeWrites);
@@ -112,7 +113,7 @@ void IrcServ::run()
             {
                 if (clientFd == _servFd)
                 {
-                    if (!acceptClient(acceptFd, clientAddr, clientAddrLen))
+                    if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
                         continue ;
                 }
                 else
