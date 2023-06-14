@@ -53,10 +53,18 @@ int main(int argc, char **argv)
         
         db.insertClient(&c1);
         db.insertClient(&c2);
-        std::string message = "abcd";
+        std::string message = "JOIN #123";
         commandHandler.setClientFd(5).parsing(message);
         commandHandler.setClientFd(6).parsing(message);
         print_users_in_ch_name(&db, "#123");
+
+        std::string message_mode = "MODE #123 -o ysungwon2";
+        std::cout << "before MODE" << std::endl;
+        commandHandler.setClientFd(5).parsing(message_mode);
+        std::cout << "after MODE" << std::endl;
+        print_users_in_ch_name(&db, "#123");
+
+
     } catch (std::exception &e){
         std::cout << e.what() << std::endl;
     }
