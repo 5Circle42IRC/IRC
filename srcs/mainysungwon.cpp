@@ -53,10 +53,12 @@ int main(int argc, char **argv)
         
         db.insertClient(&c1);
         db.insertClient(&c2);
-        std::string message = "abcd";
-        commandHandler.setClientFd(5).parsing(message);
-        commandHandler.setClientFd(6).parsing(message);
-        print_users_in_ch_name(&db, "#123");
+        std::string message = "JOIN #123 1234\nJOIN #abc 1234";
+       commandHandler.setClientFd(5).parsing(message);
+    //    std::string message2 = "JOIN #123 1234\nJOIN #abc abcd";
+    //    commandHandler.setClientFd(6).parsing(message);
+    //    print_users_in_ch_name(&db, "#123");
+    //    print_users_in_ch_name(&db, "#abc");
     } catch (std::exception &e){
         std::cout << e.what() << std::endl;
     }

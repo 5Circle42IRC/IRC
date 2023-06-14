@@ -49,35 +49,40 @@ void IrcCommand::checkRunCMD(){
 			it != _commandNames.end(); it++) {
 		if (*it == _command){
 			(this->*_commandPointers[index])();
-			std::cout << "here" << "inside 2" <<std::endl;
 			return ;
 		}
 		index++;
 	}
 	throw ERR_INVALID_COMMAND();
-
 }
 
 void IrcCommand::parsing(std::string message){
-	int		start;
+	int		start = 0;
 	int		end;
-	std::string	delim = " ,\t\n\v\f\r";
+	std::vector<std::string> multiCmd;
+	std::string	delim = " ,\t\v\f";
+	std::string endl = "\n\r";
 
 	if (message.size() > 512)
 		throw ERR_OUT_OF_BOUND_MESSAGE();
-	_args.clear();
 	message.erase(0, message.find_first_not_of(delim));
-	std::cout << "message after whitespace: " << message << std::endl;
-	for (end = message.find_first_of(delim); end != -1; end = message.find_first_of(delim)){
-		_args.push_back(message.substr(0, end));
-		message.erase(start, end + 1);
+	// 다중메세지 개행, 캐리지리턴 기준으로 나누기 (동작 확인)
+	for (end = message.find_first_of(endl); end != -1; end = message.find_first_of(endl)){
+		multiCmd.push_back(message.substr(0, end));
+		message.erase(0, end + 1);
 	}
-	_args.push_back(message);
-	_command = _args[0];
-	std::cout << "command: " << _command << std::endl;
-	std::cout << "args:" << _args[0] << "abd" << std::endl;
-	_args.pop_front();
-	checkRunCMD();
+	multiCmd.push_back(message);
+	for (std::vector<std::string>::iterator it = multiCmd.begin(); it != multiCmd.end(); it++){
+		_args.clear();
+		for (end = it->find_first_of(delim); end != -1; end = it->find_first_of(delim)){
+			_args.push_back(it->substr(0, end));
+			it->erase(0, end + 1);
+		}
+		_args.push_back(*it);
+		_command = _args[0];
+		_args.pop_front();
+		checkRunCMD();		
+	}
 }
 
 std::deque<std::string>& IrcCommand::getArgs(){ return _args; }
