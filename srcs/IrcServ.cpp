@@ -3,11 +3,20 @@
 #include <arpa/inet.h>
 #include <cstring>
 #include <unistd.h>
+#include <string>
 #include <iostream>
 
 IrcServ::IrcServ(){};
 IrcServ::IrcServ(int port, std::string passWord)
-    : _error(0), _port(port), _passWord(passWord), _servFd(0), _fdMax(3), _fdNum(0), _opt(1)
+    : _error(0)
+    , _port(port)
+    , _passWord(passWord)
+    , _servFd(0)
+    , _fdMax(3)
+    , _fdNum(0)
+    , _opt(1)
+    , _readLen(0)
+    , _writeLen(0)
 { }
 
 int IrcServ::on()
@@ -81,13 +90,14 @@ void IrcServ::deleteClient(int fd)
     close(fd);
 }
 
+//password 로직, client에 패스워드 불을 넣기
 void IrcServ::run()
 {
     int acceptFd(0);
-    int readLen(0);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen;
-    //DB선언 DB db;
+    IrcDB db; //DB선언 DB db;
+    IrcCommand command(&db);
 
     while (42)
     {
@@ -108,19 +118,19 @@ void IrcServ::run()
                 else
                 {
                     memset(_message, 0, sizeof(_message));
-                    readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
+                    _readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
+                    if (_readLen == -1)
+                    {
+                        std::cerr << "failed recv" << std::endl;
+                        continue;
+                    }
 
-                    if (readLen == 1) 
-                        continue ;
-                    else if (readLen > 1) 
-                        _message[readLen - 1] = '\0';
+                    // std::string test(_message);
+                    // std::cerr << "_message : " << _message << std::endl;
+                    // std::cerr << "_message len : " << test.length()  << std::endl;
+                    // std::cerr << "_message readlen : " << _readLen << std::endl;
 
-                    std::string test(_message);
-                    std::cerr << "_message : " << _message << std::endl;
-                    std::cerr << "_message len : " << test.length()  << std::endl;
-                    std::cerr << "_message readlen : " << readLen << std::endl;
-
-                    if (readLen == 0)
+                    if (_readLen == 0)
                     {
                         deleteClient(clientFd);
                     }
@@ -131,10 +141,25 @@ void IrcServ::run()
                             deleteClient(clientFd);
                             continue;
                         }
-                        // xcommand자리
+                        try {
+                            command.setClientFd(clientFd);
+                            command.parsing(_message);
+                        } catch (std::exception& e){
+                            db.findClientByFd(clientFd)->addBackBuffer(e.what());
+                        }
                         std::cout << _message << std::endl; // char??? std::string???
                     }
                 }
+            }
+            else
+            {
+                if (db.findClientByFd(clientFd)->getBuffer().size() == 0)
+                    continue;
+                _writeLen = send(clientFd
+                                , db.findClientByFd(clientFd)->getBuffer().c_str()
+                                , db.findClientByFd(clientFd)->getBuffer().size()
+                                , 0);
+                db.findClientByFd(clientFd)->reduceBuffer(_writeLen);
             }
         }
     }
