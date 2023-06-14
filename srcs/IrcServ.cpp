@@ -107,6 +107,7 @@ void IrcServ::run()
                 }
                 else
                 {
+                    memset(_message, 0, sizeof(_message));
                     readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
 
                     if (readLen == 1) 

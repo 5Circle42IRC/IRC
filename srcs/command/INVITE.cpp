@@ -3,21 +3,21 @@
 #include "../../include/IrcClient.hpp"
 
 #include <string>
-void IrcCommand::INVITE(int clientFd){
+void IrcCommand::INVITE(){
 	if (_args.size() != 2)
-		throw InvalidArguments();
+		throw ERR_INVALID_ARGUMENT();
 
 	IrcClient *host;
 
 	try {
 		IrcChannel *channel = _db->findChannel(_args[1]);
-		host = _db->findClientByFd(clientFd);
+		host = _db->findClientByFd(_clientFd);
 		IrcClient *client = _db->findClientByName(_args[2]);
 
 		// 채널의 리미트가 걸려있음
 		if (channel->getLimit() == channel->getUser().size())
 		{
-			_db->findClientByFd(clientFd)->addBackBuffer("Channel member is Full\r\n");
+			_db->findClientByFd(_clientFd)->addBackBuffer("Channel member is Full\r\n");
 			return ; //throw 로 limit 에러 날릴 필요가 있음
 		}
 

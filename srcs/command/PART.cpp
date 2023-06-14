@@ -2,7 +2,7 @@
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcChannel.hpp"
 
-static int checkValidPART(std::deque<std::string>		args)
+static int checkValidPART(std::deque<std::string> args)
 {
     std::string chname = args[0]; 
     int size = chname.size();
@@ -26,17 +26,17 @@ static int checkValidPART(std::deque<std::string>		args)
     return 1;
 }
 
-void IrcCommand::PART(int clientFd){
+void IrcCommand::PART(){
     IrcChannel *channel;
     IrcClient *client;
     std::string chname = _args[0]; 
 
-    client = _db->findClientByFd(clientFd);
+    client = _db->findClientByFd(_clientFd);
     channel =_db->findChannel(chname);
     if (checkValidPART(_args))//check chname valid
     {
         channel = _db->findChannel(chname);
-        if (channel->deleteUser(clientFd) == false)
+        if (channel->deleteUser(_clientFd) == false)
             throw std::exception();
     }
     client->addBackBuffer(client->getNickname() + ": PART " + channel->getName());

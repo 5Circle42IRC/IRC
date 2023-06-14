@@ -8,26 +8,26 @@
 
 class IrcCommand {
 	public :
-		IrcCommand(IrcDB *db);
+		IrcCommand(IrcDB *db, int clientFd);
 		~IrcCommand();
 
 		void parsing(std::string message);
 		// void KICK(int clientFd);
 		// void INVITE(int clientFd);
 
-		void JOIN(int clientFd);
-		void NICK(int clientFd);
-		// void PASS(int clientFd);
-		// void NAME(int clientFd);
-		void PRIVMSG(int clientFd);
+		void JOIN();
+		void NICK();
+		// void PASS();
+		// void NAME();
+		void PRIVMSG();
 
-		void TOPIC(int clientFd);
-		// void MODE(int clientFd);
-		void INVITE(int clientFd);
+		void TOPIC();
+		// void MODE();
+		void INVITE();
 
-		void PART(int clientFd);
-		void PONG(int clientFd);
-		void USER(int clientFd);
+		void PART();
+		void PONG();
+		void USER();
 		std::deque<std::string>& getArgs();
 		std::string getCommand();
 
@@ -39,17 +39,18 @@ class IrcCommand {
 		IrcDB* 						_db;
 		std::deque<std::string>		_args;
 		std::string 				_command;
+		int							_clientFd;
 
-		void joinChannel(std::map<std::string, std::string>& keypair, int clientFd);
+		void joinChannel(std::map<std::string, std::string>& keypair);
 
-		class InvalidArguments: public std::exception {
+		class ERR_INVALID_ARGUMENT: public std::exception {
 			virtual const char *what() const throw();
 		};
 		
-		class ERR_INVALIDPASSWORD: public std::exception {
+		class ERR_INVALID_PASSWORD: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_USERONCHANNEL: public std::exception {
+		class ERR_USER_ON_CHANNEL: public std::exception {
 			virtual const char *what() const throw();
 		};
 };
