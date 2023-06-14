@@ -21,9 +21,8 @@ class IrcCommand {
 		// void NAME();
 		void PRIVMSG();
 
-		void TOPIC();
-		// void MODE();
-		void INVITE();
+		void TOPIC(int clientFd);
+		void MODE(int clientFd);
 
 		void PART();
 		void PONG();
