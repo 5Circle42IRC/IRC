@@ -89,3 +89,4 @@ const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR
 const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }
 const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALIDARGUMENT";}
 const char* IrcCommand::ERR_INVALID_COMMAND::what() const throw() { return "ERR_INVALIDCOMMAND";}
+const char* IrcCommand::ERR_OUT_OF_BOUND_MESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
