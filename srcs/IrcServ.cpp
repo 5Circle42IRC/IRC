@@ -75,8 +75,8 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
         return false;
-    db.insertClient(new IrcClient(acceptFd, "", "", ""));
     send(acceptFd, "input password : ", 17, 0);
+    db.insertClient(new IrcClient(acceptFd, "", "", ""));
     FD_SET(acceptFd, &_activeReads);
     FD_SET(acceptFd, &_activeWrites);
     if (_fdMax < acceptFd)
@@ -111,55 +111,61 @@ void IrcServ::run()
             // std::cout << clientFd << "debugs" << std::endl;
             if (FD_ISSET(clientFd, &_cpyReads))
             {
-                if (clientFd == _servFd)
+                switch (static_cast<int>(clientFd == _servFd))
                 {
+                case ENTER_CLIENT:
                     if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
-                        continue ;
-                }
-                else
-                {
+                    break;
+                default:
                     memset(_message, 0, sizeof(_message));
                     _readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
                     if (_readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
-                        continue;
+                        break;
                     }
-
                     // std::string test(_message);
                     // std::cerr << "_message : " << _message << std::endl;
                     // std::cerr << "_message len : " << test.length()  << std::endl;
                     // std::cerr << "_message readlen : " << _readLen << std::endl;
+                    IrcClient *clientClass = db.findClientByFd(clientFd);
 
-                    if (_readLen == 0)
+                    switch (_readLen)
                     {
+                    case EXIT_CLIENT:
                         deleteClient(clientFd);
-                    }
-                    else
-                    {
-                        if (_passWord.compare(_message))
+                        break;
+                    default:
+                        //password로직?
+                        if (clientClass->getPassword().length() == EMPTY)
                         {
-                            deleteClient(clientFd);
-                            continue;
+                            clientClass->setPassword(_message);
+                            send(acceptFd, "input nickname : ", 17, 0);
+                        } else if (clientClass->getNickname().length() == EMPTY) {
+                            clientClass->setNickname(_message);
+                            send(acceptFd, "input realname : ", 17, 0);
+                        } else if (clientClass->getUsername().length() == EMPTY) {
+                            clientClass->setUsername(_message);
+                        } else {
+                            try {
+                                command.setClientFd(clientFd).parsing(_message);
+                            } catch (std::exception& e){
+                                db.findClientByFd(clientFd)->addBackBuffer(e.what());
+                            }
+                            std::cout << _message << std::endl; // char??? std::string???
                         }
-                        try {
-                            command.setClientFd(clientFd).parsing(_message);
-                        } catch (std::exception& e){
-                            db.findClientByFd(clientFd)->addBackBuffer(e.what());
-                        }
-                        std::cout << _message << std::endl; // char??? std::string???
+                        break;
                     }
+
+                    if (db.findClientByFd(clientFd)->getBuffer().size() == 0)
+                        break;
+                    _writeLen = send(clientFd
+                                    , db.findClientByFd(clientFd)->getBuffer().c_str()
+                                    , db.findClientByFd(clientFd)->getBuffer().size()
+                                    , 0);
+                    db.findClientByFd(clientFd)->reduceBuffer(_writeLen);
+                    break;
                 }
-            }
-            else
-            {
-                if (db.findClientByFd(clientFd)->getBuffer().size() == 0)
-                    continue;
-                _writeLen = send(clientFd
-                                , db.findClientByFd(clientFd)->getBuffer().c_str()
-                                , db.findClientByFd(clientFd)->getBuffer().size()
-                                , 0);
-                db.findClientByFd(clientFd)->reduceBuffer(_writeLen);
             }
         }
     }

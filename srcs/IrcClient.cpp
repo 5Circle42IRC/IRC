@@ -79,49 +79,49 @@ const std::string &IrcClient::getBuffer() const
     return _buffer;
 }
 
-void IrcClient::setNickname(std::string &newNickname)
+void IrcClient::setNickname(std::string newNickname)
 {
     _nickname = newNickname;
     return;
 }
 
-void IrcClient::setUsername(std::string &newUsername)
+void IrcClient::setUsername(std::string newUsername)
 {
     _username = newUsername;
     return;
 }
 
-void IrcClient::setHostname(std::string &newHostname)
+void IrcClient::setHostname(std::string newHostname)
 {
     _hostname = newHostname;
     return;
 }
 
-void IrcClient::setServername(std::string &newServername)
+void IrcClient::setServername(std::string newServername)
 {
     _servername = newServername;
     return;
 }
 
-void IrcClient::setRealname(std::string &newRealname)
+void IrcClient::setRealname(std::string newRealname)
 {
     _realname = newRealname;
     return;
 }
 
-void IrcClient::setPassword(std::string &newPassword)
+void IrcClient::setPassword(std::string newPassword)
 {
     _password = newPassword;
     return;
 }
 
-void IrcClient::addBackBuffer(const std::string &str)
+void IrcClient::addBackBuffer(const std::string str)
 {
     _buffer = str;
     return;
 }
 
-void IrcClient::addBackCarriageBuffer(const std::string &str)
+void IrcClient::addBackCarriageBuffer(const std::string str)
 {
     _buffer = str;
     _buffer = _buffer + "\r\n";

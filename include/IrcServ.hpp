@@ -47,6 +47,13 @@ private:
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd);
 
+    enum e_active
+    {
+        EXIT_CLIENT = 0,
+        ENTER_CLIENT = 1,
+        EMPTY = 0,
+    };
+    
 
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);

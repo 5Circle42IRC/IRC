@@ -21,14 +21,14 @@ public:
     const std::string &getBuffer() const;
 
     void setPasswordFlag(bool flag); 
-    void setNickname(std::string &newNickname);
-    void setUsername(std::string &newUsername);
-    void setHostname(std::string &newHostname);
-    void setServername(std::string &newServername);
-    void setRealname(std::string &newRealname);
-    void setPassword(std::string &newPassword);
-    void addBackBuffer(const std::string &str);
-    void addBackCarriageBuffer(const std::string &str);
+    void setNickname(std::string newNickname);
+    void setUsername(std::string newUsername);
+    void setHostname(std::string newHostname);
+    void setServername(std::string newServername);
+    void setRealname(std::string newRealname);
+    void setPassword(std::string newPassword);
+    void addBackBuffer(const std::string str);
+    void addBackCarriageBuffer(const std::string str);
     void reduceBuffer(int result);
 
     void Display();
