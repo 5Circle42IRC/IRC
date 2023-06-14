@@ -1,10 +1,14 @@
 #ifndef __IrcServ_hpp__
 #define __IrcServ_hpp__
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 512
 
 #include <string>
 #include <arpa/inet.h>
+
+#include "../include/IrcClient.hpp"
+#include "../include/IrcDB.hpp"
+#include "../include/IrcCommand.hpp"
 
 class IrcServ 
 {
@@ -27,6 +31,9 @@ private:
     int _fdNum;
     int _opt;
 
+    ssize_t _readLen;
+    ssize_t _writeLen;
+
     fd_set _activeReads;
     fd_set _activeWrites;
     fd_set _cpyReads;
@@ -37,7 +44,6 @@ private:
     struct timeval _timeout;
 
     bool initSelect();
-    int acceptClinet();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen);
     void deleteClient(int fd);
 
