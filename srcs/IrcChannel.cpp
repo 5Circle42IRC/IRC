@@ -1,9 +1,10 @@
 #include "../include/IrcChannel.hpp"
 
-IrcChannel::IrcChannel() : _name("no Name"), _topic("any thing") {}
+IrcChannel::IrcChannel()
+    : _name("no Name"), _topic("any thing"), _grant(0) {}
  
 IrcChannel::IrcChannel(std::string name)
-    : _name(name), _topic("any thing") {}
+    : _name(name), _topic("any thing"), _grant(0) {}
 
 IrcChannel::~IrcChannel() {}
 
