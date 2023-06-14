@@ -1,3 +1,3 @@
-#include "../../include/ircCommand.hpp"
+#include "../../include/IrcCommand.hpp"
 
 void IrcCommand::MODE(){}

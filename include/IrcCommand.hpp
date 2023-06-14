@@ -46,7 +46,7 @@ class IrcCommand {
 		int							_clientFd;
 
 		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[8];
+		commandPtrArr				_commandPointers[9];
 		std::vector<std::string>	_commandNames;
 
 		void joinChannel(std::map<std::string, std::string>& keypair);
@@ -63,6 +63,9 @@ class IrcCommand {
 			virtual const char *what() const throw();
 		};
 		class ERR_INVALID_COMMAND: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
 			virtual const char *what() const throw();
 		};
 };

@@ -16,7 +16,8 @@ SRCS		= mainysungwon.cpp \
 			  command/PRIVMSG.cpp \
 			  command/TOPIC.cpp \
 			  command/INVITE.cpp \
-			  command/PONG.cpp
+			  command/PONG.cpp \
+			  command/MODE.cpp
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)

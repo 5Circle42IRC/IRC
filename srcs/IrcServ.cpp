@@ -143,8 +143,7 @@ void IrcServ::run()
                             continue;
                         }
                         try {
-                            command.setClientFd(clientFd);
-                            command.parsing(_message);
+                            command.setClientFd(clientFd).parsing(_message);
                         } catch (std::exception& e){
                             db.findClientByFd(clientFd)->addBackBuffer(e.what());
                         }
