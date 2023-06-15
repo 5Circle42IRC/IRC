@@ -39,14 +39,22 @@ private:
     fd_set _cpyReads;
     fd_set _cpyWrites;
 
-    char _message[BUFFER_SIZE];
+    char _recvMessage[BUFFER_SIZE];
+    std::string _sendMessage;
     sockaddr_in _servAddr;
     struct timeval _timeout;
 
     bool initSelect();
-    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen);
+    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd);
 
+    enum e_active
+    {
+        EXIT_CLIENT = 0,
+        ENTER_CLIENT = 1,
+        EMPTY = 0,
+    };
+    
 
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);

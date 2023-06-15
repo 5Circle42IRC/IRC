@@ -53,9 +53,9 @@ int main(int argc, char **argv)
         
         db.insertClient(&c1);
         db.insertClient(&c2);
-        std::string message = "JOIN #123 1234\nJOIN #abc abcd";
+        std::string message = "JOIN #123\nNICK abcd";
        commandHandler.setClientFd(5).parsing(message);
-        std::string message2 = "JOIN #123 3456\nJOIN #abc abcd";
+        std::string message2 = "JOIN #123\nJOIN #abc";
        commandHandler.setClientFd(6).parsing(message2);
        print_users_in_ch_name(&db, "#123");
        print_users_in_ch_name(&db, "#abc");

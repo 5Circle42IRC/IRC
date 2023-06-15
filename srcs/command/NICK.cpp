@@ -7,7 +7,7 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
     if (nick.size() > 9)
     {
         std::cout << "NICK size have to be lower than 9" << std::endl;
-        throw ERR_INVALID_ARGUMENT();
+        throw std::exception();
     }
     if (_db->findClientByName(nick)->getNickname() == nick)
     {
