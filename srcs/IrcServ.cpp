@@ -219,7 +219,7 @@ void IrcServ::run()
                     }
                     if (clientClass->getBuffer().size() == 0)
                         break;
-                    displayServerParam(clientFd, clientClass, db);
+                    displayServerParam(clientFd, db);
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()
