@@ -127,10 +127,7 @@ void IrcClient::addBackCarriageBuffer(const std::string str)
 
 void IrcClient::reduceBuffer(int result)
 {
-    std::cout << "before buffer: " << _buffer << std::endl;
     _buffer.erase(0, result);
-    std::cout << "after buffer: " << _buffer << std::endl;
-    return;
 }
 
 void IrcClient::setPasswordFlag(bool flag)

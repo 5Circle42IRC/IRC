@@ -36,7 +36,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 
 void IrcCommand::JOIN(){
 	std::map<int, std::string>argsList;
-	std::map<std::string, std::string>keypair;
+	std::multimap<std::string, std::string>keypair;
 
 	if (_args.begin()->at(0) != '#')
 		throw ERR_INVALID_ARGUMENT();
@@ -45,14 +45,17 @@ void IrcCommand::JOIN(){
 	std::deque<std::string>::iterator it;
 	for (it = _args.begin(); it != _args.end() && it->at(0) == '#'; it++){
 		argsList[i] = *it;
-		keypair[*it] = "";
+		keypair.insert(std::make_pair(*it, ""));
 		i++;
 	}
 	for (; it != _args.end() && it->at(0) != '#'; it++){
-		keypair[argsList[j]] = *it;
+		keypair.find(argsList[j])->second = *it;
 		j++;
 		if (j > i - 1)
 			throw ERR_INVALID_ARGUMENT();
+	}
+	for (std::multimap<std::string, std::string>::iterator it3 = keypair.begin(); it3 != keypair.end(); it3++){
+		std::cout << "argsList : " << it3->first << " ****" << std::endl;
 	}
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();

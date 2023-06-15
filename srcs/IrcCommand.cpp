@@ -72,7 +72,6 @@ void IrcCommand::parsing(std::string message){
 	if (message.size() > 512)
 		throw ERR_OUT_OF_BOUND_MESSAGE();
 	message.erase(0, message.find_first_not_of(delim));
-	std::cout << "before parsing : " << message << std::endl;
 	// 다중메세지 개행, 캐리지리턴 기준으로 나누기 (동작 확인)
 	for (end = message.find_first_of(endl); end != -1; end = message.find_first_of(endl)){
 		multiCmd.push_back(message.substr(0, end));
@@ -91,7 +90,6 @@ void IrcCommand::parsing(std::string message){
 		_args.push_back(*it);
 		_command = _args[0];
 		_args.pop_front();
-		std::cout << "after parsing cmd: <" << _command << ">" << std::endl;
 		try {
 			checkRunCMD();
 		} catch (std::exception &e){
