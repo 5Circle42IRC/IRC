@@ -121,8 +121,8 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
     }
 
     std::cout << "\n======================================" << std::endl;
-    std::cerr << "server receive Message : " << "[" << _recvMessage << "]" << std::endl;
-    std::cerr << "server receive Message len : " << std::strlen(_recvMessage) << std::endl;
+    std::cerr << "server recieve Message : " << "[" << _recvMessage << "]" << std::endl;
+    std::cerr << "server recieve Message len : " << std::strlen(_recvMessage) << std::endl;
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 }
 
@@ -221,8 +221,8 @@ void IrcServ::run()
                                     , clientClass->getBuffer().size()
                                     , 0);
                     if (_writeLen > 0)
-                        std::cout << "\033[38;5;3m$> User "<< clientClass->getNickname() 
-                                  << " send massage : " << clientClass->getBuffer() << "\033[0m" << std::endl;
+                        std::cout << "\033[38;5;3m$> user "<< clientClass->getNickname() 
+                                  << " recieve massage : " << clientClass->getBuffer() << "\033[0m" << std::endl;
                     clientClass->reduceBuffer(_writeLen);
                     break;
                 }
