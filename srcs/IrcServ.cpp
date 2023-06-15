@@ -102,12 +102,11 @@ void IrcServ::run()
     socklen_t clientAddrLen;
     IrcDB db; //DB선언 DB db;
     IrcCommand command(&db);
+    int messageLen(0);
 
     while (42)
     {
         initSelect();
-
-        sleep(1);
 
         for (int clientFd = 0; clientFd < _fdMax + 1; clientFd++)
         {
@@ -121,7 +120,6 @@ void IrcServ::run()
                         std::cerr << "failed accept" << std::endl;
                     break;
                 default:
-                    // 여기 문제가 있음... 왜 안찾아짐?
                     IrcClient *clientClass = db.findClientByFd(clientFd);
 
                     memset(_recvMessage, 0, sizeof(_recvMessage));
@@ -144,14 +142,11 @@ void IrcServ::run()
                         deleteClient(clientFd);
                         break;
                     default:
-                        //password로직?
-                        if (clientClass->getPasswordFlag() == false)
-                        {
+                        if (clientClass->getPasswordFlag() == false) {
                             if (!_passWord.compare(_recvMessage))
                             {
                                 clientClass->setPasswordFlag(true);
-                                if (send(clientFd, "set your password : ", 20, 0))
-                                    std::cerr << "not send" << std::endl;
+                                send(clientFd, "input nickname : ", 17, 0);
                                 std::cerr << "acceptFd : " << acceptFd << std::endl;
                                 std::cerr << "clientFd : " << clientFd << std::endl;
                             } else {
@@ -159,13 +154,12 @@ void IrcServ::run()
                                 send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
                                 deleteClient(clientFd);
                             }
-                        }
-                        else if (clientClass->getPassword().length() == EMPTY)
-                        {
-                            clientClass->setPassword(_recvMessage);
-                            send(clientFd, "input nickname : ", 17, 0);
                         } else if (clientClass->getNickname().length() == EMPTY) {
+                            send(clientFd, "set your password : ", 20, 0);
                             clientClass->setNickname(_recvMessage);
+                        } else if (clientClass->getPassword().length() == EMPTY) {
+                            // 여기서 닉네임이 동일한지 판단.
+                            clientClass->setPassword(_recvMessage);
                             send(clientFd, "input realname : ", 17, 0);
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             clientClass->setUsername(_recvMessage);
@@ -175,14 +169,12 @@ void IrcServ::run()
                             } catch (std::exception& e){
                                 clientClass->addBackBuffer(e.what());
                             }
-                            std::cout << _recvMessage << std::endl; // char??? std::string???
+                            std::cout << "$>"<< clientClass->getNickname() << " send massage : " << _recvMessage << std::endl; // char??? std::string???
                         }
                         break;
                     }
-
                     if (clientClass->getBuffer().size() == 0)
                         break;
-                    std::cout << "channel size : " << db._channels.size() << std::endl;
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()

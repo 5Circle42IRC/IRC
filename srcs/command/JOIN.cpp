@@ -34,21 +34,17 @@ void IrcCommand::JOIN(){
 	std::map<int, std::map<std::string, std::string> > argsList;
 	std::map<std::string, std::string>keypair;
 
-	if (_args.begin()->at(0) != '#')
-		throw ERR_INVALID_ARGUMENT();
 	int i, j = 0;
 	std::deque<std::string>::iterator it;
-	for (it = _args.begin(); it != _args.end() && it->at(0) == '#'; it++){
+	for ( it = _args.begin(); it->at(0) != '#'; it++){
 		keypair[*it] = "";
 		argsList[i] = keypair;
 		i++;
 	}
-	for (; it != _args.end() && it->at(0) != '#'; it++){
-		argsList[j].begin()->second = *it;
+	for (; it != _args.end(); it++){
+		argsList.begin()->second.begin()->second = *it;
 		j++;
 	}
-	if (it != _args.end())
-		throw ERR_INVALID_ARGUMENT();
 	for (std::map<int, std::map<std::string, std::string> >::iterator it2 = argsList.begin(); it2 != argsList.end(); it2++){
 		joinChannel(it2->second);
 	}
