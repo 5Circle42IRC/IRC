@@ -4,11 +4,12 @@ TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
 OBJCMDDIR	= ./objs/command
-SRCS		= mainysungwon.cpp \
+SRCS		= main.cpp \
 			  IrcCommand.cpp \
 			  IrcClient.cpp \
 			  IrcChannel.cpp \
 			  IrcDB.cpp \
+			  IrcServ.cpp\
 			  command/NICK.cpp \
 			  command/USER.cpp \
 			  command/JOIN.cpp \

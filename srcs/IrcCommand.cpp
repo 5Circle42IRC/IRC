@@ -1,4 +1,5 @@
 #include "../include/IrcCommand.hpp"
+#include "../include/IrcClient.hpp"
 
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandNames.push_back("INVITE");
@@ -53,7 +54,7 @@ void IrcCommand::checkRunCMD(){
 		}
 		index++;
 	}
-	throw ERR_INVALID_COMMAND();
+	_db->findClientByFd(_clientFd)->addBackBuffer("ERR_INVALID_COMMAND\n");
 }
 
 void IrcCommand::parsing(std::string message){
@@ -72,6 +73,7 @@ void IrcCommand::parsing(std::string message){
 		message.erase(0, end + 1);
 	}
 	multiCmd.push_back(message);
+	// 메세지 건바이건으로 커맨드 실행
 	for (std::vector<std::string>::iterator it = multiCmd.begin(); it != multiCmd.end(); it++){
 		_args.clear();
 		for (end = it->find_first_of(delim); end != -1; end = it->find_first_of(delim)){
