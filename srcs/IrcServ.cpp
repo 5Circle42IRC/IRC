@@ -105,12 +105,9 @@ void IrcServ::run()
 
     while (42)
     {
-        std::cout << "--------------------------------------" << std::endl;
         initSelect();
-
         for (int clientFd = 0; clientFd < _fdMax + 1; clientFd++)
         {
-            std::cerr << "client : " << clientFd << std::endl;
             if (FD_ISSET(clientFd, &_cpyReads))
             {
                 switch (static_cast<int>(clientFd == _servFd))
@@ -187,6 +184,13 @@ void IrcServ::run()
                     }
                     if (clientClass->getBuffer().size() == 0)
                         break;
+                    std::cout << "--------------------------------------" << std::endl;
+                    std::cerr << "client : " << clientFd << std::endl;
+                    std::cerr << "_recvMessage : " << "[" << _recvMessage << "]" << std::endl;
+                    std::cerr << "_recvMessage len : " << _recvMessage << std::endl;
+                    std::cerr << "_sendMessage : " << "[" << _sendMessage << "]" << std::endl;
+                    std::cerr << "_sendMessage len : " << _sendMessage.size() << std::endl;
+                    std::cout << "--------------------------------------" << std::endl;
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()
@@ -194,10 +198,6 @@ void IrcServ::run()
                     clientClass->reduceBuffer(_writeLen);
                     break;
                 }
-                std::cerr << "_recvMessage : " << _recvMessage << std::endl;
-                std::cerr << "_recvMessage len : " << _recvMessage << std::endl;
-                std::cerr << "_sendMessage : " << _sendMessage << std::endl;
-                std::cerr << "_sendMessage len : " << _sendMessage.size() << std::endl;
             }
         }
     }

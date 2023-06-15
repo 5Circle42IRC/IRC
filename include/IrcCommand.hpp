@@ -48,7 +48,7 @@ class IrcCommand {
 		int							_clientFd;
 
 		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[9];
+		commandPtrArr				_commandPointers[10];
 		std::vector<std::string>	_commandNames;
 
 		void joinChannel(std::map<std::string, std::string>& keypair);
