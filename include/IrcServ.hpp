@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 
 #include "../include/IrcClient.hpp"
+#include "../include/IrcChannel.hpp"
 #include "../include/IrcDB.hpp"
 #include "../include/IrcCommand.hpp"
 
@@ -47,6 +48,7 @@ private:
     bool initSelect();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd);
+    void displayServerParam(int clientFd, IrcClient *clientClass, IrcDB& db);
 
     enum e_active
     {
