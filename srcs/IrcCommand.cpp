@@ -81,7 +81,7 @@ void IrcCommand::parsing(std::string message){
 		_args.push_back(*it);
 		_command = _args[0];
 		_args.pop_front();
-		checkRunCMD();		
+		checkRunCMD();	
 	}
 }
 
