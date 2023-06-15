@@ -35,15 +35,16 @@ void IrcCommand::JOIN(){
 	std::map<std::string, std::string>keypair;
 
 	int i, j = 0;
-	std::deque<std::string>::iterator it;
-	for ( it = _args.begin(); it->at(0) != '#'; it++){
-		keypair[*it] = "";
-		argsList[i] = keypair;
-		i++;
-	}
-	for (; it != _args.end(); it++){
-		argsList.begin()->second.begin()->second = *it;
-		j++;
+	for (std::deque<std::string>::iterator it = _args.begin(); it != _args.end(); it++){
+		if (it->at(0) == '#'){
+			keypair[*it] = "";
+			argsList[i] = keypair;
+			i++;
+		}
+		else {
+			argsList.begin()->second.begin()->second = *it;
+			j++;
+		}
 	}
 	for (std::map<int, std::map<std::string, std::string> >::iterator it2 = argsList.begin(); it2 != argsList.end(); it2++){
 		joinChannel(it2->second);
