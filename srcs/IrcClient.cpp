@@ -130,7 +130,9 @@ void IrcClient::addBackCarriageBuffer(const std::string str)
 
 void IrcClient::reduceBuffer(int result)
 {
-    (void)result;
+    std::cout << "before buffer: " << _buffer << std::endl;
+    _buffer.erase(0, result);
+    std::cout << "after buffer: " << _buffer << std::endl;
     return;
 }
 

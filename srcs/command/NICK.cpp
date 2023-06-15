@@ -1,7 +1,7 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 
-static int checkValidNICK(std::deque<std::string> args, IrcDB *_db)
+int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
 {
     std::string nick = args[0]; 
     if (nick.size() > 9)

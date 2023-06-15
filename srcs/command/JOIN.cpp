@@ -26,7 +26,7 @@ void IrcCommand::joinChannel(std::map<std::string, std::string>& keypair){
 	if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
 			throw ERR_INVALID_PASSWORD();
 	channel->addUser(_clientFd);
-	client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
+	client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName() + "\n");
 }
 
 
