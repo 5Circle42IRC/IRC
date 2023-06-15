@@ -39,7 +39,8 @@ private:
     fd_set _cpyReads;
     fd_set _cpyWrites;
 
-    char _message[BUFFER_SIZE];
+    char _recvMessage[BUFFER_SIZE];
+    std::string _sendMessage;
     sockaddr_in _servAddr;
     struct timeval _timeout;
 

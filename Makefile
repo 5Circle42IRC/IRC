@@ -1,10 +1,11 @@
 CXX			= c++
-CXXFLAGS	= -std=c++98 -g3 #-Wall -Werror -Wextra
+CXXFLAGS	= -std=c++98 -g3 -fsanitize=address #-Wall -Werror -Wextra
 TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
 OBJCMDDIR	= ./objs/command
-SRCS		= mainysungwon.cpp \
+SRCS		= main.cpp \
+			  IrcServ.cpp\
 			  IrcCommand.cpp \
 			  IrcClient.cpp \
 			  IrcChannel.cpp \

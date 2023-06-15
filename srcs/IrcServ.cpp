@@ -21,7 +21,7 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 int IrcServ::on()
 {
-    std::memset(_message, 0, sizeof(_message));
+    std::memset(_recvMessage, 0, sizeof(_recvMessage));
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
     _servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -75,7 +75,9 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
     if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
         return false;
-    send(acceptFd, "input password : ", 17, 0);
+    _sendMessage = "input server password : ";
+    send(acceptFd, _sendMessage.c_str(), _sendMessage.length(), 0);
+    // 여기는 삽입하지 않음?
     db.insertClient(new IrcClient(acceptFd, "", "", ""));
     FD_SET(acceptFd, &_activeReads);
     FD_SET(acceptFd, &_activeWrites);
@@ -117,18 +119,22 @@ void IrcServ::run()
                     if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
                     break;
                 default:
-                    memset(_message, 0, sizeof(_message));
-                    _readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
-                    if (_readLen == -1)
+                    // 여기 문제가 있음... 왜 안찾아짐?
+                    std::cerr << "this?" << std::endl;
+                    IrcClient *clientClass = db.findClientByFd(clientFd);
+
+                    memset(_recvMessage, 0, sizeof(_recvMessage));
+                    _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
+                    if (clientClass->getPasswordFlag() && _readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
                         break;
                     }
-                    // std::string test(_message);
-                    // std::cerr << "_message : " << _message << std::endl;
-                    // std::cerr << "_message len : " << test.length()  << std::endl;
-                    // std::cerr << "_message readlen : " << _readLen << std::endl;
-                    IrcClient *clientClass = db.findClientByFd(clientFd);
+
+                    std::string test(_recvMessage);
+                    std::cerr << "_recvMessage : " << _recvMessage << std::endl;
+                    std::cerr << "_recvMessage len : " << test.length()  << std::endl;
+                    std::cerr << "_recvMessage readlen : " << _readLen << std::endl;
 
                     switch (_readLen)
                     {
@@ -137,33 +143,46 @@ void IrcServ::run()
                         break;
                     default:
                         //password로직?
-                        if (clientClass->getPassword().length() == EMPTY)
+                        if (clientClass->getPasswordFlag() == false)
                         {
-                            clientClass->setPassword(_message);
+                            if (!_passWord.compare(_recvMessage))
+                            {
+                                clientClass->setPasswordFlag(true);
+                                send(acceptFd, "set your password : ", 19, 0);
+                            } else {
+                                _sendMessage = "Failed Password, plz connecting again";
+
+                                send(acceptFd, _sendMessage.c_str(), _sendMessage.length(), 0);
+                                deleteClient(clientFd);
+                            }
+                        }
+                        else if (clientClass->getPassword().length() == EMPTY)
+                        {
+                            clientClass->setPassword(_recvMessage);
                             send(acceptFd, "input nickname : ", 17, 0);
                         } else if (clientClass->getNickname().length() == EMPTY) {
-                            clientClass->setNickname(_message);
+                            clientClass->setNickname(_recvMessage);
                             send(acceptFd, "input realname : ", 17, 0);
                         } else if (clientClass->getUsername().length() == EMPTY) {
-                            clientClass->setUsername(_message);
+                            clientClass->setUsername(_recvMessage);
                         } else {
                             try {
-                                command.setClientFd(clientFd).parsing(_message);
+                                command.setClientFd(clientFd).parsing(_recvMessage);
                             } catch (std::exception& e){
-                                db.findClientByFd(clientFd)->addBackBuffer(e.what());
+                                clientClass->addBackBuffer(e.what());
                             }
-                            std::cout << _message << std::endl; // char??? std::string???
+                            std::cout << _recvMessage << std::endl; // char??? std::string???
                         }
                         break;
                     }
 
-                    if (db.findClientByFd(clientFd)->getBuffer().size() == 0)
+                    if (clientClass->getBuffer().size() == 0)
                         break;
                     _writeLen = send(clientFd
-                                    , db.findClientByFd(clientFd)->getBuffer().c_str()
-                                    , db.findClientByFd(clientFd)->getBuffer().size()
+                                    , clientClass->getBuffer().c_str()
+                                    , clientClass->getBuffer().size()
                                     , 0);
-                    db.findClientByFd(clientFd)->reduceBuffer(_writeLen);
+                    clientClass->reduceBuffer(_writeLen);
                     break;
                 }
             }

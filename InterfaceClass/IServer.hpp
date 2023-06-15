@@ -61,7 +61,7 @@ protected:
 
 	struct timeval _timeout;
 
-	char _message[BUFFER_SIZE];
+	char _recvMessage[BUFFER_SIZE];
 	int _readLen;
 	struct sockaddr_in _clientAddr;
 
