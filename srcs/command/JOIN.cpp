@@ -51,6 +51,8 @@ void IrcCommand::JOIN(){
 	for (; it != _args.end() && it->at(0) != '#'; it++){
 		keypair[argsList[j]] = *it;
 		j++;
+		if (j > i - 1)
+			throw ERR_INVALID_ARGUMENT();
 	}
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();
