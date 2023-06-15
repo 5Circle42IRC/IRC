@@ -208,7 +208,7 @@ void IrcServ::run()
                             try {
                                 command.setClientFd(clientFd).parsing(_recvMessage);
                             } catch (std::exception& e){
-                                clientClass->addBackBuffer(e.what());
+                                clientClass->addBackCarriageBuffer(e.what());
                             }
                         }
                         break;
@@ -221,8 +221,10 @@ void IrcServ::run()
                                     , clientClass->getBuffer().size()
                                     , 0);
                     if (_writeLen > 0)
-                        std::cout << "\033[38;5;3m$> user "<< clientClass->getNickname() 
-                                  << " recieve massage : " << clientClass->getBuffer() << "\033[0m" << std::endl;
+                        std::cerr << "\033[38;5;3m$> user "<< clientClass->getNickname() 
+                                  << "-------recieve massage------\n" 
+                                  << clientClass->getBuffer() << "\033[0m"
+                                  << "-------recieve massage------\n" << std::endl;
                     clientClass->reduceBuffer(_writeLen);
                     break;
                 }
