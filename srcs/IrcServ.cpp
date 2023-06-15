@@ -186,6 +186,7 @@ void IrcServ::run()
                         break;
                     std::cout << "--------------------------------------" << std::endl;
                     std::cerr << "client : " << clientFd << std::endl;
+                    std::cerr << "client nickname : " << "[" << clientClass->getNickname() << "]" << std::endl;
                     std::cerr << "_recvMessage : " << "[" << _recvMessage << "]" << std::endl;
                     std::cerr << "_recvMessage len : " << _recvMessage << std::endl;
                     std::cerr << "_sendMessage : " << "[" << _sendMessage << "]" << std::endl;
