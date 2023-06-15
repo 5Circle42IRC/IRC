@@ -13,8 +13,10 @@ void IrcCommand::joinChannel(std::map<std::string, std::string>& keypair){
 		channel = new IrcChannel(name);
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
-		if (key.size() != 0)
+		if (key.size() != 0){
 			channel->setPassword(key);
+			channel->setGrant(M_KEY, true);
+		}
 		_db->insertChannel(channel);
 		client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
 		return ;
@@ -24,7 +26,7 @@ void IrcCommand::joinChannel(std::map<std::string, std::string>& keypair){
 	if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
 			throw ERR_INVALID_PASSWORD();
 	channel->addUser(_clientFd);
-	client->addBackCarriageBuffer(client->getNickname() + ": JOIN " + channel->getName());
+	client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName());
 }
 
 
@@ -40,7 +42,7 @@ void IrcCommand::JOIN(){
 			i++;
 		}
 		else {
-			argsList[j].begin()->second = *it;
+			argsList.begin()->second.begin()->second = *it;
 			j++;
 		}
 	}

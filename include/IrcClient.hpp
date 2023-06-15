@@ -11,6 +11,7 @@ public:
     ~IrcClient();
 
     int getFd() const;
+    const bool getPasswordFlag() const;
     const std::string &getNickname() const;
     const std::string &getUsername() const;
     const std::string &getHostname() const;
@@ -19,14 +20,15 @@ public:
     const std::string &getPassword() const;
     const std::string &getBuffer() const;
 
-    void setNickname(std::string &newNickname);
-    void setUsername(std::string &newUsername);
-    void setHostname(std::string &newHostname);
-    void setServername(std::string &newServername);
-    void setRealname(std::string &newRealname);
-    void setPassword(std::string &newPassword);
-    void addBackBuffer(const std::string &str);
-    void addBackCarriageBuffer(const std::string &str);
+    void setPasswordFlag(bool flag); 
+    void setNickname(std::string newNickname);
+    void setUsername(std::string newUsername);
+    void setHostname(std::string newHostname);
+    void setServername(std::string newServername);
+    void setRealname(std::string newRealname);
+    void setPassword(std::string newPassword);
+    void addBackBuffer(const std::string str);
+    void addBackCarriageBuffer(const std::string str);
     void reduceBuffer(int result);
 
     void Display();
@@ -36,6 +38,7 @@ public:
 
 protected:
 	int         _fd;
+    bool        _passwordFlag;
 	std::string _nickname;
     std::string _username;
     std::string _hostname;
