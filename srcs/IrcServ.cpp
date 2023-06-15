@@ -93,6 +93,26 @@ void IrcServ::deleteClient(int fd)
     close(fd);
 }
 
+void IrcServ::displayServerParam(int clientFd, IrcClient *clientClass, IrcDB& db)
+{
+    std::cout << "\033[31m" << "--------------------------------------" << std::endl;
+    std::cerr << "client fd : " << clientFd << std::endl;
+    std::cerr << "client nickname : " << "[" << clientClass->getNickname() << "]" << std::endl;
+    std::cerr << "client password : " << "[" << clientClass->getPassword() << "]" << std::endl;
+    std::cerr << "client username : " << "[" << clientClass->getUsername() << "]" << std::endl;
+    std::cout << "======================================" << std::endl;
+    std::cerr << "channl size : " << "[" << db._channels.size() << "]" << std::endl;
+    for (std::map<std::string, IrcChannel*>::iterator it = db._channels.begin(); it != db._channels.end();it++)
+        std::cerr << "channel name : " << "[" << it->second->getName() << "]" << std::endl;
+    std::cout << "======================================" << std::endl;
+    std::cerr << "server receive Message : " << "[" << _recvMessage << "]" << std::endl;
+    std::cerr << "server receive Message len : " << _recvMessage << std::endl;
+    std::cerr << "server send Message : " << "[" << _sendMessage << "]" << std::endl;
+    std::cerr << "server send Message len : " << _sendMessage.size() << std::endl;
+    std::cout << "--------------------------------------" << "\033[0m" << std::endl;
+
+}
+
 //password 로직, client에 패스워드 불을 넣기
 void IrcServ::run()
 {
@@ -166,10 +186,10 @@ void IrcServ::run()
                             // 여기서 닉네임이 동일한지 판단.
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             if (messageLen < 2) {
-                                _recvMessage[messageLen - 1] = '\0';
                                 _sendMessage = "wrong input retry : ";
                                 send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
                             } else {
+                                _recvMessage[messageLen - 1] = '\0';
                                 clientClass->setUsername(_recvMessage);
                             }
                         } else {
@@ -184,13 +204,7 @@ void IrcServ::run()
                     }
                     if (clientClass->getBuffer().size() == 0)
                         break;
-                    std::cout << "--------------------------------------" << std::endl;
-                    std::cerr << "client : " << clientFd << std::endl;
-                    std::cerr << "_recvMessage : " << "[" << _recvMessage << "]" << std::endl;
-                    std::cerr << "_recvMessage len : " << _recvMessage << std::endl;
-                    std::cerr << "_sendMessage : " << "[" << _sendMessage << "]" << std::endl;
-                    std::cerr << "_sendMessage len : " << _sendMessage.size() << std::endl;
-                    std::cout << "--------------------------------------" << std::endl;
+                    displayServerParam(clientFd, clientClass, db);
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()
