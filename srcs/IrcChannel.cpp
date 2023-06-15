@@ -53,7 +53,7 @@ int IrcChannel::getGrant() const { return _grant; }
 bool IrcChannel::isOperator(const int clientFd) const {
     if (isJoinedUser(clientFd))
         return _user.find(clientFd)->second;
-    throw InvalidClientFd();
+    return 0;
 }
 
 const std::map<int, bool>& IrcChannel::getUser() const { return _user; }
