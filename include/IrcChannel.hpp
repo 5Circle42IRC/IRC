@@ -6,11 +6,10 @@
 
 typedef enum 
 {
-    OPERATOR = 1,
-    INVITE = 2,
-    TOPIC = 4,
-    KEY = 8,
-    LIMIT = 16,
+    M_INVITE = 2,
+    M_TOPIC = 4,
+    M_KEY = 8,
+    M_LIMIT = 16,
 }typeMode;
 
 class IrcChannel
@@ -21,7 +20,7 @@ public:
     const IrcChannel& operator=(const IrcChannel& copy);
     ~IrcChannel();
     void addUser(const int clientFd);
-    void deleteUser(const int target);
+    bool deleteUser(const int target);
     bool isJoinedUser(const int clientFd) const;
 
     void setGrant(typeMode grant, bool on);
@@ -32,11 +31,11 @@ public:
 
     int getGrant() const;
 
-    const std::string& getTopic() const;
-    const std::string& getName() const;
-    const std::string& getPassword() const;
-
-    const std::map<int, bool>& getUser() const;
+    const std::string&          getTopic() const;
+    std::string&                getName();
+    const std::string&          getPassword() const;
+    const std::map<int, bool>&  getUser() const;
+    const int                   getLimit() const;
 
 protected:
     IrcChannel(const IrcChannel& copy);
@@ -45,12 +44,13 @@ protected:
     std::string         _password;
 
     int					_grant;
+    int                 _limit;
 
     std::map<int, bool>	_user;
 
 private:
 
-    class InvalidGrant {
+    class InvalidGrant : public std::exception {
         public:
             virtual const char *what() const throw();
     };

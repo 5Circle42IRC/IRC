@@ -1,21 +1,26 @@
 #ifndef __IrcServ_hpp__
 #define __IrcServ_hpp__
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 512
 
-#include "../include/IrcCommand.hpp"
+#include <string>
 #include <arpa/inet.h>
 
-class IrcServ : protected IrcCommand
+#include "../include/IrcClient.hpp"
+#include "../include/IrcDB.hpp"
+#include "../include/IrcCommand.hpp"
+
+class IrcServ 
 {
 public:
     IrcServ();
     virtual ~IrcServ();
     IrcServ(int port, std::string passWord);
 
+    int on();
     void run();
 
-protected:
+private:
     int _error;
 
     int _port;
@@ -26,17 +31,31 @@ protected:
     int _fdNum;
     int _opt;
 
+    ssize_t _readLen;
+    ssize_t _writeLen;
+
     fd_set _activeReads;
     fd_set _activeWrites;
     fd_set _cpyReads;
     fd_set _cpyWrites;
 
+    char _recvMessage[BUFFER_SIZE];
+    std::string _sendMessage;
     sockaddr_in _servAddr;
+    struct timeval _timeout;
 
-private:
-    void initFd();
-    void initSocket();
-    void initServAddr();
+    bool initSelect();
+    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
+    void deleteClient(int fd);
+
+    enum e_active
+    {
+        EXIT_CLIENT = 0,
+        ENTER_CLIENT = 1,
+        EMPTY = 0,
+    };
+    
+
     IrcServ(const IrcServ &copy);
     const IrcServ &operator=(const IrcServ &copy);
 

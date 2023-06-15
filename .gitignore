@@ -35,4 +35,10 @@ test.*
 test/
 .vscode/
 
+Makefile
+mainysungwon.cpp
 mycommands.cpp
+mainjwee.cpp
+a.out.dSYM
+
+ircserv

@@ -2,42 +2,73 @@
 # define __IRCCOMMAND_HPP__
 
 # include "./IrcDB.hpp"
+# include <deque>
 # include <vector>
 
-class IrcCommand: protected IrcDB {
+//_clientFd 또는 _clientPtr을 멤버변수로 추가하는 건에 대하여...
+
+class IrcCommand {
 	public :
-		IrcCommand();
-		virtual ~IrcCommand();
+		/*db만 받는 생성자는 테스트 이후 삭제해도 됨.*/
+		IrcCommand(IrcDB *db);
+		IrcCommand(IrcDB *db, int clientFd);
+		~IrcCommand();
 
-		void	foreach(std::map<int, IrcClient&>& client);
-		void	foreach(std::map<std::string, IrcChannel&> channel);
-
-		const	std::vector<std::string>& getArgs() const;
-
+		void parsing(std::string message);
 		// void KICK(int clientFd);
-		// void INVITE(int clientFd);
+		void INVITE();
 
-		// void JOIN(int clientFd);
-		void NICK(int clientFd);
-		// void PASS(int clientFd);
-		// void NAME(int clientFd);
-		// void PRIVMSG(int clientFd);
+		void JOIN();
+		void NICK();
+		// void PASS();
+		// void NAME();
+		void PRIVMSG();
 
-		// void TOPIC(int clientFd);
-		// void MODE(int clientFd);
+		void TOPIC();
+		void MODE();
 
-		// void PART(int clientFd);
-		// void PONG(int clientFd);
-		// void USER(int clientFd);
+		void PART();
+		void PONG();
+		void USER();
 
-	protected:
-		std::vector<std::string>  _args;
+		IrcCommand& setClientFd(int clientFd);
+		std::deque<std::string>& getArgs();
+		std::string getCommand();
+
+
 
 	private:
-		class InvalidArguments: public std::exception {
+		IrcCommand();
+
+		IrcDB* 						_db;
+		std::deque<std::string>		_args;
+		std::string 				_command;
+		int							_clientFd;
+
+		typedef void (IrcCommand::*commandPtrArr)();
+		commandPtrArr				_commandPointers[9];
+		std::vector<std::string>	_commandNames;
+
+		void joinChannel(std::map<std::string, std::string>& keypair);
+		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
+		void checkRunCMD();
+
+		class ERR_INVALID_ARGUMENT: public std::exception {
 			virtual const char *what() const throw();
 		};
-
+		
+		class ERR_INVALID_PASSWORD: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_USER_ON_CHANNEL: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_INVALID_COMMAND: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
+			virtual const char *what() const throw();
+		};
 };
 
 #endif

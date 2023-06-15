@@ -1,41 +1,34 @@
 #ifndef __IRC_DB_HPP__
 #define __IRC_DB_HPP__
 
-#include "../include/IrcChannel.hpp"
-#include "../include/IrcClient.hpp"
-#include <exception>
+#include <iostream>
+#include <map>
+#include <utility>
 
-class IrcDB : protected IrcClient, protected IrcChannel
+class IrcClient;
+class IrcChannel;
+
+class IrcDB
 {
 public:
     IrcDB();
-    virtual ~IrcDB();
-	virtual IrcClient& find(const int clientFd);
-	virtual IrcChannel& find(const std::string channelName);
-	virtual void deleteChannel(const std::string channelName);
-	virtual void deleteTargetInChannel(const std::string& channelName, const int targetFd);
-	virtual void addTargetInChannel(const std::string& channelName, const int targetFd);
-	virtual void registerClient(const int& fd);
-	virtual void registerChannel(const std::string& channel);
+    ~IrcDB();
 
-protected:
-	class notFindClient : public std::exception
-	{
-		virtual const char* what() const throw();
-	};
+	IrcClient *findClientByName(std::string name);
+	IrcClient *findClientByFd(int clientFd);
 
-	class notFindChannel : public std::exception
-	{
-		virtual const char* what() const throw();
-	};
+	IrcChannel *findChannel(std::string name);
 
-	std::map<int, IrcClient &> _client;
-	std::map<std::string, IrcChannel &> _channel;
+	void insertClient(IrcClient *client);
+	void insertChannel(IrcChannel *channel);
+
+	void deleteClient(int clientFd);
+	void deleteChannel(std::string name);
+
+	std::map<std::string , IrcChannel*> _channels;
 
 private:
-    const IrcDB& operator=(const IrcDB& copy);
-	IrcDB(const IrcDB& copy);
-
+	std::map<int, IrcClient *> _clients;
 };
 
 #endif

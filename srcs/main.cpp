@@ -1,4 +1,6 @@
 #include "../include/IrcServ.hpp"
+#include <iostream>
+#include <unistd.h>
 #include <cstdlib>
 
 static void errorHandle(std::string message, int exitCode)
@@ -11,30 +13,28 @@ int main(int argc, char **argv)
 {
     if (argc != 3)
         errorHandle("Usage : ./ircserv [port] [password]", 0);
-    (void)argc;
 
     char *isError = NULL;
     long port = std::strtol(argv[1], &isError, 10);
+    int hostFd;
 
     if (*isError || (0 > port || 65535 < port))
         errorHandle("port error", -1);
-
     try {
         IrcServ serv(port, argv[2]);
+        hostFd = serv.on();
         serv.run();
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
+        return -1;
     } catch (...) {
         std::cout << "unkown exception" << std::endl;
     }
-/*
-    printf("port : %d\n", port);
-    printf("ip : %d\n", htonl(INADDR_ANY));
-*/
+    close(hostFd);
     return 0;
 }
 
 /*
-
-
+    printf("port : %d\n", port);
+    printf("ip : %d\n", htonl(INADDR_ANY));
 */
