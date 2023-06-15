@@ -33,7 +33,6 @@ bool IrcChannel::isJoinedUser(const int clientFd) const {
 void IrcChannel::setGrant(typeMode grant, bool on) {
     if (on){
         _grant |= grant;
-        std::cout << grant << " mode is set" << std::endl;
     }
     else
         _grant &= ~grant;

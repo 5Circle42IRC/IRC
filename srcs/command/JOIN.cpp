@@ -12,7 +12,6 @@ void IrcCommand::joinChannel(std::map<std::string, std::string>& keypair){
 	} catch(std::exception &e){
 		channel = new IrcChannel(name);
 		channel->addUser(_clientFd);
-		channel->setGrant(M_OPERATOR, 1);
 		channel->setOperator(_clientFd, _clientFd);
 		if (key.size() != 0)
 			channel->setPassword(key);
