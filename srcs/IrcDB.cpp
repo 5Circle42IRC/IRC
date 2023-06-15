@@ -2,6 +2,15 @@
 #include "../include/IrcClient.hpp"
 #include "../include/IrcChannel.hpp"
 
+const std::map<std::string, IrcChannel*> IrcDB::getAllChannels() const
+{
+	return _channels;
+}
+
+const std::map<int, IrcClient*> IrcDB::getAllClients() const
+{
+	return _clients;
+}
 
 IrcDB::IrcDB(){}
 IrcDB::~IrcDB(){}
