@@ -208,7 +208,7 @@ void IrcServ::run()
                             try {
                                 command.setClientFd(clientFd).parsing(_recvMessage);
                             } catch (std::exception& e){
-                                clientClass->addBackBuffer(e.what());
+                                clientClass->addBackCarriageBuffer(e.what());
                             }
                         }
                         break;
