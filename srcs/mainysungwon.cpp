@@ -59,9 +59,9 @@ int main(int argc, char **argv)
         print_users_in_ch_name(&db, "#123");
 
         std::string message_mode = "MODE #123 -o ysungwon2";
-        std::cout << "before MODE" << std::endl;
+        std::cout << "///////before MODE//////" << std::endl;
         commandHandler.setClientFd(5).parsing(message_mode);
-        std::cout << "after MODE" << std::endl;
+        std::cout << "/////after MODE//////" << std::endl;
         print_users_in_ch_name(&db, "#123");
 
 
