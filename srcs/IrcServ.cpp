@@ -182,6 +182,7 @@ void IrcServ::run()
 
                     if (clientClass->getBuffer().size() == 0)
                         break;
+                    std::cout << "channel size : " << db._channels.size() << std::endl;
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()

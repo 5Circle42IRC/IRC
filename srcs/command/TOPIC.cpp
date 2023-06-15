@@ -3,7 +3,7 @@
 #include "../../include/IrcDB.hpp"
 #include "../../include/IrcChannel.hpp"
 
-static int checkValidTOPIC(std::deque<std::string> args, IrcDB *_db)
+static void checkValidTOPIC(std::deque<std::string> args, IrcDB *_db)
 {
     if (args.size() != 2)
     {
@@ -11,20 +11,14 @@ static int checkValidTOPIC(std::deque<std::string> args, IrcDB *_db)
         throw std::exception();
     }
 
-
-
-  
-    return 0;
 }
 void IrcCommand::TOPIC(){
      
-    if (checkValidTOPIC(getArgs(), _db) == 0)
-        throw std::exception();
-    
+    checkValidTOPIC(getArgs(), _db);
     std::string chname = _args[0];
     std::string topic = _args[1];
     IrcChannel* channel = _db->findChannel(chname);
-    IrcClient* client = _db->findClientByFd(_clientFd);      
+    IrcClient* client = _db->findClientByFd(_clientFd);
 
     if (channel->isOperator(_clientFd))
     {
