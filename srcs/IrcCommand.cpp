@@ -11,6 +11,7 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandNames.push_back("TOPIC");
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
+	_commandNames.push_back("DISPLAY");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -20,6 +21,8 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandPointers[6] = &IrcCommand::TOPIC;
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
+	_commandPointers[9] = &IrcCommand::DISPLAY;
+
 }
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandNames.push_back("INVITE");
@@ -31,6 +34,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandNames.push_back("TOPIC");
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
+	_commandNames.push_back("DISPLAY");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -40,6 +44,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandPointers[6] = &IrcCommand::TOPIC;
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
+	_commandPointers[9] = &IrcCommand::DISPLAY;
 }
 IrcCommand::~IrcCommand(){}
 
