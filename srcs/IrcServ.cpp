@@ -122,8 +122,6 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
     std::cout << "\n======================================" << std::endl;
     std::cerr << "server receive Message : " << "[" << _recvMessage << "]" << std::endl;
     std::cerr << "server receive Message len : " << std::strlen(_recvMessage) << std::endl;
-    std::cerr << "server send Message : " << "[" << _sendMessage << "]" << std::endl;
-    std::cerr << "server send Message len : " << _sendMessage.size() << std::endl;
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 
 }
