@@ -232,9 +232,10 @@ void IrcServ::run()
                     if (clientClass->getBuffer().size() == 0)
                         break;
                     displayServerParam(clientFd, db);
+                    _sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
                     _writeLen = send(clientFd
-                                    , clientClass->getBuffer().c_str()
-                                    , clientClass->getBuffer().size()
+                                    , _sendMessage.c_str()
+                                    , _sendMessage.size()
                                     , 0);
                     if (_writeLen > 0)
                         std::cerr << "\033[38;5;3m------- user "<< clientClass->getNickname() 
