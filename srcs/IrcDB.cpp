@@ -29,14 +29,14 @@ IrcClient* IrcDB::findClientByName(std::string name){
 IrcClient* IrcDB::findClientByFd(int clientFd){
 	std::map<int, IrcClient *>::iterator it = _clients.find(clientFd);
 	if (it == _clients.end())
-		throw std::exception();
+		throw ERR_CLIENT_NOT_IN_DB();
 	return it->second;
 }
 
 IrcChannel* IrcDB::findChannel(std::string name){
 	std::map<std::string, IrcChannel *>::iterator it = _channels.find(name);
 	if (it == _channels.end())
-		throw std::exception();
+		throw ERR_CHANNEL_NOT_IN_DB();
 	return it->second;
 }
 
@@ -61,3 +61,6 @@ void IrcDB::deleteChannel(std::string name){
 	delete _channels[name];
 	_channels.erase(name);
 }
+
+const char* IrcDB::ERR_CHANNEL_NOT_IN_DB::what() const throw() { return "ERR_CHANNEL_NOT_IN_DB"; }
+const char* IrcDB::ERR_CLIENT_NOT_IN_DB::what() const throw() { return "ERR_CLIENT_NOT_IN_DB"; }
