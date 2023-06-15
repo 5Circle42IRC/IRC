@@ -119,20 +119,19 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
         std::cerr << "channel grant : " << "[" << it->second->getGrant() << "]" << std::endl;
         std::cerr << "channel topic : " << "[" << it->second->getTopic() << "]" << std::endl;
     }
+
     std::cout << "\n======================================" << std::endl;
     std::cerr << "server receive Message : " << "[" << _recvMessage << "]" << std::endl;
     std::cerr << "server receive Message len : " << std::strlen(_recvMessage) << std::endl;
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
-
 }
 
-//password 로직, client에 패스워드 불을 넣기
 void IrcServ::run()
 {
     int acceptFd(0);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen;
-    IrcDB db; //DB선언 DB db;
+    IrcDB db; 
     IrcCommand command(&db);
     int messageLen(0);
 
@@ -193,10 +192,10 @@ void IrcServ::run()
                                 send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
                             } else {
                                 _recvMessage[messageLen - 1] = '\0';
+                                // 여기서 닉네임이 동일한지 판단.
                                 clientClass->setPassword(_recvMessage);
                                 send(clientFd, "input realname : ", 17, 0);
                             }
-                            // 여기서 닉네임이 동일한지 판단.
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             if (messageLen < 2) {
                                 _sendMessage = "wrong input retry : ";
@@ -211,7 +210,6 @@ void IrcServ::run()
                             } catch (std::exception& e){
                                 clientClass->addBackBuffer(e.what());
                             }
-                            std::cout << "$>"<< clientClass->getNickname() << " send massage : " << _recvMessage << std::endl; // char??? std::string???
                         }
                         break;
                     }
@@ -222,6 +220,9 @@ void IrcServ::run()
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()
                                     , 0);
+                    if (_writeLen > 0)
+                        std::cout << "\033[38;5;3m$> User "<< clientClass->getNickname() 
+                                  << " send massage : " << clientClass->getBuffer() << "\033[0m" << std::endl;
                     clientClass->reduceBuffer(_writeLen);
                     break;
                 }
