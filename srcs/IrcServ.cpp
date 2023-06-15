@@ -78,7 +78,6 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
         return false;
     _sendMessage = "input server password : ";
     send(acceptFd, _sendMessage.c_str(), _sendMessage.length(), 0);
-    // 여기는 삽입하지 않음?
     db.insertClient(new IrcClient(acceptFd, "", "", ""));
     FD_SET(acceptFd, &_activeReads);
     FD_SET(acceptFd, &_activeWrites);
