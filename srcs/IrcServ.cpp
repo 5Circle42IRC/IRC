@@ -93,22 +93,35 @@ void IrcServ::deleteClient(int fd)
     close(fd);
 }
 
-void IrcServ::displayServerParam(int clientFd, IrcClient *clientClass, IrcDB& db)
+void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
 {
+	std::map<std::string , IrcChannel*> channels(db.getAllChannels());
+	std::map<int, IrcClient *> clients(db.getAllClients());
+    
     std::cout << "\033[31m" << "--------------------------------------" << std::endl;
-    std::cerr << "client fd : " << clientFd << std::endl;
-    std::cerr << "client nickname : " << "[" << clientClass->getNickname() << "]" << std::endl;
-    std::cerr << "client password : " << "[" << clientClass->getPassword() << "]" << std::endl;
-    std::cerr << "client username : " << "[" << clientClass->getUsername() << "]" << std::endl;
-    std::cout << "======================================" << std::endl;
-    std::cerr << "channl size : " << "[" << db._channels.size() << "]" << std::endl;
-    for (std::map<std::string, IrcChannel*>::iterator it = db._channels.begin(); it != db._channels.end();it++)
-        std::cerr << "channel name : " << "[" << it->second->getName() << "]" << std::endl;
-    std::cout << "======================================" << std::endl;
+    for(std::map<int, IrcClient *>::iterator clientIt = clients.begin(); clientIt != clients.end(); clientIt++)
+    {
+        std::cerr << "client fd : " << clientIt->first << std::endl;
+        std::cerr << "client username : " << "[" << clientIt->second->getUsername() << "]" << std::endl;
+        std::cerr << "client nickname : " << "[" << clientIt->second->getNickname() << "]" << std::endl;
+        std::cerr << "client password : " << "[" << clientIt->second->getPassword() << "]" << std::endl;
+    }
+
+    std::cout << "\n======================================" << std::endl;
+    std::cerr << "channl all size : " << "[" << channels.size() << "]" << std::endl;
+    for (std::map<std::string, IrcChannel*>::iterator it = channels.begin(); it != channels.end(); it++)
+    {
+        std::cout << "\n=-=-=-=-=-=-=-=-=-=" << "[ "  
+                  << "channel name : " << it->second->getName() << " ]" 
+                  << "-=-=-=-=-=-=-=-=-=-" << std::endl;
+        std::cerr << "channel password : " << "[" << it->second->getPassword() << "]" << std::endl;
+        std::cerr << "channel limit : " << "[" << it->second->getLimit() << "]" << std::endl;
+        std::cerr << "channel grant : " << "[" << it->second->getGrant() << "]" << std::endl;
+        std::cerr << "channel topic : " << "[" << it->second->getTopic() << "]" << std::endl;
+    }
+    std::cout << "\n======================================" << std::endl;
     std::cerr << "server receive Message : " << "[" << _recvMessage << "]" << std::endl;
-    std::cerr << "server receive Message len : " << _recvMessage << std::endl;
-    std::cerr << "server send Message : " << "[" << _sendMessage << "]" << std::endl;
-    std::cerr << "server send Message len : " << _sendMessage.size() << std::endl;
+    std::cerr << "server receive Message len : " << std::strlen(_recvMessage) << std::endl;
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 
 }
@@ -204,7 +217,7 @@ void IrcServ::run()
                     }
                     if (clientClass->getBuffer().size() == 0)
                         break;
-                    displayServerParam(clientFd, clientClass, db);
+                    displayServerParam(clientFd, db);
                     _writeLen = send(clientFd
                                     , clientClass->getBuffer().c_str()
                                     , clientClass->getBuffer().size()
