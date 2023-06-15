@@ -50,6 +50,7 @@ class IrcCommand {
 		std::vector<std::string>	_commandNames;
 
 		void joinChannel(std::map<std::string, std::string>& keypair);
+		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
 
 		class ERR_INVALID_ARGUMENT: public std::exception {

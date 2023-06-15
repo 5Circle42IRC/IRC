@@ -1,13 +1,13 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 
-static int checkValidNICK(std::deque<std::string> args, IrcDB *_db)
+int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
 {
     std::string nick = args[0]; 
     if (nick.size() > 9)
     {
         std::cout << "NICK size have to be lower than 9" << std::endl;
-        throw std::exception();
+        throw ERR_INVALID_ARGUMENT();
     }
     if (_db->findClientByName(nick)->getNickname() == nick)
     {

@@ -21,7 +21,8 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 int IrcServ::on()
 {
-    std::memset(_message, 0, sizeof(_message));
+    _passWord.append("\n");
+    std::memset(_recvMessage, 0, sizeof(_recvMessage));
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
     _servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -112,14 +113,17 @@ void IrcServ::run()
             {
                 if (clientFd == _servFd)
                 {
-                    if (!acceptClient(acceptFd, clientAddr, clientAddrLen))
-                        continue ;
-                }
-                else
-                {
-                    memset(_message, 0, sizeof(_message));
-                    _readLen = recv(clientFd, _message, BUFFER_SIZE, 0);
-                    if (_readLen == -1)
+                case ENTER_CLIENT:
+                    if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
+                        std::cerr << "failed accept" << std::endl;
+                    break;
+                default:
+                    // 여기 문제가 있음... 왜 안찾아짐?
+                    IrcClient *clientClass = db.findClientByFd(clientFd);
+
+                    memset(_recvMessage, 0, sizeof(_recvMessage));
+                    _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
+                    if (clientClass->getPasswordFlag() && _readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
                         continue;
@@ -132,19 +136,47 @@ void IrcServ::run()
 
                     if (_readLen == 0)
                     {
+                    case EXIT_CLIENT:
+                        std::cout << "exit_Client" << std::endl;
                         deleteClient(clientFd);
                     }
                     else
                     {
                         if (_passWord.compare(_message))
                         {
-                            deleteClient(clientFd);
-                            continue;
+                            if (!_passWord.compare(_recvMessage))
+                            {
+                                clientClass->setPasswordFlag(true);
+                                if (send(clientFd, "set your password : ", 19, 0))
+                                    std::cerr << "not send" << std::endl;
+                                std::cerr << "acceptFd : " << acceptFd << std::endl;
+                                std::cerr << "clientFd : " << clientFd << std::endl;
+                            } else {
+                                _sendMessage = "Failed Password, plz connecting again";
+                                send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
+                                deleteClient(clientFd);
+                            }
                         }
-                        try {
-                            command.setClientFd(clientFd).parsing(_message);
-                        } catch (std::exception& e){
-                            db.findClientByFd(clientFd)->addBackBuffer(e.what());
+                        else if (clientClass->getPassword().length() == EMPTY)
+                        {
+                            clientClass->setPassword(_recvMessage);
+                            send(clientFd, "input nickname : ", 17, 0);
+                        } else if (clientClass->getNickname().length() == EMPTY) {
+                            clientClass->setNickname(_recvMessage);
+                            send(clientFd, "input realname : ", 17, 0);
+                        } else if (clientClass->getUsername().length() == EMPTY) {
+                            clientClass->setUsername(_recvMessage);
+                            _sendMessage = "$> ";
+                            send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
+                        } else {
+                            _sendMessage = "$> ";
+                            send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
+                            try {
+                                command.setClientFd(clientFd).parsing(_recvMessage);
+                            } catch (std::exception& e){
+                                clientClass->addBackBuffer(e.what());
+                            }
+                            std::cout << _recvMessage << std::endl; // char??? std::string???
                         }
                         std::cout << _message << std::endl; // char??? std::string???
                     }
