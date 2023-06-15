@@ -150,7 +150,7 @@ void IrcServ::run()
                             if (!_passWord.compare(_recvMessage))
                             {
                                 clientClass->setPasswordFlag(true);
-                                if (send(clientFd, "set your password : ", 19, 0))
+                                if (send(clientFd, "set your password : ", 20, 0))
                                     std::cerr << "not send" << std::endl;
                                 std::cerr << "acceptFd : " << acceptFd << std::endl;
                                 std::cerr << "clientFd : " << clientFd << std::endl;
@@ -169,11 +169,7 @@ void IrcServ::run()
                             send(clientFd, "input realname : ", 17, 0);
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             clientClass->setUsername(_recvMessage);
-                            _sendMessage = "$> ";
-                            send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
                         } else {
-                            _sendMessage = "$> ";
-                            send(clientFd, _sendMessage.c_str(), _sendMessage.length(), 0);
                             try {
                                 command.setClientFd(clientFd).parsing(_recvMessage);
                             } catch (std::exception& e){
