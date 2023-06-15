@@ -91,8 +91,12 @@ void IrcCommand::parsing(std::string message){
 		_args.push_back(*it);
 		_command = _args[0];
 		_args.pop_front();
-		std::cout << "after parsing cmd: <" << _command << ">" << std::endl; 
-		checkRunCMD();	
+		std::cout << "after parsing cmd: <" << _command << ">" << std::endl;
+		try {
+		checkRunCMD();
+		} catch (std::exception &e){
+			_db->findClientByFd(_clientFd)->addBackCarriageBuffer(e.what());
+		}
 	}
 }
 
@@ -101,8 +105,8 @@ std::string IrcCommand::getCommand(){ return _command; }
 IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return *this; }
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
-const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR_INVALIDPASSWORD"; }
-const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }
-const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALIDARGUMENT";}
-const char* IrcCommand::ERR_INVALID_COMMAND::what() const throw() { return "ERR_INVALIDCOMMAND";}
+const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR_INVALID_PASSWORD"; }
+const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USER_ON_CHANNEL"; }
+const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALID_ARGUMENT";}
+const char* IrcCommand::ERR_INVALID_COMMAND::what() const throw() { return "ERR_INVALID_COMMAND";}
 const char* IrcCommand::ERR_OUT_OF_BOUND_MESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
