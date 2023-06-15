@@ -31,6 +31,8 @@ class IrcCommand {
 		void PONG();
 		void USER();
 
+		void DISPLAY();
+
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
 		std::string getCommand();
