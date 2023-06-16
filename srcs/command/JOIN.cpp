@@ -16,6 +16,10 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 				throw ERR_USER_ON_CHANNEL();
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
 				throw ERR_INVALID_PASSWORD();
+		if ((channel->getGrant() & M_LIMIT) && channel->getLimit() <= channel->getUser().size())
+				throw ERR_OUT_OF_LIMIT();
+		if ((channel->getGrant() & M_INVITE))
+				throw ERR_INVITE_PERSON_ONLY();
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
 		if (channel->getGrant() & M_KEY)

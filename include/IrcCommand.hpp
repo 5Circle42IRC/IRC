@@ -101,6 +101,12 @@ class IrcCommand {
 		class ERR_UNKNOWNMODE : public std::exception {
 			virtual const char *what() const throw();
 		};
+		class ERR_OUT_OF_LIMIT : public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_INVITE_PERSON_ONLY : public std::exception {
+			virtual const char *what() const throw();
+		};
 };
 
 #endif
