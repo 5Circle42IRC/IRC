@@ -27,7 +27,9 @@ bool IrcChannel::deleteUser(const int target) {
     return _user.erase(target);
 }
 bool IrcChannel::isJoinedUser(const int clientFd) const {
-    return _user.count(clientFd) != 0;
+    if (_user.count(clientFd) == 0)
+        return 0;
+    return 1;
 }
 
 void IrcChannel::setGrant(typeMode grant, bool on) {

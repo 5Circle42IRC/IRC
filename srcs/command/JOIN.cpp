@@ -1,12 +1,17 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
+#include <algorithm>
 
 void IrcCommand::joinChannel(std::string name, std::string key){
 	IrcChannel *channel;
 	IrcClient *client = _db->findClientByFd(_clientFd);
 	try {
 		channel =_db->findChannel(name);
+		if (name.size() > 200)
+			throw ERR_INVALID_NAME_OF_CHANNEL();
+		if (name.find_first_of(",") >= 0 || name.find_first_of(",") >= 0)
+			throw ERR_INVALID_CHAR_IN_NAME();
 		if (channel->isJoinedUser(_clientFd))
 				throw ERR_USER_ON_CHANNEL();
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
@@ -36,7 +41,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 
 void IrcCommand::JOIN(){
 	std::map<int, std::string>argsList;
-	std::map<std::string, std::string>keypair;
+	std::multimap<std::string, std::string>keypair;
 
 	if (_args.begin()->at(0) != '#')
 		throw ERR_INVALID_ARGUMENT();
@@ -45,18 +50,21 @@ void IrcCommand::JOIN(){
 	std::deque<std::string>::iterator it;
 	for (it = _args.begin(); it != _args.end() && it->at(0) == '#'; it++){
 		argsList[i] = *it;
-		keypair[*it] = "";
+		keypair.insert(std::make_pair(*it, ""));
 		i++;
 	}
 	for (; it != _args.end() && it->at(0) != '#'; it++){
-		keypair[argsList[j]] = *it;
+		keypair.find(argsList[j])->second = *it;
 		j++;
 		if (j > i - 1)
 			throw ERR_INVALID_ARGUMENT();
 	}
+	for (std::multimap<std::string, std::string>::iterator it3 = keypair.begin(); it3 != keypair.end(); it3++){
+		std::cout << "argsList : " << it3->first << " ****" << std::endl;
+	}
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();
 	for (std::map<std::string, std::string>::iterator it2 = keypair.begin(); it2 != keypair.end(); it2++){
-		joinChannel(it2->first, it2->second);
+			joinChannel(it2->first, it2->second);
 	}
 }
