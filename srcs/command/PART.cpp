@@ -33,24 +33,19 @@ void IrcCommand::PART(){
 
         chname = _args[i]; 
         channel =_db->findChannel(chname);
-
-
-        int size = chname.size();
-        std::cout << "chname : <" << chname << ">" << std::endl;
-        std::cout << "chname size : <" << size << ">" << std::endl;
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
         */
-        channel = _db->findChannel(chname);
+
+        int size = chname.size();
+        std::cout << "chname : <" << chname << ">" << std::endl;
+        std::cout << "chname size : <" << size << ">" << std::endl;
+
+
         
         
-        ///my own error
-        if (size > 200 || size < 2)
-        {   
-            std::cout << "chname size is wrong, chname : <" << chname << ">" << std::endl;
-            throw std::exception();
-        }  
+
 
 
         /*
@@ -61,17 +56,17 @@ void IrcCommand::PART(){
         if (channel->isJoinedUser(_clientFd) == false)
         {
             std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
-            throw std::exception();
+            throw ERR_NOTONCHANNEL();
         }              
 
         ///my own error
         if (channel->deleteUser(_clientFd) == true)
         {
-            std::cout << "PART success" << std::endl;
+            std::cout << "PART success <" << _clientFd << "> from <" << channel->getName() << ">" << std::endl;
         }
         else
         {
-            std::cout << "PART fail???" << std::endl;
+            std::cout << "PART Fail <" << _clientFd << "> from <" << channel->getName() << ">" << std::endl;
             throw std::exception();
         }
         chnameSum += (chname + " ");
