@@ -192,10 +192,11 @@ void IrcServ::checkUserName(const int clientFd, const int messageLen, IrcClient*
     }
 }
 
-void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass)
+void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
 {
     try {
-        command.setClientFd(clientFd).parsing(_recvMessage);
+        if (messageLen > 1)
+            command.setClientFd(clientFd).parsing(_recvMessage);
     } catch (std::exception& e){
         clientClass->addBackCarriageBuffer(e.what());
     }
@@ -272,7 +273,7 @@ void IrcServ::run()
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             checkUserName(clientFd, messageLen, clientClass);
                         } else {
-                            excuteCommand(command, clientFd, clientClass);
+                            excuteCommand(command, clientFd, messageLen, clientClass);
                         }
                         break;
                     }
