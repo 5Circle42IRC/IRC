@@ -2,16 +2,16 @@
 #include "../include/IrcClient.hpp"
 
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {
-	// _commandList["INVITE"] = &IrcCommand::INVITE;
-	// _commandList["JOIN"] = &IrcCommand::JOIN;
-	// _commandList["NICK"] = &IrcCommand::NICK;
-	// _commandList["PART"] = &IrcCommand::PART;
-	// _commandList["PONG"] = &IrcCommand::PONG;
-	// _commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
-	// _commandList["TOPIC"] = &IrcCommand::TOPIC;
-	// _commandList["USER"] = &IrcCommand::USER;
-	// _commandList["MODE"] = &IrcCommand::MODE;
-	// _commandList["DISPLAY"] = &IrcCommand::DISPLAY;
+	_commandList["INVITE"] = &IrcCommand::INVITE;
+	_commandList["JOIN"] = &IrcCommand::JOIN;
+	_commandList["NICK"] = &IrcCommand::NICK;
+	_commandList["PART"] = &IrcCommand::PART;
+	_commandList["PONG"] = &IrcCommand::PONG;
+	_commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
+	_commandList["TOPIC"] = &IrcCommand::TOPIC;
+	_commandList["USER"] = &IrcCommand::USER;
+	_commandList["MODE"] = &IrcCommand::MODE;
+	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -35,16 +35,16 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 
 }
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
-	// _commandList["INVITE"] = &IrcCommand::INVITE;
-	// _commandList["JOIN"] = &IrcCommand::JOIN;
-	// _commandList["NICK"] = &IrcCommand::NICK;
-	// _commandList["PART"] = &IrcCommand::PART;
-	// _commandList["PONG"] = &IrcCommand::PONG;
-	// _commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
-	// _commandList["TOPIC"] = &IrcCommand::TOPIC;
-	// _commandList["USER"] = &IrcCommand::USER;
-	// _commandList["MODE"] = &IrcCommand::MODE;
-	// _commandList["DISPLAY"] = &IrcCommand::DISPLAY;
+	_commandList["INVITE"] = &IrcCommand::INVITE;
+	_commandList["JOIN"] = &IrcCommand::JOIN;
+	_commandList["NICK"] = &IrcCommand::NICK;
+	_commandList["PART"] = &IrcCommand::PART;
+	_commandList["PONG"] = &IrcCommand::PONG;
+	_commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
+	_commandList["TOPIC"] = &IrcCommand::TOPIC;
+	_commandList["USER"] = &IrcCommand::USER;
+	_commandList["MODE"] = &IrcCommand::MODE;
+	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -131,13 +131,20 @@ std::string IrcCommand::getCommand(){ return _command; }
 IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return *this; }
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
+//JOIN
 const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR_INVALID_PASSWORD"; }
 const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USER_ON_CHANNEL"; }
 const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALID_ARGUMENT";}
+const char* IrcCommand::ERR_OUT_OF_LIMIT::what() const throw() { return "ERR_OUT_OF_LIMIT";}
+const char* IrcCommand::ERR_INVITE_PERSON_ONLY::what() const throw() { return "ERR_INVITE_PERSON_ONLY";}
+
+//PARSING
 const char* IrcCommand::ERR_INVALID_COMMAND::what() const throw() { return "ERR_INVALID_COMMAND";}
 const char* IrcCommand::ERR_OUT_OF_BOUND_MESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
 const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
 const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return "ERR_INVALID_CHAR_IN_NAME"; }
+
+
 //NICK
 const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "ERR_NICKNAMEINUSE"; }
 const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
