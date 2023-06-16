@@ -59,8 +59,6 @@ bool IrcServ::initSelect()
 {
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
-    // _cpyReads = _activeReads;
-    // _cpyWrites = _activeWrites;
     _timeout.tv_sec = 0;
     _timeout.tv_usec = 100;
 
@@ -80,7 +78,6 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     sendTo(acceptFd, "input server password");
     db.insertClient(new IrcClient(acceptFd, "", "", ""));
     FD_SET(acceptFd, &_activeReads);
-    // FD_SET(acceptFd, &_activeWrites);
     if (_fdMax < acceptFd)
         _fdMax = acceptFd;
     return true;
@@ -89,7 +86,6 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
 void IrcServ::deleteClient(int fd)
 {
     FD_CLR(fd, &_activeReads);
-    // FD_CLR(fd, &_activeWrites);
     close(fd);
 }
 
