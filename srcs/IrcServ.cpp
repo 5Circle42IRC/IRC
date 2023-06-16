@@ -7,6 +7,7 @@
 #include <iostream>
 
 IrcServ::IrcServ(){};
+IrcServ::~IrcServ(){};
 IrcServ::IrcServ(int port, std::string passWord)
     : _error(0)
     , _port(port)
@@ -319,5 +320,3 @@ const char *IrcServ::acceptException::what() const throw()
 {
     return "accept error";
 }
-
-IrcServ::~IrcServ(){};
