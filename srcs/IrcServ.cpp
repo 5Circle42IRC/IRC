@@ -56,10 +56,10 @@ int IrcServ::on()
 
 bool IrcServ::initSelect()
 {
-    // FD_COPY(&_activeReads, &_cpyReads);
-    // FD_COPY(&_activeWrites, &_cpyWrites);
-    _cpyReads = _activeReads;
-    _cpyWrites = _activeWrites;
+    FD_COPY(&_activeReads, &_cpyReads);
+    FD_COPY(&_activeWrites, &_cpyWrites);
+    // _cpyReads = _activeReads;
+    // _cpyWrites = _activeWrites;
     _timeout.tv_sec = 0;
     _timeout.tv_usec = 100;
 
