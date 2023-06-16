@@ -1,12 +1,17 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
+#include <algorithm>
 
 void IrcCommand::joinChannel(std::string name, std::string key){
 	IrcChannel *channel;
 	IrcClient *client = _db->findClientByFd(_clientFd);
 	try {
 		channel =_db->findChannel(name);
+		if (name.size() > 200)
+			throw ERR_INVALID_NAME_OF_CHANNEL();
+		if (name.find_first_of(",") >= 0 || name.find_first_of(",") >= 0)
+			throw ERR_INVALID_CHAR_IN_NAME();
 		if (channel->isJoinedUser(_clientFd))
 				throw ERR_USER_ON_CHANNEL();
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
@@ -60,6 +65,6 @@ void IrcCommand::JOIN(){
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();
 	for (std::map<std::string, std::string>::iterator it2 = keypair.begin(); it2 != keypair.end(); it2++){
-		joinChannel(it2->first, it2->second);
+			joinChannel(it2->first, it2->second);
 	}
 }
