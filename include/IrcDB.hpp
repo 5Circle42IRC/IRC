@@ -34,6 +34,9 @@ public:
 	class ERR_CLIENT_NOT_IN_DB: public std::exception{
 		virtual const char *what() const throw();
 	};
+	class ERR_NOSUCHNICK : public std::exception {
+		virtual const char *what() const throw();
+	};		
 
 private:
 	std::map<std::string , IrcChannel*> _channels;

@@ -48,5 +48,4 @@ void IrcCommand::PRIVMSG(){
         std::cout << "af client buffer : <" << client->getBuffer() << ">" << std::endl;
         std::cout << "af target buffer : <" << target->getBuffer() << ">" << std::endl;
     }
-    
 }

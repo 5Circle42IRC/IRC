@@ -19,11 +19,15 @@ void IrcCommand::MODE()
     //channel find check
     IrcChannel* channel = _db->findChannel(_args[0]);
     
+    if (channel->isJoinedUser(_clientFd) == false)
+    {
+        throw ERR_NOTONCHANNEL();
+    }
     //channel operator check
     if (channel->isOperator(_clientFd) == false)
     {
         std::cout << "<" << _db->findClientByFd(_clientFd)->getNickname() << "> is not a operator to <" << channel->getName() << ">" << std::endl;
-        return;      
+        throw ERR_CHANOPRIVSNEEDED();
     }
 
     std::string option = _args[1];
@@ -45,7 +49,7 @@ void IrcCommand::MODE()
     else
     {
         std::cout << "options first letter have to be + or -"<<std::endl;
-        return;              
+        throw ERR_UNKNOWNMODE();           
     }
 
     int argCount = 2;
@@ -93,40 +97,9 @@ void IrcCommand::MODE()
         else
         {
             std::cout << "there is no option : <" << option[i] << ">" << std::endl;
-            return ;
+            throw ERR_UNKNOWNMODE();
         }               
         i++;
     }
-
-    /*
-    if (option[1] == 'o')
-    {
-        int targetFd = _db->findClientByName(_args[2])->getFd();
-        std::cout << "in MODE, targetFD : <" << targetFd << ">  clientFd : <" << _clientFd<< ">" << std::endl;
-        
-
-        channel->setOperator(_clientFd, _db->findClientByName(_args[2])->getFd());
-    }
-    else if (option[1] == 't')
-    {
-
-    }
-    else if (option[1] == 'k')
-    {
-        
-    }    
-    else if (option[1] == 'l')
-    {
-        
-    }
-    else if (option[1] == 'i')
-    {
-        
-    }
-    else
-    {
-        std::cout << "wrong option in MODE" << std::endl;
-    }
-    */
     std::cout << "------MODE end------" << std::endl; 
 }
