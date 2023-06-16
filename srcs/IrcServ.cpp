@@ -168,7 +168,6 @@ void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db,
             sendTo(clientFd, "The name already exists");
         }
     }
-
 }
 
 void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass)
