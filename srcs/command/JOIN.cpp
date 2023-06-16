@@ -58,11 +58,8 @@ void IrcCommand::JOIN(){
 	for (; it != _args.end() && it->at(0) != '#'; it++){
 		keypair.find(argsList[j])->second = *it;
 		j++;
-		if (j > i - 1)
+		if (j > i)
 			throw ERR_INVALID_ARGUMENT();
-	}
-	for (std::multimap<std::string, std::string>::iterator it3 = keypair.begin(); it3 != keypair.end(); it3++){
-		std::cout << "argsList : " << it3->first << " ****" << std::endl;
 	}
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();
