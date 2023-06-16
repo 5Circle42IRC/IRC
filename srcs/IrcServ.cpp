@@ -231,12 +231,19 @@ void IrcServ::run()
     int messageLen(0);
     IrcDB db; 
     IrcCommand command(&db);
-
+    IrcClient *clientClass;
     while (42)
     {
         initSelect();
         for (int clientFd = 0; clientFd < _fdMax + 1; clientFd++)
         {
+            try {
+                clientClass = db.findClientByFd(clientFd);
+                if (clientClass->getUsername().length() != EMPTY)
+                {
+                    writeUserBuffer(clientFd, clientClass);
+                }
+            } catch (std::exception& e) { }
             if (FD_ISSET(clientFd, &_cpyReads))
             {
                 switch (static_cast<int>(clientFd == _servFd))
@@ -246,7 +253,6 @@ void IrcServ::run()
                         std::cerr << "failed accept" << std::endl;
                     break;
                 default:
-                    IrcClient *clientClass = db.findClientByFd(clientFd);
 
                     memset(_recvMessage, 0, sizeof(_recvMessage));
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
@@ -274,14 +280,10 @@ void IrcServ::run()
                             checkUserName(clientFd, messageLen, clientClass);
                         } else {
                             excuteCommand(command, clientFd, messageLen, clientClass);
+                            displayServerParam(clientFd, db);
                         }
                         break;
                     }
-
-                    if (clientClass->getBuffer().size() == 0)
-                        break;
-                    displayServerParam(clientFd, db);
-                    writeUserBuffer(clientFd, clientClass);
                     break;
                 }
             }
