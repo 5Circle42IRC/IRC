@@ -15,7 +15,7 @@ void IrcCommand::PART(){
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"
         */
-        throw std::exception();
+        throw ERR_NEEDMOREPARAMS();
     }
 
 
@@ -38,16 +38,11 @@ void IrcCommand::PART(){
             "<client> <channel> :No such channel"        
         */
 
+
+
         int size = chname.size();
         std::cout << "chname : <" << chname << ">" << std::endl;
         std::cout << "chname size : <" << size << ">" << std::endl;
-
-
-        
-        
-
-
-
         /*
             ERR_NOTONCHANNEL (442) 
             "<client> <channel> :You're not on that channel"
