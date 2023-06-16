@@ -51,7 +51,7 @@ class IrcCommand {
 		commandPtrArr				_commandPointers[10];
 		std::vector<std::string>	_commandNames;
 
-		void joinChannel(std::map<std::string, std::string>& keypair);
+		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
 

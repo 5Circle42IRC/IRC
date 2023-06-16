@@ -48,7 +48,16 @@ private:
     bool initSelect();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd);
-    void displayServerParam(int clientFd, IrcClient *clientClass, IrcDB& db);
+    void displayServerParam(const int clientFd, const IrcDB& db);
+    bool isSameNickname(IrcDB& db, std::string message);
+    void sendTo(int clientFd, std::string message);
+
+    void checkServerPassword(const int clientFd, IrcClient* clientClass);
+    void checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass);
+    void checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass);
+    void checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass);
+    void excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass);
+    void writeUserBuffer(const int clientFd, IrcClient* clientClass);
 
     enum e_active
     {

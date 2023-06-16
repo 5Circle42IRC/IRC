@@ -17,7 +17,7 @@ void IrcCommand::DISPLAY(){
     
     
 
-    std::map<std::string , IrcChannel*>  _channels = _db->_channels;
+    std::map<std::string , IrcChannel*>  _channels = _db->getAllChannels();
     std::cout << "/////all channel////" << std::endl;
     std::cout << "all channel size : <" << _channels.size() << ">" << std::endl;
     std::map<std::string , IrcChannel*>::iterator it;
