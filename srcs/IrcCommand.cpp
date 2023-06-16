@@ -123,3 +123,8 @@ const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOT
 //TOPIC
 const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
 const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR_CHANOPRIVSNEEDED"; }
+
+//MODE
+const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return "ERR_UNKNOWNMODE"; }
+
+

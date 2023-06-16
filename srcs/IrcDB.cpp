@@ -1,7 +1,7 @@
 #include "../include/IrcDB.hpp"
 #include "../include/IrcClient.hpp"
 #include "../include/IrcChannel.hpp"
-
+#include "../include/IrcCommand.hpp"
 const std::map<std::string, IrcChannel*> IrcDB::getAllChannels() const
 {
 	return _channels;
@@ -24,7 +24,7 @@ IrcClient* IrcDB::findClientByName(std::string name){
 			if (it->second->getNickname() == name)
 				return it->second; 
 		}
-	throw std::exception();
+	throw ERR_NOSUCHNICK();
 }
 IrcClient* IrcDB::findClientByFd(int clientFd){
 	std::map<int, IrcClient *>::iterator it = _clients.find(clientFd);
@@ -64,3 +64,4 @@ void IrcDB::deleteChannel(std::string name){
 
 const char* IrcDB::ERR_CHANNEL_NOT_IN_DB::what() const throw() { return "ERR_CHANNEL_NOT_IN_DB"; }
 const char* IrcDB::ERR_CLIENT_NOT_IN_DB::what() const throw() { return "ERR_CLIENT_NOT_IN_DB"; }
+const char* IrcDB::ERR_NOSUCHNICK::what() const throw() { return "ERR_NOSUCHNICK"; }

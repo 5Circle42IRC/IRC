@@ -97,6 +97,13 @@ class IrcCommand {
         class ERR_CHANOPRIVSNEEDED : public std::exception {
             virtual const char *what() const throw();
         };
+
+		//MODE
+        class ERR_UNKNOWNMODE : public std::exception {
+            virtual const char *what() const throw();
+        };		
+		
+		
 };
 
 #endif
