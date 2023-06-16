@@ -50,7 +50,7 @@ class IrcCommand {
 		typedef void (IrcCommand::*commandPtrArr)();
 		commandPtrArr				_commandPointers[10];
 		std::vector<std::string>	_commandNames;
-	//	std::map<std::string, commandPtrArr> _commandList;
+		std::map<std::string, commandPtrArr> _commandList;
 
 		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);

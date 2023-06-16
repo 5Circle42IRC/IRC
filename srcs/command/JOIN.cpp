@@ -10,8 +10,8 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		channel =_db->findChannel(name);
 		if (name.size() > 200)
 			throw ERR_INVALID_NAME_OF_CHANNEL();
-		if (name.find_first_of(",") >= 0 || name.find_first_of(",") >= 0)
-			throw ERR_INVALID_CHAR_IN_NAME();
+		// if (name.find_first_of(",") >= 0 || name.find_first_of(",") >= 0)
+		// 	throw ERR_INVALID_CHAR_IN_NAME();
 		if (channel->isJoinedUser(_clientFd))
 				throw ERR_USER_ON_CHANNEL();
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))

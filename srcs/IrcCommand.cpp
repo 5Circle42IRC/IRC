@@ -2,7 +2,16 @@
 #include "../include/IrcClient.hpp"
 
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {
-//	_command["INVITE"]
+	// _commandList["INVITE"] = &IrcCommand::INVITE;
+	// _commandList["JOIN"] = &IrcCommand::JOIN;
+	// _commandList["NICK"] = &IrcCommand::NICK;
+	// _commandList["PART"] = &IrcCommand::PART;
+	// _commandList["PONG"] = &IrcCommand::PONG;
+	// _commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
+	// _commandList["TOPIC"] = &IrcCommand::TOPIC;
+	// _commandList["USER"] = &IrcCommand::USER;
+	// _commandList["MODE"] = &IrcCommand::MODE;
+	// _commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -26,6 +35,16 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 
 }
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
+	// _commandList["INVITE"] = &IrcCommand::INVITE;
+	// _commandList["JOIN"] = &IrcCommand::JOIN;
+	// _commandList["NICK"] = &IrcCommand::NICK;
+	// _commandList["PART"] = &IrcCommand::PART;
+	// _commandList["PONG"] = &IrcCommand::PONG;
+	// _commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
+	// _commandList["TOPIC"] = &IrcCommand::TOPIC;
+	// _commandList["USER"] = &IrcCommand::USER;
+	// _commandList["MODE"] = &IrcCommand::MODE;
+	// _commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -52,6 +71,7 @@ IrcCommand::~IrcCommand(){}
 
 void IrcCommand::checkRunCMD(){
 	int index = 0;
+	// std::map<std::string, commandPtrArr>
 	for (std::vector<std::string>::iterator it = _commandNames.begin();
 			it != _commandNames.end(); it++) {
 		if (*it == _command){
@@ -73,7 +93,7 @@ void IrcCommand::parsing(std::string message){
 		throw ERR_OUT_OF_BOUND_MESSAGE();
 	message.erase(0, message.find_first_not_of(delim));
 	// 다중메세지 개행, 캐리지리턴 기준으로 나누기 (동작 확인)
-	for (end = message.find_first_of(endl); end != -1; end = message.find_first_of(endl)){
+	for (end = message.find_first_of(endl); message.size() != 0 && end != -1; end = message.find_first_of(endl)){
 		multiCmd.push_back(message.substr(0, end));
 		message.erase(0, end + 1);
 	}
@@ -93,7 +113,8 @@ void IrcCommand::parsing(std::string message){
 				break;
 			i++;
 		}
-		_args.push_back(*it);
+		if (*it != "")
+			_args.push_back(*it);
 		if (_args.size() == 1)
 			_command = _args[0];
 		_args.pop_front();
