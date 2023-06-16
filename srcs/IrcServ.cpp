@@ -112,17 +112,17 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
     std::cout << "\033[31m" << "--------------------------------------" << std::endl;
     for(std::map<int, IrcClient *>::iterator clientIt = clients.begin(); clientIt != clients.end(); clientIt++)
     {
-        std::cerr << "client fd : " << clientIt->first << std::endl;
+        std::cerr << "client fd       : " << clientIt->first << std::endl;
         std::cerr << "client username : " << "[" << clientIt->second->getUsername() << "]" << std::endl;
         std::cerr << "client nickname : " << "[" << clientIt->second->getNickname() << "]" << std::endl;
         std::cerr << "client password : " << "[" << clientIt->second->getPassword() << "]" << std::endl;
     }
 
-    std::cout << "\n======================================" << std::endl;
+    std::cout << "======================================" << std::endl;
     std::cerr << "channl all size : " << "[" << channels.size() << "]" << std::endl;
     for (std::map<std::string, IrcChannel*>::iterator it = channels.begin(); it != channels.end(); it++)
     {
-        std::cout << "\n=-=-=-=-=-=-=-=-=-=" << "[ "  
+        std::cout << "=-=-=-=-=-=-=-=-=-=" << "[ "  
                   << "channel name : " << it->second->getName() << " ]" 
                   << "-=-=-=-=-=-=-=-=-=-" << std::endl;
         std::cerr << "channel password : " << "[" << it->second->getPassword() << "]" << std::endl;
@@ -131,7 +131,7 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
         std::cerr << "channel topic : " << "[" << it->second->getTopic() << "]" << std::endl;
     }
 
-    std::cout << "\n======================================" << std::endl;
+    std::cout << "======================================" << std::endl;
     std::cerr << "server recieve Message : " << "[" << _recvMessage << "]" << std::endl;
     std::cerr << "server recieve Message len : " << std::strlen(_recvMessage) << std::endl;
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
@@ -143,14 +143,91 @@ void IrcServ::sendTo(int clientFd, std::string message)
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
+void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass)
+{
+    if (!_passWord.compare(_recvMessage))
+    {
+        clientClass->setPasswordFlag(true);
+        sendTo(clientFd, "input nickname");
+    } else {
+        sendTo(clientFd, "Failed Password, plz connecting again");
+        deleteClient(clientFd);
+    }
+}
+
+void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass)
+{
+    if (messageLen < 2|| messageLen > 10) {
+        sendTo(clientFd, "wrong input retry");
+    } else {
+        sendTo(clientFd, "set your password");
+        _recvMessage[messageLen - 1] = '\0';
+        if (!isSameNickname(db, _recvMessage)) {
+            clientClass->setNickname(_recvMessage);
+        } else {
+            sendTo(clientFd, "The name already exists");
+        }
+    }
+
+}
+
+void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass)
+{
+    if (messageLen < 2) {
+        sendTo(clientFd, "wrong input retry");
+    } else {
+        _recvMessage[messageLen - 1] = '\0';
+        clientClass->setPassword(_recvMessage);
+        sendTo(clientFd, "input realname");
+    }
+}
+
+void IrcServ::checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass)
+{
+    if (messageLen < 2) {
+        sendTo(clientFd, "wrong input retry");
+    } else {
+        _recvMessage[messageLen - 1] = '\0';
+        clientClass->setUsername(_recvMessage);
+    }
+}
+
+void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass)
+{
+    try {
+        command.setClientFd(clientFd).parsing(_recvMessage);
+    } catch (std::exception& e){
+        clientClass->addBackCarriageBuffer(e.what());
+    }
+
+}
+
+void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
+{
+    _sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
+    _writeLen = send(clientFd
+                    , _sendMessage.c_str()
+                    , _sendMessage.size()
+                    , 0);
+    if (_writeLen > 0)
+    {
+        std::cerr << "\033[38;5;3m------ user "<< clientClass->getNickname() 
+                    << " recieve massage ------\n" 
+                    << clientClass->getBuffer()
+                    << "---------- recieve massage -----------\n" << "\033[0m" << std::endl;
+    }
+    clientClass->reduceBuffer(_writeLen);
+
+}
+
 void IrcServ::run()
 {
     int acceptFd(0);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen;
+    int messageLen(0);
     IrcDB db; 
     IrcCommand command(&db);
-    int messageLen(0);
 
     while (42)
     {
@@ -185,64 +262,23 @@ void IrcServ::run()
                     default:
                         messageLen = std::strlen(_recvMessage);
                         if (clientClass->getPasswordFlag() == false) {
-                            if (!_passWord.compare(_recvMessage))
-                            {
-                                clientClass->setPasswordFlag(true);
-                                sendTo(clientFd, "input nickname");
-                            } else {
-                                sendTo(clientFd, "Failed Password, plz connecting again");
-                                deleteClient(clientFd);
-                            }
+                            checkServerPassword(clientFd, clientClass);
                         } else if (clientClass->getNickname().length() == EMPTY) {
-                            if (messageLen < 2|| messageLen > 10) {
-                                sendTo(clientFd, "wrong input retry");
-                            } else {
-                                sendTo(clientFd, "set your password");
-                                _recvMessage[messageLen - 1] = '\0';
-                                if (!isSameNickname(db, _recvMessage)) {
-                                clientClass->setNickname(_recvMessage);
-                                } else {
-                                    sendTo(clientFd, "The name already exists");
-                                }
-                            }
+                            checkNickname(clientFd, messageLen, db, clientClass);
                         } else if (clientClass->getPassword().length() == EMPTY) {
-                            if (messageLen < 2) {
-                                sendTo(clientFd, "wrong input retry");
-                            } else {
-                                _recvMessage[messageLen - 1] = '\0';
-                                clientClass->setPassword(_recvMessage);
-                                sendTo(clientFd, "input realname");
-                            }
+                            checkUserPassword(messageLen, clientFd, clientClass);
                         } else if (clientClass->getUsername().length() == EMPTY) {
-                            if (messageLen < 2) {
-                                sendTo(clientFd, "wrong input retry");
-                            } else {
-                                _recvMessage[messageLen - 1] = '\0';
-                                clientClass->setUsername(_recvMessage);
-                            }
+                            checkUserName(clientFd, messageLen, clientClass);
                         } else {
-                            try {
-                                command.setClientFd(clientFd).parsing(_recvMessage);
-                            } catch (std::exception& e){
-                                clientClass->addBackCarriageBuffer(e.what());
-                            }
+                            excuteCommand(command, clientFd, clientClass);
                         }
                         break;
                     }
+
                     if (clientClass->getBuffer().size() == 0)
                         break;
                     displayServerParam(clientFd, db);
-                    _sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
-                    _writeLen = send(clientFd
-                                    , _sendMessage.c_str()
-                                    , _sendMessage.size()
-                                    , 0);
-                    if (_writeLen > 0)
-                        std::cerr << "\033[38;5;3m------- user "<< clientClass->getNickname() 
-                                  << "recieve massage------\n" 
-                                  << clientClass->getBuffer()
-                                  << "-------recieve massage------\n" << "\033[0m" << std::endl;
-                    clientClass->reduceBuffer(_writeLen);
+                    writeUserBuffer(clientFd, clientClass);
                     break;
                 }
             }
