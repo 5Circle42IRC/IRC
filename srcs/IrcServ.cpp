@@ -7,6 +7,7 @@
 #include <iostream>
 
 IrcServ::IrcServ(){};
+IrcServ::~IrcServ(){};
 IrcServ::IrcServ(int port, std::string passWord)
     : _error(0)
     , _port(port)
@@ -56,10 +57,10 @@ int IrcServ::on()
 
 bool IrcServ::initSelect()
 {
-    // FD_COPY(&_activeReads, &_cpyReads);
-    // FD_COPY(&_activeWrites, &_cpyWrites);
-    _cpyReads = _activeReads;
-    _cpyWrites = _activeWrites;
+    FD_COPY(&_activeReads, &_cpyReads);
+    FD_COPY(&_activeWrites, &_cpyWrites);
+    // _cpyReads = _activeReads;
+    // _cpyWrites = _activeWrites;
     _timeout.tv_sec = 0;
     _timeout.tv_usec = 100;
 
@@ -168,7 +169,6 @@ void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db,
             sendTo(clientFd, "The name already exists");
         }
     }
-
 }
 
 void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass)
@@ -320,5 +320,3 @@ const char *IrcServ::acceptException::what() const throw()
 {
     return "accept error";
 }
-
-IrcServ::~IrcServ(){};
