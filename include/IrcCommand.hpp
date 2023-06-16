@@ -50,6 +50,7 @@ class IrcCommand {
 		typedef void (IrcCommand::*commandPtrArr)();
 		commandPtrArr				_commandPointers[10];
 		std::vector<std::string>	_commandNames;
+	//	std::map<std::string, commandPtrArr> _commandList;
 
 		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
@@ -97,13 +98,9 @@ class IrcCommand {
         class ERR_CHANOPRIVSNEEDED : public std::exception {
             virtual const char *what() const throw();
         };
-
-		//MODE
-        class ERR_UNKNOWNMODE : public std::exception {
-            virtual const char *what() const throw();
-        };		
-		
-		
+		class ERR_UNKNOWNMODE : public std::exception {
+			virtual const char *what() const throw();
+		};
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include "../include/IrcClient.hpp"
 
 IrcCommand::IrcCommand(IrcDB *db): _db(db) {
+//	_command["INVITE"]
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -77,7 +78,7 @@ void IrcCommand::parsing(std::string message){
 		message.erase(0, end + 1);
 	}
 	multiCmd.push_back(message);
-	if (multiCmd.back() == "")
+	if (multiCmd.back().size() == 0)
 		multiCmd.pop_back();
 	// 메세지 건바이건으로 커맨드 실행
 	for (std::vector<std::string>::iterator it = multiCmd.begin(); it != multiCmd.end(); it++){
@@ -93,6 +94,8 @@ void IrcCommand::parsing(std::string message){
 			i++;
 		}
 		_args.push_back(*it);
+		if (_args.size() == 1)
+			_command = _args[0];
 		_args.pop_front();
 		try {
 			checkRunCMD();
