@@ -235,7 +235,7 @@ void IrcServ::run()
         {
             try {
                 clientClass = db.findClientByFd(clientFd);
-                if (clientClass->getUsername().length() != EMPTY)
+                if (clientClass->getBuffer().length() != EMPTY)
                 {
                     FD_SET(clientFd, &_activeWrites);
                 }
