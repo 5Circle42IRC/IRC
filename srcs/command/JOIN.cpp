@@ -2,6 +2,7 @@
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
 #include <algorithm>
+#include <stdio.h>
 
 void IrcCommand::joinChannel(std::string name, std::string key){
 	IrcChannel *channel;
@@ -60,10 +61,11 @@ void IrcCommand::JOIN(){
 		i++;
 	}
 	for (; it != _args.end() && it->at(0) != '#'; it++){
-		keypair.find(argsList[j])->second = *it;
 		j++;
-		if (j > i)
+		if (j > i){
 			throw ERR_INVALID_ARGUMENT();
+		}
+		keypair.find(argsList[j])->second = *it;
 	}
 	if (it != _args.end())
 		throw ERR_INVALID_ARGUMENT();

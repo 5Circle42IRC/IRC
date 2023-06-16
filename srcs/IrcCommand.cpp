@@ -134,7 +134,7 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 //JOIN
 const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR_INVALID_PASSWORD"; }
 const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USER_ON_CHANNEL"; }
-const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALID_ARGUMENT";}
+const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALID_ARGUMENT"; }
 const char* IrcCommand::ERR_OUT_OF_LIMIT::what() const throw() { return "ERR_OUT_OF_LIMIT";}
 const char* IrcCommand::ERR_INVITE_PERSON_ONLY::what() const throw() { return "ERR_INVITE_PERSON_ONLY";}
 
