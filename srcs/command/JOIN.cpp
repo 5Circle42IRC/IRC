@@ -61,13 +61,12 @@ void IrcCommand::JOIN(){
 		i++;
 	}
 	for (; it != _args.end() && it->at(0) != '#'; it++){
-		j++;
-		if (j > i){
-			throw ERR_INVALID_ARGUMENT();
-		}
 		keypair.find(argsList[j])->second = *it;
+		j++;
+		if (j == i)
+			break;
 	}
-	if (it != _args.end())
+	if (++it != _args.end())
 		throw ERR_INVALID_ARGUMENT();
 	for (std::map<std::string, std::string>::iterator it2 = keypair.begin(); it2 != keypair.end(); it2++){
 			joinChannel(it2->first, it2->second);
