@@ -83,9 +83,10 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     return true;
 }
 
-void IrcServ::deleteClient(int fd)
+void IrcServ::deleteClient(int fd, IrcDB& db)
 {
     FD_CLR(fd, &_activeReads);
+    db.deleteClient(fd);
     close(fd);
 }
 
@@ -228,6 +229,7 @@ void IrcServ::run()
     IrcDB db; 
     IrcCommand command(&db);
     IrcClient *clientClass;
+
     while (42)
     {
         initSelect();
@@ -262,7 +264,7 @@ void IrcServ::run()
                     {
                     case EXIT_CLIENT:
                         std::cerr << "exit_Client" << std::endl;
-                        deleteClient(clientFd);
+                        deleteClient(clientFd, db);
                         break;
                     default:
                         messageLen = std::strlen(_recvMessage);

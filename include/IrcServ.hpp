@@ -47,7 +47,7 @@ private:
 
     bool initSelect();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
-    void deleteClient(int fd);
+    void deleteClient(int fd, IrcDB& db);
     void displayServerParam(const int clientFd, const IrcDB& db);
     bool isSameNickname(IrcDB& db, std::string message);
     void sendTo(int clientFd, std::string message);
