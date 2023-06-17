@@ -268,9 +268,8 @@ void IrcServ::run()
                         break;
                     default:
                         messageLen = std::strlen(_recvMessage);
-                        if (clientClass->getPasswordFlag() == false) {
-                            checkServerPassword(clientFd, clientClass);
-                        } else if (clientClass->getNickname().length() == EMPTY) {
+                        checkServerPassword(clientFd, clientClass);// throw 로직 고민하기
+                        if (clientClass->getNickname().length() == EMPTY) {
                             checkNickname(clientFd, messageLen, db, clientClass);
                         } else if (clientClass->getPassword().length() == EMPTY) {
                             checkUserPassword(messageLen, clientFd, clientClass);
