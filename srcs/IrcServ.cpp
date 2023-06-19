@@ -141,20 +141,22 @@ void IrcServ::sendTo(int clientFd, std::string message)
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
-void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass)
+void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db)
 {
+    _passWord.erase(0, _passWord.find_last_of("\r\n"));
     if (!_passWord.compare(_recvMessage))
     {
         clientClass->setPasswordFlag(true);
         sendTo(clientFd, "input nickname");
     } else {
         sendTo(clientFd, "Failed Password, plz connecting again");
-        deleteClient(clientFd);
+        deleteClient(clientFd, db);
     }
 }
 
 void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass)
 {
+    _passWord.erase(0, _passWord.find_last_of("\r\n"));
     if (messageLen < 2|| messageLen > 10) {
         sendTo(clientFd, "wrong input retry");
     } else {
@@ -170,6 +172,7 @@ void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db,
 
 void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass)
 {
+    _passWord.erase(0, _passWord.find_last_of("\r\n"));
     if (messageLen < 2) {
         sendTo(clientFd, "wrong input retry");
     } else {
@@ -181,6 +184,7 @@ void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcCli
 
 void IrcServ::checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass)
 {
+    _passWord.erase(0, _passWord.find_last_of("\r\n"));
     if (messageLen < 2) {
         sendTo(clientFd, "wrong input retry");
     } else {
@@ -268,7 +272,7 @@ void IrcServ::run()
                         break;
                     default:
                         messageLen = std::strlen(_recvMessage);
-                        checkServerPassword(clientFd, clientClass);// throw 로직 고민하기
+                        checkServerPassword(clientFd, clientClass, db);// throw 로직 고민하기
                         if (clientClass->getNickname().length() == EMPTY) {
                             checkNickname(clientFd, messageLen, db, clientClass);
                         } else if (clientClass->getPassword().length() == EMPTY) {
