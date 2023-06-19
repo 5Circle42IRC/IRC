@@ -256,14 +256,22 @@ void IrcServ::run()
                     if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
                         std::cerr << "failed accept" << std::endl;
                     break;
-                default:
 
+                default:
                     memset(_recvMessage, 0, sizeof(_recvMessage));
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
                     if (clientClass->getPasswordFlag() && _readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
                         break;
+                    }
+                    if (!clientClass->getPasswordFlag())
+                    {
+                        //pass 
+                        std::cout << "_recv : " << _recvMessage << std::endl;
+                        if (!strncmp("PASS ", _recvMessage, 5) && !_passWord.compare(0, _passWord.size() + 1, _recvMessage, 5, sizeof(_recvMessage)))
+                            clientClass->setPasswordFlag(true);
+                        continue;
                     }
 
                     switch (_readLen)
