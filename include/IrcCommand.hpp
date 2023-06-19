@@ -30,6 +30,8 @@ class IrcCommand {
 		void PART();
 		void PONG();
 		void USER();
+		void PASS();
+		void DISPLAY();
 
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
@@ -46,10 +48,11 @@ class IrcCommand {
 		int							_clientFd;
 
 		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[9];
+		commandPtrArr				_commandPointers[11];
 		std::vector<std::string>	_commandNames;
+		std::map<std::string, commandPtrArr> _commandList;
 
-		void joinChannel(std::map<std::string, std::string>& keypair);
+		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
 
@@ -67,6 +70,41 @@ class IrcCommand {
 			virtual const char *what() const throw();
 		};
 		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_INVALID_NAME_OF_CHANNEL: public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_INVALID_CHAR_IN_NAME: public std::exception {
+			virtual const char *what() const throw();
+		};
+        class ERR_NICKNAMEINUSE: public std::exception {
+            virtual const char *what() const throw();
+        };
+        class ERR_NONICKNAMEGIVEN : public std::exception {
+            virtual const char *what() const throw();
+        };
+        class ERR_ERRONEUSNICKNAME : public std::exception {
+            virtual const char *what() const throw();
+        };
+        //PART
+        class ERR_NOTONCHANNEL : public std::exception {
+            virtual const char *what() const throw();
+        };
+        //TOPIC
+        class ERR_NEEDMOREPARAMS : public std::exception {
+            virtual const char *what() const throw();
+        };
+        class ERR_CHANOPRIVSNEEDED : public std::exception {
+            virtual const char *what() const throw();
+        };
+		class ERR_UNKNOWNMODE : public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_OUT_OF_LIMIT : public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_INVITE_PERSON_ONLY : public std::exception {
 			virtual const char *what() const throw();
 		};
 };

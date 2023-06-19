@@ -1,10 +1,10 @@
 #include "../include/IrcChannel.hpp"
 
 IrcChannel::IrcChannel()
-    : _name("no Name"), _topic("any thing"), _grant(0) {}
+    : _name("no Name"), _topic("any thing"), _grant(0), _limit(0) {}
  
 IrcChannel::IrcChannel(std::string name)
-    : _name(name), _topic("any thing"), _grant(0) {}
+    : _name(name), _topic("any thing"), _grant(0), _limit(0) {}
 
 IrcChannel::~IrcChannel() {}
 
@@ -27,7 +27,9 @@ bool IrcChannel::deleteUser(const int target) {
     return _user.erase(target);
 }
 bool IrcChannel::isJoinedUser(const int clientFd) const {
-    return _user.count(clientFd) != 0;
+    if (_user.count(clientFd) == 0)
+        return 0;
+    return 1;
 }
 
 void IrcChannel::setGrant(typeMode grant, bool on) {
@@ -53,7 +55,7 @@ int IrcChannel::getGrant() const { return _grant; }
 bool IrcChannel::isOperator(const int clientFd) const {
     if (isJoinedUser(clientFd))
         return _user.find(clientFd)->second;
-    throw InvalidClientFd();
+    return 0;
 }
 
 const std::map<int, bool>& IrcChannel::getUser() const { return _user; }

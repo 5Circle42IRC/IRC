@@ -3,27 +3,35 @@
 
 int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
 {
-    std::string nick = args[0]; 
-    if (nick.size() > 9)
+    std::string newNick = args[0]; 
+    std::string oldNick = _db->findClientByFd(_clientFd)->getNickname();
+    if (newNick.size() > 9)
     {
-        std::cout << "NICK size have to be lower than 9" << std::endl;
-        throw std::exception();
+        throw ERR_ERRONEUSNICKNAME();  
     }
-    if (_db->findClientByName(nick)->getNickname() == nick)
+    if (_db->findClientByFd(_clientFd)->getNickname() == newNick)
     {
-        std::cout << "Already same nick exists." << std::endl;
-        std::cout << "nick <" << nick << ">  " << "ClientFd : <" << _db->findClientByName(nick)->getFd() << ">" << std::endl;
-        throw std::exception();        
+        throw ERR_NICKNAMEINUSE();
     } 
-    return 1;
+    return 0;
 }
+
 void IrcCommand::NICK(){
     
+        IrcClient* client = _db->findClientByFd(_clientFd);
         if (getArgs().size() != 1)
-            std::cout << "NICK args size is not 1" << std::endl;
+        {
+            throw ERR_NONICKNAMEGIVEN();               
+        }
         else
         {
-            if (checkValidNICK(getArgs(), _db) == 1 )
-                _db->findClientByFd(_clientFd)->setNickname(getArgs()[0]);
+            std::string oldNick = client->getNickname();
+            
+            checkValidNICK(getArgs(), _db);
+            _db->findClientByFd(_clientFd)->setNickname(getArgs()[0]);
+            
+            //:WiZ NICK Kilroy 
+            client->addBackBuffer(":" + oldNick + " NICK " + client->getNickname() + "\r\n");
+            client->setPasswordFlag(true);
         }    
 }

@@ -37,7 +37,7 @@ public:
     const std::map<int, bool>&  getUser() const;
     const int                   getLimit() const;
 
-protected:
+private:
     IrcChannel(const IrcChannel& copy);
     std::string         _name;
     std::string         _topic;
@@ -47,8 +47,6 @@ protected:
     int                 _limit;
 
     std::map<int, bool>	_user;
-
-private:
 
     class InvalidGrant : public std::exception {
         public:
