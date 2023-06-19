@@ -12,6 +12,7 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
+	_commandList["DISPLAY"] = &IrcCommand::PASS;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -22,6 +23,7 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
 	_commandNames.push_back("DISPLAY");
+	_commandNames.push_back("PASS");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -32,6 +34,7 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
 	_commandPointers[9] = &IrcCommand::DISPLAY;
+	_commandPointers[10] = &IrcCommand::PASS;
 
 }
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
@@ -45,6 +48,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
+	_commandList["DISPLAY"] = &IrcCommand::PASS;
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -55,6 +59,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
 	_commandNames.push_back("DISPLAY");
+	_commandNames.push_back("PASS");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -65,6 +70,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
 	_commandPointers[9] = &IrcCommand::DISPLAY;
+	_commandPointers[10] = &IrcCommand::PASS;
 }
 IrcCommand::~IrcCommand(){}
 

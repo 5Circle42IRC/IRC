@@ -266,18 +266,18 @@ void IrcServ::run()
                         break;
                     default:
                         messageLen = std::strlen(_recvMessage);
-                        if (clientClass->getPasswordFlag() == false) {
-                            checkServerPassword(clientFd, clientClass);
-                        } else if (clientClass->getNickname().length() == EMPTY) {
-                            checkNickname(clientFd, messageLen, db, clientClass);
-                        } else if (clientClass->getPassword().length() == EMPTY) {
-                            checkUserPassword(messageLen, clientFd, clientClass);
-                        } else if (clientClass->getUsername().length() == EMPTY) {
-                            checkUserName(clientFd, messageLen, clientClass);
-                        } else {
+                        // if (clientClass->getPasswordFlag() == false) {
+                        //     checkServerPassword(clientFd, clientClass);
+                        // } else if (clientClass->getNickname().length() == EMPTY) {
+                        //     checkNickname(clientFd, messageLen, db, clientClass);
+                        // } else if (clientClass->getPassword().length() == EMPTY) {
+                        //     checkUserPassword(messageLen, clientFd, clientClass);
+                        // } else if (clientClass->getUsername().length() == EMPTY) {
+                        //     checkUserName(clientFd, messageLen, clientClass);
+                        // } else {
                             excuteCommand(command, clientFd, messageLen, clientClass);
                             displayServerParam(clientFd, db);
-                        }
+                        // }
                         break;
                     }
                     break;
