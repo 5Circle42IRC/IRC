@@ -83,10 +83,19 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     return true;
 }
 
-void IrcServ::deleteClient(int fd)
+void IrcServ::deleteClient(int clientFd, IrcDB& db)
 {
-    FD_CLR(fd, &_activeReads);
-    close(fd);
+    FD_CLR(clientFd, &_activeReads);
+    std::map<std::string , IrcChannel*>_channels = db.getAllChannels();
+    std::map<std::string , IrcChannel*>::iterator it;
+    for (it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if (it->second->isJoinedUser(clientFd))
+            it->second->deleteUser(clientFd);
+    }    
+    db.deleteClient(clientFd);
+
+    close(clientFd);
 }
 
 bool IrcServ::isSameNickname(IrcDB& db, std::string message)
@@ -140,7 +149,7 @@ void IrcServ::sendTo(int clientFd, std::string message)
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
-void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass)
+void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db)
 {
     if (!_passWord.compare(_recvMessage))
     {
@@ -148,7 +157,8 @@ void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass)
         sendTo(clientFd, "input nickname");
     } else {
         sendTo(clientFd, "Failed Password, plz connecting again");
-        deleteClient(clientFd);
+
+        deleteClient(clientFd, db);
     }
 }
 
@@ -269,23 +279,13 @@ void IrcServ::run()
                     {
                     case EXIT_CLIENT:
                         std::cerr << "exit_Client" << std::endl;
-                        deleteClient(clientFd);
+                        deleteClient(clientFd, db);
                         break;
                     default:
                         messageLen = std::strlen(_recvMessage);
-                        // if (clientClass->getPasswordFlag() == false) {
-                        //     checkServerPassword(clientFd, clientClass);
-                        // } else if (clientClass->getNickname().length() == EMPTY) {
-                        //     checkNickname(clientFd, messageLen, db, clientClass);
-                        // } else if (clientClass->getPassword().length() == EMPTY) {
-                        //     checkUserPassword(messageLen, clientFd, clientClass);
-                        // } else if (clientClass->getUsername().length() == EMPTY) {
-                        //     checkUserName(clientFd, messageLen, clientClass);
-                        // } else {
-                            IrcCommand command1(&db, clientFd);
-                            excuteCommand(command1, clientFd, messageLen, clientClass);
-                            displayServerParam(clientFd, db);
-                        // }
+                        IrcCommand command1(&db, clientFd);
+                        excuteCommand(command1, clientFd, messageLen, clientClass);
+                        displayServerParam(clientFd, db);
                         break;
                     }
                     break;
