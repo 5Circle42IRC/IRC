@@ -90,11 +90,6 @@ void IrcCommand::checkRunCMD(){
 }
 
 void IrcCommand::parsing(std::string message){
-
-	
-	
-	if (message[0] == 'C')
-		return;
 	int		end;
 	std::vector<std::string> multiCmd;
 	std::string	delim = " ,\t\v\f";
@@ -120,8 +115,11 @@ void IrcCommand::parsing(std::string message){
 		for (end = it->find_first_of(delim); end != -1; end = it->find_first_of(delim)){
 			_args.push_back(it->substr(0, end));
 			it->erase(0, end + 1);
-			if (i == 0)
+			if (i == 0){
 				_command = _args[0];
+				if (_command == "JOIN")
+					delim = " \t\v\f";
+			}
 			if ((!_command.compare("PRIVMSG") || !_command.compare("TOPIC")) && i > 0)
 				break;
 			i++;
