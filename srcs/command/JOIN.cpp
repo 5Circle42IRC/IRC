@@ -65,7 +65,7 @@ void IrcCommand::JOIN(){
 	for (int end = _args[1].find(","); end != -1; end = _args[1].find(",")){
 		passwordList.push_back(_args[1].substr(0, end));
 		_args[1].erase(0, end + 1);
-	}	
+	}
 	passwordList.push_back(_args[1]);
 	if (passwordList.back().size() == 0)
 		passwordList.pop_back();
