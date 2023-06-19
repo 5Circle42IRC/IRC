@@ -90,6 +90,11 @@ void IrcCommand::checkRunCMD(){
 }
 
 void IrcCommand::parsing(std::string message){
+
+	
+	
+	if (message[0] == 'C')
+		return;
 	int		end;
 	std::vector<std::string> multiCmd;
 	std::string	delim = " ,\t\v\f";

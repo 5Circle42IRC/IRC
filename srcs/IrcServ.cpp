@@ -136,7 +136,7 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
 
 void IrcServ::sendTo(int clientFd, std::string message)
 {
-    std::string sendMessage("\033[38;5;3m" + message + "\r\n" + "\033[0m");
+    std::string sendMessage("\033[38;5;3m" + message + "\r" + "\033[0m");
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
@@ -203,17 +203,24 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
 {
     if (clientClass->getBuffer().size())
     {
-        _sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
+        //_sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
+        _sendMessage = clientClass->getBuffer();
         _writeLen = send(clientFd
                         , _sendMessage.c_str()
                         , _sendMessage.size()
                         , 0);
         if (_writeLen > 0)
         {
+            /*
             std::cerr << "\033[38;5;3m------ user "<< clientClass->getNickname() 
                         << " recieve massage ------\n" 
                         << clientClass->getBuffer()
                         << "---------- recieve massage -----------\n" << "\033[0m" << std::endl;
+            */
+           std::cerr << "------ user "<< clientClass->getNickname() 
+                        << " recieve massage ------\n" 
+                        << clientClass->getBuffer()
+                        << "---------- recieve massage -----------\n" << "" << std::endl;
         }
         clientClass->reduceBuffer(_writeLen);
     }
