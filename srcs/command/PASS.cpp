@@ -1,12 +1,6 @@
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 
-int IrcCommand::checkValidPASS(std::deque<std::string> args, IrcDB *_db)
-{
-
-    return 0;
-}
-
 void IrcCommand::PASS(){
     
         IrcClient* client = _db->findClientByFd(_clientFd);
@@ -17,7 +11,7 @@ void IrcCommand::PASS(){
         }
         else
         {
-            
-            client->addBackBuffer(":" + client->getNickname() + " PASS " + _args[1] + "\r\n");
+            client->setPassword(_args[0]);
+            client->addBackBuffer(":" + client->getNickname() + " PASS " + _args[0] + "\r\n");
         }    
 }
