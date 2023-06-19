@@ -30,7 +30,7 @@ class IrcCommand {
 		void PART();
 		void PONG();
 		void USER();
-
+		void PASS();
 		void DISPLAY();
 
 		IrcCommand& setClientFd(int clientFd);
@@ -48,7 +48,7 @@ class IrcCommand {
 		int							_clientFd;
 
 		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[10];
+		commandPtrArr				_commandPointers[11];
 		std::vector<std::string>	_commandNames;
 		std::map<std::string, commandPtrArr> _commandList;
 

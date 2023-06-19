@@ -58,6 +58,8 @@ void IrcCommand::PART(){
         if (channel->deleteUser(_clientFd) == true)
         {
             std::cout << "PART success <" << _clientFd << "> from <" << channel->getName() << ">" << std::endl;
+            if (channel->getUser().size() == 0)
+                _db->deleteChannel(channel->getName());
         }
         else
         {

@@ -68,7 +68,7 @@ test/
 *.app
 
 test.*
-test/
+test*/
 .vscode/
 
 Makefile

@@ -32,5 +32,6 @@ void IrcCommand::NICK(){
             
             //:WiZ NICK Kilroy 
             client->addBackBuffer(":" + oldNick + " NICK " + client->getNickname() + "\r\n");
+            client->setPasswordFlag(true);
         }    
 }

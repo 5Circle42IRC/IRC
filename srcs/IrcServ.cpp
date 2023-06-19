@@ -210,17 +210,24 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
 {
     if (clientClass->getBuffer().size())
     {
-        _sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
+        //_sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
+        _sendMessage = clientClass->getBuffer();
         _writeLen = send(clientFd
                         , _sendMessage.c_str()
                         , _sendMessage.size()
                         , 0);
         if (_writeLen > 0)
         {
+            /*
             std::cerr << "\033[38;5;3m------ user "<< clientClass->getNickname() 
                         << " recieve massage ------\n" 
                         << clientClass->getBuffer()
                         << "---------- recieve massage -----------\n" << "\033[0m" << std::endl;
+            */
+           std::cerr << "------ user "<< clientClass->getNickname() 
+                        << " recieve massage ------\n" 
+                        << clientClass->getBuffer()
+                        << "---------- recieve massage -----------\n" << "" << std::endl;
         }
         clientClass->reduceBuffer(_writeLen);
     }
