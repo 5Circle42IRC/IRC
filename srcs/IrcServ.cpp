@@ -278,11 +278,13 @@ void IrcServ::run()
                     {
                         //pass 
                         std::cout << "_recv : " << _recvMessage << std::endl;
-                        if (!strncmp("PASS ", _recvMessage, 5) && !_passWord.compare(0, _passWord.size() + 1, _recvMessage, 5, sizeof(_recvMessage)))
-                            clientClass->setPasswordFlag(true);
-                        continue;
+                        if (!strncmp("PASS ", _recvMessage, 5) 
+                            && !_passWord.compare(0, _passWord.size() + 1, _recvMessage, 5, sizeof(_recvMessage)))
+                            clientClass->setPasswordFlag(1);
+                        break;
                     }
 
+                    sendTo(clientFd, "input server password");
                     switch (_readLen)
                     {
                     case EXIT_CLIENT:

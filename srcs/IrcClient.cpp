@@ -130,12 +130,12 @@ void IrcClient::reduceBuffer(int result)
     _buffer.erase(0, result);
 }
 
-void IrcClient::setPasswordFlag(bool flag)
+void IrcClient::setPasswordFlag(int number)
 {
-    _passwordFlag = flag;
+    _passwordFlag += number;
 }
 
-const bool IrcClient::getPasswordFlag() const
+const int IrcClient::getPasswordFlag() const
 {
     return _passwordFlag;
 }
