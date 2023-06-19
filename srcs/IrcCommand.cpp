@@ -87,7 +87,7 @@ void IrcCommand::parsing(std::string message){
 	int		end;
 	std::vector<std::string> multiCmd;
 	std::string	delim = " ,\t\v\f";
-	std::string endl = "\n\r";
+	std::string endl = "\r\n";
 
 	if (message.size() > 512)
 		throw ERR_OUT_OF_BOUND_MESSAGE();
@@ -96,6 +96,8 @@ void IrcCommand::parsing(std::string message){
 	for (end = message.find_first_of(endl); message.size() != 0 && end != -1; end = message.find_first_of(endl)){
 		multiCmd.push_back(message.substr(0, end));
 		message.erase(0, end + 1);
+		if (message[0] == '\n' || '\r')
+			message.erase(0);
 	}
 	multiCmd.push_back(message);
 	if (multiCmd.back().size() == 0)
