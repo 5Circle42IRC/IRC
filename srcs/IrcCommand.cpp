@@ -99,7 +99,32 @@ void IrcCommand::parsing(std::string message){
 	std::vector<std::string> multiCmd;
 	std::string	delim = " ,\t\v\f";
 	std::string endl = "\r\n";
+	IrcClient *client = _db->findClientByFd(_clientFd);
 
+	_args.clear();
+
+	if (client->getNickname().size() == 0){
+		int end1;
+		if (message.substr(0, 5) == "NICK "){
+			message.erase(0, 5);
+			_command = "NICK";
+			end = message.find_first_of(endl);
+			_args.push_back(message.substr(0, end));
+			checkRunCMD();
+		}
+		else{
+			client->addBackCarriageBuffer("input your Nickname");
+			return ;
+		}
+	}
+	if (client->getUsername().size() == 0){
+		if (message.substr(0, 5) == "USER "){
+			message.erase(0, 5);
+			_command = "USER";
+			_args.push_back(message);
+			checkRunCMD();
+		}
+	}
 	if (message.size() > 512)
 		throw ERR_OUT_OF_BOUND_MESSAGE();
 	message.erase(0, message.find_first_not_of(delim));
