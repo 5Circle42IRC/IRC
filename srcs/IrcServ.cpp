@@ -282,7 +282,8 @@ void IrcServ::run()
                         // } else if (clientClass->getUsername().length() == EMPTY) {
                         //     checkUserName(clientFd, messageLen, clientClass);
                         // } else {
-                            excuteCommand(command, clientFd, messageLen, clientClass);
+                            IrcCommand command1(&db, clientFd);
+                            excuteCommand(command1, clientFd, messageLen, clientClass);
                             displayServerParam(clientFd, db);
                         // }
                         break;

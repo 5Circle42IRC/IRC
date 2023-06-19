@@ -37,7 +37,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		if (key.size() != 0){
 			channel->setPassword(key);
 			channel->setGrant(M_KEY, true);
-			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 		}
 		else
 			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ "\r\n");		
@@ -62,13 +62,15 @@ void IrcCommand::JOIN(){
 	channelList.push_back(_args[0]);
 	if (channelList.back().size() == 0)
 		channelList.pop_back();
-	for (int end = _args[1].find(","); end != -1; end = _args[1].find(",")){
-		passwordList.push_back(_args[1].substr(0, end));
-		_args[1].erase(0, end + 1);
+	if (_args.size() == 2){
+		for (int end = _args[1].find(","); end != -1; end = _args[1].find(",")){
+			passwordList.push_back(_args[1].substr(0, end));
+			_args[1].erase(0, end + 1);
+		}
+		passwordList.push_back(_args[1]);
+		if (passwordList.back().size() == 0)
+			passwordList.pop_back();
 	}
-	passwordList.push_back(_args[1]);
-	if (passwordList.back().size() == 0)
-		passwordList.pop_back();
 	if (channelList.size() < passwordList.size())
 		throw ERR_INVALID_ARGUMENT();
 	for (int i = 0; i < channelList.size(); i++){
@@ -80,47 +82,4 @@ void IrcCommand::JOIN(){
 	for (std::multimap<std::string, std::string>::iterator it = keypair.begin(); it != keypair.end(); it++){
 		joinChannel(it->first, it->second); 
 	}
-	
-	// std::map<int, std::string>argsList;
-	// std::multimap<std::string, std::string>keypair;
-
-	// if (_args.begin()->at(0) != '#')
-	// 	throw ERR_INVALID_ARGUMENT();
-	// int i = 0;
-	// int j = 0;
-	// for (std::deque<std::string>::iterator it = _args.begin(); it != _args.end() && it->at(0) == '#'; it++){
-	// 	i++;
-	// }
-	// if (_args.size() > i * 2)
-	// 	throw ERR_INVALID_ARGUMENT();
-	// if (_args.size() == i){
-	// 	for (std::deque<std::string>::iterator it2 = _args.begin(); it2 != _args.end(); it2++)
-	// 	joinChannel(*it2, "");
-	// 	return ;
-	// }
-	// std::cout << "strat here" << std::endl;
-	// int size = i;
-	// std::cout << size << " " << i << std::endl;
-	// for (int j = 0; j <= size && i < _args.size(); j++){
-	// 	keypair.insert(std::make_pair(_args[j], _args[i]));
-	// 	i++;
-	// }
-	// for (std::map<std::string, std::string>::iterator it3 = keypair.begin(); it3 != keypair.end(); it3++){
-	// 	std::cout << it3->first << " " << it3->second << std::endl;
-	// 	joinChannel(it3->first, it3->second);
-	// }
-
-	// std::deque<std::string>::iterator it;
-	// for (it = _args.begin(); it != _args.end() && it->at(0) == '#'; it++){
-	// 	argsList[i] = *it;
-	// 	keypair.insert(std::make_pair(*it, ""));
-	// 	i++;
-	// }
-	// for (; it != _args.end() && it->at(0) != '#'; it++){
-	// 	keypair.find(argsList[j])->= *it;
-	// 	j++;
-	// 	if (j == i && ++it != _args.end())
-	// 		throw ERR_INVALID_ARGUMENT();
-	// }
-
 }
