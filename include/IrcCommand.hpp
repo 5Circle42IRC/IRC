@@ -30,7 +30,7 @@ class IrcCommand {
 		void PART();
 		void PONG();
 		void USER();
-
+		void PASS();
 		void DISPLAY();
 
 		IrcCommand& setClientFd(int clientFd);
