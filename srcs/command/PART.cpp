@@ -69,6 +69,6 @@ void IrcCommand::PART(){
         chnameSum += (chname + " ");
         i++;
     }
-    client->addBackBuffer(client->getNickname() + ": PART " + chnameSum);
+    client->addBackBuffer(client->getNickname() + ": PART " + chnameSum + "\r\n");
     return ;
 }
