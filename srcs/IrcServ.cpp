@@ -154,7 +154,6 @@ void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, Ir
         deleteClient(clientFd, db);
     }
 }
-*/
 
 void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass)
 {
@@ -194,9 +193,11 @@ void IrcServ::checkUserName(const int clientFd, const int messageLen, IrcClient*
         clientClass->setUsername(_recvMessage);
     }
 }
+*/
 
-void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
+void IrcServ::excuteCommand(IrcDB& db, const int clientFd, int messageLen, IrcClient* clientClass)
 {
+    IrcCommand command(&db, clientFd);
     try {
         if (messageLen > 1)
             command.setClientFd(clientFd).parsing(_recvMessage);
@@ -218,19 +219,19 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
                         , 0);
         if (_writeLen > 0)
         {
-            /*
             std::cerr << "\033[38;5;3m------ user "<< clientClass->getNickname() 
                         << " recieve massage ------\n" 
                         << clientClass->getBuffer()
                         << "---------- recieve massage -----------\n" << "\033[0m" << std::endl;
-            */
-           std::cerr << "------ user "<< clientClass->getNickname() 
-                        << " recieve massage ------\n" 
-                        << clientClass->getBuffer()
-                        << "---------- recieve massage -----------\n" << "" << std::endl;
         }
         clientClass->reduceBuffer(_writeLen);
     }
+}
+
+bool IrcServ::login(int clientFd, IrcDB& db)
+{
+    IrcCommand command(&db, clientFd);
+    std::string message(_recvMessage);
 }
 
 void IrcServ::run()
@@ -240,7 +241,6 @@ void IrcServ::run()
     socklen_t clientAddrLen;
     int messageLen(0);
     IrcDB db; 
-    IrcCommand command(&db);
     IrcClient *clientClass;
 
     while (42)
@@ -280,9 +280,11 @@ void IrcServ::run()
                         deleteClient(clientFd, db);
                         break;
                     default:
-                        excuteCommand(command, clientFd, messageLen, clientClass);
-                        displayServerParam(clientFd, db);
-
+                        if (login(clientFd, db))
+                        {
+                            excuteCommand(db, clientFd, messageLen, clientClass);
+                            displayServerParam(clientFd, db);
+                        }
 /*
                         if (clientClass->getNickname().length() == EMPTY) {
                             sendTo(clientFd, "plz input getNickname");

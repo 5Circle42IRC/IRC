@@ -56,7 +56,9 @@ private:
     void checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass);
     void checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass);
     void checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass);
-    void excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass);
+
+    bool login(int clientFd, IrcDB& db);
+    void excuteCommand(IrcDB& db, const int clientFd, int messageLen, IrcClient* clientClass);
     void writeUserBuffer(const int clientFd, IrcClient* clientClass);
 
     enum e_active
