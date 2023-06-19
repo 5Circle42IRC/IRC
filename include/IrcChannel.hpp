@@ -27,6 +27,7 @@ public:
     void setOperator(const int clientFd, const int target);
     void setTopic(std::string& newTopic);
     void setPassword(std::string& newPassword);
+    void setLimit(int limit);
     bool isOperator(const int clientFd) const;
 
     int getGrant() const;

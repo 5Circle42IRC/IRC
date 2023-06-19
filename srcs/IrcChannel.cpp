@@ -40,6 +40,7 @@ void IrcChannel::setGrant(typeMode grant, bool on) {
         _grant &= ~grant;
 }
 
+void IrcChannel::setLimit(int limit) { _limit = limit; }
 void IrcChannel::setOperator(const int clientFd, const int target) {
     if (_user.size() == 1 && isJoinedUser(clientFd)) {
         _user[target] = true;
