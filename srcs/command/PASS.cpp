@@ -11,7 +11,6 @@ void IrcCommand::PASS(){
         }
         else
         {
-            client->setPassword(_args[0]);
             client->addBackBuffer(":" + client->getNickname() + " PASS " + _args[0] + "\r\n");
         }    
 }

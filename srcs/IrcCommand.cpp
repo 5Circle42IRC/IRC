@@ -91,7 +91,7 @@ void IrcCommand::parsing(std::string message){
 
 	_args.clear();
 
-	if (client->getPasswordFlag() == false){
+	if (client->getPasswordFlag() < 3){
 		if (client->getNickname().size() == 0){
 			if (message.substr(0, 5) == "NICK "){
 				message.erase(0, 5);
@@ -102,6 +102,7 @@ void IrcCommand::parsing(std::string message){
 				}
 				_args.push_back(message.substr(0, end));
 				checkRunCMD();
+				client->setPasswordFlag(1);
 				return ;
 			}
 			else {
@@ -119,7 +120,7 @@ void IrcCommand::parsing(std::string message){
 				}
 				_args.push_back(message.substr(0, end));
 				checkRunCMD();
-				client->setPasswordFlag(true);
+				client->setPasswordFlag(1);
 				return ;
 			}
 			else {
