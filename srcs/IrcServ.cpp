@@ -141,6 +141,7 @@ void IrcServ::sendTo(int clientFd, std::string message)
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
+/*
 void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db)
 {
     _passWord.erase(0, _passWord.find_last_of("\r\n"));
@@ -153,6 +154,7 @@ void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, Ir
         deleteClient(clientFd, db);
     }
 }
+*/
 
 void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass)
 {
@@ -271,6 +273,19 @@ void IrcServ::run()
                         deleteClient(clientFd, db);
                         break;
                     default:
+                        excuteCommand(command, clientFd, messageLen, clientClass);
+                        displayServerParam(clientFd, db);
+
+/*
+                        if (clientClass->getNickname().length() == EMPTY) {
+                            sendTo(clientFd, "plz input getNickname");
+                        } else if (clientClass->getPassword().length() == EMPTY) {
+                            sendTo(clientFd, "plz input password");
+                        } else if (clientClass->getUsername().length() == EMPTY) {
+                            sendTo(clientFd, "plz input Username");
+                        }
+*/
+/*
                         messageLen = std::strlen(_recvMessage);
                         checkServerPassword(clientFd, clientClass, db);// throw 로직 고민하기
                         if (clientClass->getNickname().length() == EMPTY) {
@@ -280,9 +295,10 @@ void IrcServ::run()
                         } else if (clientClass->getUsername().length() == EMPTY) {
                             checkUserName(clientFd, messageLen, clientClass);
                         } else {
-                            excuteCommand(command, clientFd, messageLen, clientClass);
-                            displayServerParam(clientFd, db);
+                        excuteCommand(command, clientFd, messageLen, clientClass);
+                        displayServerParam(clientFd, db);
                         }
+*/
                         break;
                     }
                     break;
