@@ -32,6 +32,7 @@ class IrcCommand {
 		void USER();
 		void PASS();
 		void DISPLAY();
+		void KICK();
 
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
@@ -48,13 +49,14 @@ class IrcCommand {
 		int							_clientFd;
 
 		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[11];
+		commandPtrArr				_commandPointers[12];
 		std::vector<std::string>	_commandNames;
 		std::map<std::string, commandPtrArr> _commandList;
 
 		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
+		void kickUser(std::string channel, std::string name, std::string comment);
 
 		class ERR_INVALID_ARGUMENT: public std::exception {
 			virtual const char *what() const throw();
@@ -105,6 +107,9 @@ class IrcCommand {
 			virtual const char *what() const throw();
 		};
 		class ERR_INVITE_PERSON_ONLY : public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_NOT_OPERATOR : public std::exception {
 			virtual const char *what() const throw();
 		};
 };
