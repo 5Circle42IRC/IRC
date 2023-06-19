@@ -28,7 +28,7 @@ class IrcCommand {
 		void MODE();
 
 		void PART();
-		void PONG();
+		void PING();
 		void USER();
 		void PASS();
 		void DISPLAY();
