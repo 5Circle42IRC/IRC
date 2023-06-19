@@ -136,7 +136,7 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
 
 void IrcServ::sendTo(int clientFd, std::string message)
 {
-    std::string sendMessage("\033[38;5;3m" + message + "\r" + "\033[0m");
+    std::string sendMessage("\033[38;5;3m" + message + "\r\n" + "\033[0m");
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
 }
 
