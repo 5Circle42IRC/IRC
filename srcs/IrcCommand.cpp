@@ -12,8 +12,6 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
-	_commandList["PASS"] = &IrcCommand::PASS;
-	_commandList["KICK"] = &IrcCommand::KICK;	
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -24,8 +22,6 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
 	_commandNames.push_back("DISPLAY");
-	_commandNames.push_back("PASS");
-	_commandNames.push_back("KICK");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -36,8 +32,7 @@ IrcCommand::IrcCommand(IrcDB *db): _db(db) {
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
 	_commandPointers[9] = &IrcCommand::DISPLAY;
-	_commandPointers[10] = &IrcCommand::PASS;
-	_commandPointers[11] = &IrcCommand::KICK;
+
 }
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["INVITE"] = &IrcCommand::INVITE;
@@ -50,8 +45,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
-	_commandList["PASS"] = &IrcCommand::PASS;
-	_commandList["KICK"] = &IrcCommand::KICK;	
 	_commandNames.push_back("INVITE");
 	_commandNames.push_back("JOIN");
 	_commandNames.push_back("NICK");
@@ -62,8 +55,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandNames.push_back("USER");
 	_commandNames.push_back("MODE");
 	_commandNames.push_back("DISPLAY");
-	_commandNames.push_back("PASS");
-	_commandNames.push_back("KICK");
 	_commandPointers[0] = &IrcCommand::INVITE;
 	_commandPointers[1] = &IrcCommand::JOIN;
 	_commandPointers[2] = &IrcCommand::NICK;
@@ -74,8 +65,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandPointers[7] = &IrcCommand::USER;
 	_commandPointers[8] = &IrcCommand::MODE;
 	_commandPointers[9] = &IrcCommand::DISPLAY;
-	_commandPointers[10] = &IrcCommand::PASS;
-	_commandPointers[11] = &IrcCommand::KICK;
 }
 IrcCommand::~IrcCommand(){}
 
@@ -120,14 +109,9 @@ void IrcCommand::parsing(std::string message){
 		for (end = it->find_first_of(delim); end != -1; end = it->find_first_of(delim)){
 			_args.push_back(it->substr(0, end));
 			it->erase(0, end + 1);
-			if (i == 0){
+			if (i == 0)
 				_command = _args[0];
-				if (_command == "JOIN" || _command == "KICK")
-					delim = " \t\v\f";
-			}
 			if ((!_command.compare("PRIVMSG") || !_command.compare("TOPIC")) && i > 0)
-				break;
-			if ((!_command.compare("KICK")) && i == 2)
 				break;
 			i++;
 		}
@@ -176,6 +160,4 @@ const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR
 //MODE
 const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return "ERR_UNKNOWNMODE"; }
 
-//KICK
-const char* IrcCommand::ERR_NOT_OPERATOR::what() const throw() { return "ERR_NOT_OPERATOR"; }
 

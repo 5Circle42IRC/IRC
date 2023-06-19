@@ -83,11 +83,19 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     return true;
 }
 
-void IrcServ::deleteClient(int fd, IrcDB& db)
+void IrcServ::deleteClient(int clientFd, IrcDB& db)
 {
-    FD_CLR(fd, &_activeReads);
-    db.deleteClient(fd);
-    close(fd);
+    FD_CLR(clientFd, &_activeReads);
+    std::map<std::string , IrcChannel*>_channels = db.getAllChannels();
+    std::map<std::string , IrcChannel*>::iterator it;
+    for (it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if (it->second->isJoinedUser(clientFd))
+            it->second->deleteUser(clientFd);
+    }    
+    db.deleteClient(clientFd);
+
+    close(clientFd);
 }
 
 bool IrcServ::isSameNickname(IrcDB& db, std::string message)
@@ -149,6 +157,7 @@ void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, Ir
         sendTo(clientFd, "input nickname");
     } else {
         sendTo(clientFd, "Failed Password, plz connecting again");
+
         deleteClient(clientFd, db);
     }
 }
