@@ -8,7 +8,7 @@ void IrcCommand::TOPIC(){
     if (_args.size() != 2)
     {
         std::cout << "TOPIC args size is not 2" << std::endl;   
-        throw ERR_NEEDMOREPARAMS();
+        throw ERR_NEED_MORE_PARAMS();
     }
     std::string chname = _args[0];
     std::string topic = _args[1];
@@ -24,9 +24,9 @@ void IrcCommand::TOPIC(){
     if (channel->isJoinedUser(_clientFd) == false)
     {
         std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
-        throw ERR_NOTONCHANNEL();
+        throw ERR_NOT_ON_CHANNEL();
         /*
-            ERR_NOTONCHANNEL (442) 
+            ERR_NOT_ON_CHANNEL (442) 
             "<client> <channel> :You're not on that channel"
         
         */
@@ -34,9 +34,9 @@ void IrcCommand::TOPIC(){
     if (channel->isOperator(_clientFd) == false)
     {
         std::cout << "Don't have privillege to change topic" << std::endl;
-        throw ERR_CHANOPRIVSNEEDED();
+        throw ERR_CHAN_OPRIVS_NEEDED();
         /*
-            ERR_CHANOPRIVSNEEDED (482) 
+            ERR_CHAN_OPRIVS_NEEDED (482) 
             "<client> <channel> :You're not channel operator"
         */
     }

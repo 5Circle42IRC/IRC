@@ -23,4 +23,14 @@ void IrcCommand::INVITE(){
 	channel->addUser(target->getFd());
 	host->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
 	target->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
+	//가입한 채널 정보 띄워주기
+	std::string joinedUserList;
+	std::map<int, bool> userList = channel->getUser();
+	for (std::map<int, bool>::iterator it = userList.begin(); it != userList.end(); it++){
+		joinedUserList += (_db->findClientByFd(it->first)->getNickname() + ", ");
+	}
+	target->addBackCarriageBuffer("<Channel Info>");
+	target->addBackCarriageBuffer("< Name       : " + channel->getName() + " >");
+	target->addBackCarriageBuffer("< Topic      : " + channel->getTopic() + " >");
+	target->addBackCarriageBuffer("< joinedUser : " + joinedUserList + " >");
 }

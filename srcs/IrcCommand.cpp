@@ -76,7 +76,8 @@ void IrcCommand::parsing(std::string message){
 					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
 				client->setPasswordFlag(1);
-				client->addBackCarriageBuffer("Welcome to our chat");
+				std::string test("hi  test   ");
+				client->addBackCarriageBuffer("001 " + test + " :Welcome " + "dldldl" + " to irc ysungwon");
 				return ;
 			}
 			else {
@@ -96,6 +97,10 @@ void IrcCommand::parsing(std::string message){
 			message.erase(0);
 	}
 	multiCmd.push_back(message);
+	// multiCmd 출력 확인용
+	for (std::vector<std::string>::iterator mulit = multiCmd.begin(); mulit != multiCmd.end(); mulit++){
+		std::cout << "&&&" <<  *mulit  << "&&&" << std::endl;
+	}
 	if (multiCmd.back().size() == 0)
 		multiCmd.pop_back();
 	// 메세지 건바이건으로 커맨드 실행
@@ -154,17 +159,17 @@ const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return 
 
 
 //NICK
-const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "ERR_NICKNAMEINUSE"; }
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "433 :ERR_NICKNAMEINUSE"; }
 const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
 const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART
-const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOTONCHANNEL"; }
+const char* IrcCommand::ERR_NOT_ON_CHANNEL::what() const throw() { return "ERR_NOT_ON_CHANNEL"; }
 //TOPIC
-const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
-const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR_CHANOPRIVSNEEDED"; }
+const char* IrcCommand::ERR_NEED_MORE_PARAMS::what() const throw() { return "ERR_NEED_MORE_PARAMS"; }
+const char* IrcCommand::ERR_CHAN_OPRIVS_NEEDED::what() const throw() { return "ERR_CHAN_OPRIVS_NEEDED"; }
 
 //MODE
-const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return "ERR_UNKNOWNMODE"; }
+const char* IrcCommand::ERR_UNKNOWN_MODE::what() const throw() { return "ERR_UNKNOWN_MODE"; }
 
 //KICK
 const char* IrcCommand::ERR_NOT_OPERATOR::what() const throw() { return "ERR_NOT_OPERATOR"; }

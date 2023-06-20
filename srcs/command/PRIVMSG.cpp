@@ -7,7 +7,7 @@ void IrcCommand::PRIVMSG(){
 
     if (_args.size() < 2)
     {
-        throw ERR_NEEDMOREPARAMS();
+        throw ERR_NEED_MORE_PARAMS();
     }
     std::string firstArg = _args[0];
     std::string msg = _args[1];
@@ -22,7 +22,7 @@ void IrcCommand::PRIVMSG(){
         std::map<int, bool>::iterator it;
 
         if (!channel->isJoinedUser(_clientFd))
-            throw ERR_NOTONCHANNEL();
+            throw ERR_NOT_ON_CHANNEL();
         for (it = users.begin();
                 it != users.end();
                 it++)

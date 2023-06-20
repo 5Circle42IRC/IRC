@@ -142,6 +142,7 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 }
 
+
 void IrcServ::sendTo(int clientFd, std::string message)
 {
     std::string sendMessage("\033[38;5;3m" + message + "\r\n" + "\033[0m");
@@ -243,6 +244,7 @@ void IrcServ::run()
     int messageLen(0);
     IrcDB db; 
     IrcClient *clientClass;
+    std::string _recvM;
 
     while (42)
     {
@@ -268,6 +270,9 @@ void IrcServ::run()
                 default:
                     memset(_recvMessage, 0, sizeof(_recvMessage));
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
+                    _recvM = _recvMessage;
+                    _recvM.erase(0, 8);
+                    IrcCommand(&db, clientFd).parsing(_recvM);
                     if (clientClass->getPasswordFlag() && _readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
@@ -337,6 +342,7 @@ void IrcServ::run()
                         deleteClient(clientFd, db);
                         break;
                     default:
+                        
                         messageLen = std::strlen(_recvMessage);
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, messageLen, clientClass);

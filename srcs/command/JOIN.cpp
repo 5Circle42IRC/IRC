@@ -4,6 +4,18 @@
 #include <algorithm>
 #include <stdio.h>
 
+void IrcCommand::makeBufferString(IrcChannel *channel, IrcClient *client){
+	std::string joinedUserList;
+	std::map<int, bool> userList = channel->getUser();
+	for (std::map<int, bool>::iterator it = userList.begin(); it != userList.end(); it++){
+		joinedUserList += (_db->findClientByFd(it->first)->getNickname() + ", ");
+	}
+	client->addBackCarriageBuffer("<Channel Info>");
+	client->addBackCarriageBuffer("< Name       : " + channel->getName() + " >");
+	client->addBackCarriageBuffer("< Topic      : " + channel->getTopic() + " >");
+	client->addBackCarriageBuffer("< joinedUser : " + joinedUserList + " >");
+}
+
 void IrcCommand::joinChannel(std::string name, std::string key){
 	IrcChannel *channel;
 	IrcClient *client = _db->findClientByFd(_clientFd);
@@ -24,10 +36,14 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 				throw ERR_INVITE_PERSON_ONLY();
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
-		if (channel->getGrant() & M_KEY)
-			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ " using key " + key + "\r\n");
-		else
+		if (channel->getGrant() & M_KEY){
+			client->addBackCarriageBuffer(client->getNickname() + ": JOIN " + channel->getName()+ " using key " + key);
+			makeBufferString(channel, client);
+		}
+		else {
 			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName() + "\r\n");
+			makeBufferString(channel, client);
+		}
 	} catch(IrcDB::ERR_CHANNEL_NOT_IN_DB &e){
 		channel = new IrcChannel(name);
 		channel->addUser(_clientFd);
@@ -36,9 +52,12 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			channel->setPassword(key);
 			channel->setGrant(M_KEY, true);
 			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			makeBufferString(channel, client);
 		}
-		else
-			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ "\r\n");		
+		else{
+			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ "\r\n");	
+			makeBufferString(channel, client);
+		}	
 		_db->insertChannel(channel);
 	} catch (std::exception &e){
 		_db->findClientByFd(_clientFd)->addBackCarriageBuffer(e.what());

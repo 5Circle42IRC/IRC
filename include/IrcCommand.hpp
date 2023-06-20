@@ -54,6 +54,7 @@ class IrcCommand {
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
 		void kickUser(std::string channel, std::string name, std::string comment);
+		void makeBufferString(IrcChannel *channel, IrcClient *client);
 
 		class ERR_INVALID_ARGUMENT: public std::exception {
 			virtual const char *what() const throw();
@@ -77,27 +78,27 @@ class IrcCommand {
 		class ERR_INVALID_CHAR_IN_NAME: public std::exception {
 			virtual const char *what() const throw();
 		};
-        class ERR_NICKNAMEINUSE: public std::exception {
+        class ERR_NICKNAME_IN_USE: public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_NONICKNAMEGIVEN : public std::exception {
+        class ERR_NO_NICKNAME_GIVEN : public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_ERRONEUSNICKNAME : public std::exception {
+        class ERR_ERRONEUS_NICKNAME : public std::exception {
             virtual const char *what() const throw();
         };
         //PART
-        class ERR_NOTONCHANNEL : public std::exception {
+        class ERR_NOT_ON_CHANNEL : public std::exception {
             virtual const char *what() const throw();
         };
         //TOPIC
-        class ERR_NEEDMOREPARAMS : public std::exception {
+        class ERR_NEED_MORE_PARAMS : public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_CHANOPRIVSNEEDED : public std::exception {
+        class ERR_CHAN_OPRIVS_NEEDED : public std::exception {
             virtual const char *what() const throw();
         };
-		class ERR_UNKNOWNMODE : public std::exception {
+		class ERR_UNKNOWN_MODE : public std::exception {
 			virtual const char *what() const throw();
 		};
 		class ERR_OUT_OF_LIMIT : public std::exception {

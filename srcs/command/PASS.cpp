@@ -7,7 +7,7 @@ void IrcCommand::PASS(){
 
         if (getArgs().size() != 1)
         {
-            throw ERR_NEEDMOREPARAMS();               
+            throw ERR_NEED_MORE_PARAMS();               
         }
         else
         {

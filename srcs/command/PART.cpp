@@ -14,10 +14,10 @@ void IrcCommand::PART(){
     {
         std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
         /*
-            ERR_NEEDMOREPARAMS (461) 
+            ERR_NEED_MORE_PARAMS (461) 
             "<client> <command> :Not enough parameters"
         */
-        throw ERR_NEEDMOREPARAMS();
+        throw ERR_NEED_MORE_PARAMS();
     }
 
     for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
@@ -50,14 +50,14 @@ void IrcCommand::PART(){
         std::cout << "chname : <" << chname << ">" << std::endl;
         std::cout << "chname size : <" << size << ">" << std::endl;
         /*
-            ERR_NOTONCHANNEL (442) 
+            ERR_NOT_ON_CHANNEL (442) 
             "<client> <channel> :You're not on that channel"
         
         */
         if (channel->isJoinedUser(_clientFd) == false)
         {
             std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
-            throw ERR_NOTONCHANNEL();
+            throw ERR_NOT_ON_CHANNEL();
         }              
 
         ///my own error
