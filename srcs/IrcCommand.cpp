@@ -159,9 +159,9 @@ const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return 
 
 
 //NICK
-const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "433 :ERR_NICKNAMEINUSE"; }
-const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
-const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
+const char* IrcCommand::ERR_NICKNAME_IN_USE::what() const throw() { return "ERR_NICKNAMEINUSE"; }
+const char* IrcCommand::ERR_NO_NICKNAME_GIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
+const char* IrcCommand::ERR_ERRONEUS_NICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART
 const char* IrcCommand::ERR_NOT_ON_CHANNEL::what() const throw() { return "ERR_NOT_ON_CHANNEL"; }
 //TOPIC

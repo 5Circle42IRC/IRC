@@ -17,7 +17,7 @@ IrcServ::IrcServ(int port, std::string passWord)
     , _fdNum(0)
     , _opt(1)
     , _readLen(0)
-    , _writeLen(0) 
+    , _writeLen(0)
 { }
 
 int IrcServ::on()
@@ -142,7 +142,6 @@ void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 }
 
-
 void IrcServ::sendTo(int clientFd, std::string message)
 {
     std::string sendMessage("\033[38;5;3m" + message + "\r\n" + "\033[0m");
@@ -244,7 +243,6 @@ void IrcServ::run()
     int messageLen(0);
     IrcDB db; 
     IrcClient *clientClass;
-    std::string _recvM;
 
     while (42)
     {
@@ -270,9 +268,6 @@ void IrcServ::run()
                 default:
                     memset(_recvMessage, 0, sizeof(_recvMessage));
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
-                    _recvM = _recvMessage;
-                    _recvM.erase(0, 8);
-                    IrcCommand(&db, clientFd).parsing(_recvM);
                     if (clientClass->getPasswordFlag() && _readLen == -1)
                     {
                         std::cerr << "failed recv" << std::endl;
@@ -281,54 +276,13 @@ void IrcServ::run()
                     if (!clientClass->getPasswordFlag() || sizeof(_recvMessage) < 3)
                     {
                         std::string passStr = _recvMessage;
-                        //passStr = passStr.substr(0, passStr.size()-1);
-                        //passStr.erase(0, passStr.find_first_of('P'));
-
-
-                        int start = 0;
-                        std::string delimeter = " ";
-                        int end = passStr.find(delimeter);
-                        //std::cout << "first substr : <" << passStr.substr(start, end- start) << ">" << std::endl;
-
-                        std::string firstcmd = passStr.substr(start, end- start);
-                        start = end + delimeter.size();
-                        end = passStr.find(delimeter, start);
-
-                        std::string passfromstr = passStr.substr(start, end- start);
-                        //std::cout << "second substr : <" << passfromstr << ">" << std::endl;  
-                        
-                        /*
-                        for (int z =0; z < passfromstr.size(); z++)
-                            std::cout << static_cast<int>(passfromstr[z]) << std::endl;
-                        //std::cout << "server pass   : <" << _passWord << ">" << std::endl;                      
-                        for (int z =0; z < _passWord.size(); z++)
-                            std::cout << static_cast<int>(_passWord[z]) << std::endl;                        
-                        */
-                        int chk = 1;
-
-                        for (int z =0; z < _passWord.size()-1; z++)
-                        {
-                            if (static_cast<int>(passfromstr[z]) != static_cast<int>(_passWord[z]))
-                                chk = 0;
-                        }
-
-                        if (firstcmd != "PASS")
-                        {
-                            //std::cout << "fisrt get PASS is not PASS" << std::endl;
-                        }   
-                        else if (chk == 1)
-                        {
-                            clientClass->setPasswordFlag(1);
-                            clientClass->addBackCarriageBuffer("input your Nickname using NICK command");                           
-                        }
-                        /*
+                        passStr.erase(0, passStr.find_first_of('P'));
                         if (!passStr.compare(0, 5, "PASS")) {
                             std::cerr << "Pass 통과" << std::endl;
                         } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
                             clientClass->setPasswordFlag(1);
                             clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
                         }
-                        */
                         else
                             clientClass->addBackCarriageBuffer("input server password");
                         break;
@@ -342,7 +296,6 @@ void IrcServ::run()
                         deleteClient(clientFd, db);
                         break;
                     default:
-                        
                         messageLen = std::strlen(_recvMessage);
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, messageLen, clientClass);
