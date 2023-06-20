@@ -37,8 +37,9 @@ void IrcCommand::PART(){
     std::string chnameSum;
 
     for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
-        chname = _args[i]; 
+       
         channel =_db->findChannel(*it);
+        chname = channel->getName(); 
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
@@ -73,8 +74,10 @@ void IrcCommand::PART(){
             throw std::exception();
         }
         chnameSum += (chname + " ");
+        client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
         i++;
-        client->addBackBuffer(client->getNickname() + ": PART " + chnameSum + "\r\n");
+        
     }
+    //client->addBackBuffer(":" + client->getNickname() + " PART :" + chnameSum + "\r\n");
     return ;
 }

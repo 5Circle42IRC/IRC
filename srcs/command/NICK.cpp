@@ -32,7 +32,7 @@ void IrcCommand::NICK(){
             _db->findClientByFd(_clientFd)->setNickname(getArgs()[0]);
             
             //:WiZ NICK Kilroy 
-            client->addBackBuffer(":" + oldNick + " NICK " + client->getNickname() + "\r\n");
+            client->addBackBuffer(":" + oldNick + " NICK :" + client->getNickname() + "\r\n");
             client->setPasswordFlag(true);
         }    
 }

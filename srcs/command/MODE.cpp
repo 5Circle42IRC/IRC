@@ -124,5 +124,11 @@ void IrcCommand::MODE()
         }
         i++;
     }
+    IrcClient* client = _db->findClientByFd(_clientFd);  
+    std::string stringSum;
+    std::deque<std::string>::iterator it;
+    for (it = _args.begin(); it!= _args.end(); it++)
+        stringSum += *it + " ";
+    client->addBackCarriageBuffer(":" + client->getNickname() + " MODE " + channel->getName() + " " + stringSum);
     std::cout << "------MODE end------" << std::endl; 
 }

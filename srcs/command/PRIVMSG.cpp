@@ -31,8 +31,9 @@ void IrcCommand::PRIVMSG(){
                     IrcClient *target = _db->findClientByFd(it->first);                    
                     if (_clientFd != target->getFd())
                     {
+                         
                         target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
-                        client->addBackCarriageBuffer("PRIVMSG " + target->getNickname() + " :" + msg);
+                        client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
                     }
                 }      
     }
@@ -43,7 +44,7 @@ void IrcCommand::PRIVMSG(){
         if (_clientFd != target->getFd())
         {
             target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
-            client->addBackCarriageBuffer("PRIVMSG " + target->getNickname() + " :" + msg);
+            client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
         }
     }
 }
