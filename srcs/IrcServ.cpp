@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
-#include <exception>
 
 IrcServ::IrcServ(){};
 IrcServ::~IrcServ(){};
@@ -276,22 +275,58 @@ void IrcServ::run()
                     }
                     if (!clientClass->getPasswordFlag() || sizeof(_recvMessage) < 3)
                     {
-                        try {
-                            std::string passStr(_recvMessage);
-                            passStr.erase(0, passStr.find_first_of('P'));
-                            if (passStr.compare(0, 5, "PASS")) 
-                                throw std::invalid_argument("not PASS");
-                            if (!passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_of("\r\n"), _passWord)){
-                                clientClass->setPasswordFlag(1);
-                                clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
-                            }
-                            else
-                                clientClass->addBackCarriageBuffer("input server password");
-                            break;
+                        std::string passStr = _recvMessage;
+                        //passStr = passStr.substr(0, passStr.size()-1);
+                        //passStr.erase(0, passStr.find_first_of('P'));
 
-                        } catch (std::exception& e) {
-                            break;
+
+                        int start = 0;
+                        std::string delimeter = " ";
+                        int end = passStr.find(delimeter);
+                        //std::cout << "first substr : <" << passStr.substr(start, end- start) << ">" << std::endl;
+
+                        std::string firstcmd = passStr.substr(start, end- start);
+                        start = end + delimeter.size();
+                        end = passStr.find(delimeter, start);
+
+                        std::string passfromstr = passStr.substr(start, end- start);
+                        //std::cout << "second substr : <" << passfromstr << ">" << std::endl;  
+                        
+                        /*
+                        for (int z =0; z < passfromstr.size(); z++)
+                            std::cout << static_cast<int>(passfromstr[z]) << std::endl;
+                        //std::cout << "server pass   : <" << _passWord << ">" << std::endl;                      
+                        for (int z =0; z < _passWord.size(); z++)
+                            std::cout << static_cast<int>(_passWord[z]) << std::endl;                        
+                        */
+                        int chk = 1;
+
+                        for (int z =0; z < _passWord.size()-1; z++)
+                        {
+                            if (static_cast<int>(passfromstr[z]) != static_cast<int>(_passWord[z]))
+                                chk = 0;
                         }
+
+                        if (firstcmd != "PASS")
+                        {
+                            //std::cout << "fisrt get PASS is not PASS" << std::endl;
+                        }   
+                        else if (chk == 1)
+                        {
+                            clientClass->setPasswordFlag(1);
+                            clientClass->addBackCarriageBuffer("input your Nickname using NICK command");                           
+                        }
+                        /*
+                        if (!passStr.compare(0, 5, "PASS")) {
+                            std::cerr << "Pass 통과" << std::endl;
+                        } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
+                            clientClass->setPasswordFlag(1);
+                            clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                        }
+                        */
+                        else
+                            clientClass->addBackCarriageBuffer("input server password");
+                        break;
                     }
 
                     
