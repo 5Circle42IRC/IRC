@@ -7,6 +7,9 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 	std::cout << "1" << std::endl;
 	IrcChannel *channel;
 	IrcClient *target;
+	IrcClient *client;
+
+
 	//operator 확인
 	std::cout << "2" << std::endl;
 	channel = _db->findChannel(channelName);
@@ -14,15 +17,17 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 		throw ERR_NOPRIVILEGES();
 	//channel 및 user 유무 확인
 	target = _db->findClientByName(clientName);
+	client = _db->findClientByFd(_clientFd);
 	std::cout << "3" << std::endl;
 	if (channel->isJoinedUser(target->getFd()) == false)
 		throw ERR_NOTONCHANNEL();
 	channel->deleteUser(target->getFd());
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
-		target->addBackCarriageBuffer("kick " + target->getNickname() + " from " + channel->getName() + " using \"" + comment + "\" as the reason.");
+	
+		target->addBackCarriageBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment);
 	else
-		target->addBackCarriageBuffer("kick " + target->getNickname() + " from " + channel->getName());
+		target->addBackCarriageBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname());
 
 }
 
