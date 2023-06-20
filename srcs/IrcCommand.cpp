@@ -154,7 +154,7 @@ const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return ":cann
 //PARSING
 const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return ":Unknown command";}
 const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return ":command is too long"; }
-const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
+const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return ":channel name is too long";}
 
 //NICK
 const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ":Nickname is already in use"; }

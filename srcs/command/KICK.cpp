@@ -13,8 +13,10 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 	//operator 확인
 	std::cout << "2" << std::endl;
 	channel = _db->findChannel(channelName);
-	if (channel->isOperator(_clientFd) == false)
+	if (channel->isOperator(_clientFd) == false){
+		
 		throw ERR_NOPRIVILEGES();
+	}
 	//channel 및 user 유무 확인
 	target = _db->findClientByName(clientName);
 	client = _db->findClientByFd(_clientFd);
