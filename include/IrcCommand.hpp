@@ -56,7 +56,7 @@ class IrcCommand {
 		void kickUser(std::string channel, std::string name, std::string comment);
 		void makeBufferString(IrcChannel *channel, IrcClient *client);
 
-		class ERR_BADPASSWORD: public std::exception {
+		class ERR_BADCHANNELKEY: public std::exception {
 			virtual const char *what() const throw();
 		};
 		class ERR_USERONCHANNEL: public std::exception {

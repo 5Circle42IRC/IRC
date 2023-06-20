@@ -29,7 +29,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 				throw ERR_USERONCHANNEL();
 		// grant 검사(mode)
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
-				throw ERR_BADPASSWORD();
+				throw ERR_BADCHANNELKEY();
 		if ((channel->getGrant() & M_LIMIT) && channel->getLimit() <= channel->getUser().size())
 				throw ERR_OUTOFLIMIT();
 		if ((channel->getGrant() & M_INVITE))

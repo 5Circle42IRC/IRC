@@ -145,7 +145,7 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
 //JOIN
-const char* IrcCommand::ERR_BADPASSWORD::what() const throw() { return "ERR_BADPASSWORD"; }
+const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return "ERR_BADCHANNELKEY"; }
 const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }
 const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
 const char* IrcCommand::ERR_OUTOFLIMIT::what() const throw() { return "ERR_OUTOFLIMIT";}
