@@ -289,7 +289,6 @@ void IrcServ::run()
                         std::cerr << "PassStr:" << passStr << std::endl;
                         if (!passStr.compare(0, 5, "PASS")) {
                             std::cerr << "Pass 통과" << std::endl;
-                            break;
                         } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
                             clientClass->setPasswordFlag(1);
                             clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
