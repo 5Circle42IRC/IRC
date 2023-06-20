@@ -31,7 +31,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
 				throw ERR_BADCHANNELKEY();
 		if ((channel->getGrant() & M_LIMIT) && channel->getLimit() <= channel->getUser().size())
-				throw ERR_OUTOFLIMIT();
+				throw ERR_CHANNELISFULL();
 		if ((channel->getGrant() & M_INVITE))
 				throw ERR_INVITEONLYCHAN();
 		channel->addUser(_clientFd);

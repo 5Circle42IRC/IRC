@@ -94,7 +94,7 @@ class IrcCommand {
 		class ERR_UNKNOWNMODE : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_OUTOFLIMIT : public std::exception {
+		class ERR_CHANNELISFULL : public std::exception {
 			virtual const char *what() const throw();
 		};
 		class ERR_INVITEONLYCHAN : public std::exception {

@@ -148,26 +148,25 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return ":cannot join channel (+k)"; }
 const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return ":is already on channel"; }
 const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return ":Not enough parameters"; }
-const char* IrcCommand::ERR_OUTOFLIMIT::what() const throw() { return "ERR_OUTOFLIMIT";}
+const char* IrcCommand::ERR_CHANNELISFULL::what() const throw() { return ":cannot join channel (+l)";}
 const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return ":cannot join channel (+i)";}
 
 //PARSING
 const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return ":Unknown command";}
-const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
+const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return ":command is too long"; }
 const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
 
 //NICK
 const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ":Nickname is already in use"; }
-const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
-const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
+const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return ":No nickname given"; }
+const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return ":Erroneus nickname"; }
 //PART
-const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOTONCHANNEL"; }
+const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return ":You're not on that channel"; }
 //TOPIC
-const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR_CHANOPRIVSNEEDED"; }
+const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return ":You're not channel operator"; }
 
 //MODE
-const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return "ERR_UNKNOWNMODE"; }
+const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return ":is unknwon mode char to me"; }
 
 //KICK
-const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return "ERR_NOPRIVILEGES"; }
-
+const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return ":Permission Denied- You're not an IRC operator"; }
