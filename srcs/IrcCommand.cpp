@@ -133,7 +133,9 @@ void IrcCommand::parsing(std::string message){
 		_args.pop_front();
 		try {
 			checkRunCMD();
-		} catch (std::exception &e){}
+		} catch (std::exception &e){
+			client->addBackCarriageBuffer(e.what());
+		}
 	}
 }
 
@@ -157,7 +159,7 @@ const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return 
 
 
 //NICK
-const char* IrcCommand::ERR_NICKNAME_IN_USE::what() const throw() { return "ERR_NICKNAMEINUSE"; }
+const char* IrcCommand::ERR_NICKNAME_IN_USE::what() const throw() { return ": Nickname is already in use"; }
 const char* IrcCommand::ERR_NO_NICKNAME_GIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
 const char* IrcCommand::ERR_ERRONEUS_NICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART

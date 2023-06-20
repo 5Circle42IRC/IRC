@@ -11,7 +11,7 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
     }
     if (_db->findClientByFd(_clientFd)->getNickname() == newNick)
     {
-        _db->findClientByFd(_clientFd)->addBackCarriageBuffer("433 " + newNick + " " + newNick + " :Nickname is already in use");
+        _db->findClientByFd(_clientFd)->addBackCarriageBuffer("433 " + newNick + " " + newNick) ;
         throw ERR_NICKNAME_IN_USE();
     } 
     return 0;
