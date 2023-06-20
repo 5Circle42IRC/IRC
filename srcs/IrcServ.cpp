@@ -255,6 +255,7 @@ void IrcServ::run()
                     FD_SET(clientFd, &_activeWrites);
                 }
             } catch (std::exception& e) { }
+
             if (FD_ISSET(clientFd, &_cpyReads))
             {
                 switch (static_cast<int>(clientFd == _servFd))
@@ -276,30 +277,45 @@ void IrcServ::run()
                         break;
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
-                    if (!clientClass->getPasswordFlag() || sizeof(_recvMessage) < 3)
-                    {
-                        try {
-                            std::string passStr = clientClass->getNextLineReadBuffer();
-                            if (passStr.length() != 0)
-                                clientClass->reduceReadBuffer(passStr.length() + 1);
-                            // std::cout << "passStr:" << passStr << std::endl;
-                            if (passStr.compare(0, 4, "PASS")) {
-                                std::cerr << "Pass 통과 못함" << std::endl;
-                            } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
-                                clientClass->setPasswordFlag(1);
-                                clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                    std::string passStr = clientClass->getNextLineReadBuffer();
+                    if (passStr.length() != 0) {
+                        // password check
+                        if (!clientClass->getPasswordFlag())
+                        {
+                            clientClass->reduceReadBuffer(passStr.length() + 1);
+                            try {
+                                
+                                if (passStr.compare(0, 4, "PASS")) {
+                                    std::cerr << "Pass 통과 못함" << std::endl;
+                                    break;
+                                }
+                                passStr.erase(0, 4);
+                                if (passStr.find("\r\n")) {
+                                    passStr.pop_back();
+                                    passStr.pop_back();
+                                } else if (passStr.find("\n")) {
+                                    passStr.pop_back();
+                                }
+
+                                if (passStr.compare(passStr.find_first_not_of(" \t\v\f\r"), passStr.length(), _passWord)){
+                                    clientClass->setPasswordFlag(1);
+                                    clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                                }
+                                else
+                                    clientClass->addBackCarriageBuffer("input server password");
+                            } catch(const std::exception& e) {
+                                std::cerr << e.what() << '\n';
                             }
-                            else
-                                clientClass->addBackCarriageBuffer("input server password");
-                        } catch(const std::exception& e) {
-                            std::cerr << e.what() << '\n';
+                            break;
                         }
-                        break;
+                        // execute cmd 
+                        else {
+                            messageLen = std::strlen(_recvMessage);
+                            IrcCommand command1(&db, clientFd);
+                            excuteCommand(command1, clientFd, messageLen, clientClass);
+                            displayServerParam(clientFd, db);
+                        }
                     }
-                    messageLen = std::strlen(_recvMessage);
-                    IrcCommand command1(&db, clientFd);
-                    excuteCommand(command1, clientFd, messageLen, clientClass);
-                    displayServerParam(clientFd, db);
                 }
             } else if (FD_ISSET(clientFd, &_cpyWrites)) {
                 writeUserBuffer(clientFd, clientClass);
