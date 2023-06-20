@@ -2,36 +2,25 @@
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
 
-#include <string>
 void IrcCommand::INVITE(){
 	if (_args.size() != 2)
 		throw ERR_INVALID_ARGUMENT();
 
-	IrcClient *host;
-
+	std::cout << "_args list : " << "<" << _args[0] << "> " << "<" << _args[1] << ">" << std::endl;
+	IrcClient *host = _db->findClientByFd(_clientFd);
+	IrcClient *target = _db->findClientByName(_args[0]);
 	IrcChannel *channel = _db->findChannel(_args[1]);
-	host = _db->findClientByFd(_clientFd);
-	IrcClient *client = _db->findClientByName(_args[2]);
 
-	// 채널의 리미트가 걸려있음
-	if (channel->getLimit() == channel->getUser().size())
-	{
-		_db->findClientByFd(_clientFd)->addBackBuffer("Channel member is Full\r\n");
-		return ; //throw 로 limit 에러 날릴 필요가 있음
-	}
-
-	// 권한 체크 및 오퍼레이터인지
-	if (!(channel->getGrant() & M_INVITE) && channel->getUser().at(client->getFd()) == false)
-		return ; // throw 로 권한 에러코드 날릴 필요가 있음.
-	if (channel->getUser().find(client->getFd()) == channel->getUser().end())
-		return; //throw 같은 아이디 에러코드
-	channel->addUser(client->getFd());
-	host->addBackBuffer("341\r\n");
-	// dan-!d@localhost INVITE Wiz #test
-	client->addBackBuffer(client->getNickname() + " INVITE " + host->getNickname() + " " + channel->getName() + "\r\n"); 
+	// 채널 limit 검사
+	if ((channel->getGrant() & M_LIMIT) && (channel->getLimit() <= channel->getUser().size()))
+		host->addBackCarriageBuffer("The channel is full");
+	//권한 검사
+	if ((channel->getGrant() & M_INVITE) && !channel->isOperator(_clientFd))
+		throw ERR_NOT_OPERATOR();
+	//이미 존재하는 유저인지 검사
+	if (channel->isJoinedUser(target->getFd()))
+		throw ERR_USER_ON_CHANNEL();
+	channel->addUser(target->getFd());
+	host->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
+	target->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
 }
-/*
-	Command: INVITE
-	Parameters: <nickname> <channel>	
-	INVITE Wiz #foo_bar 
-*/
