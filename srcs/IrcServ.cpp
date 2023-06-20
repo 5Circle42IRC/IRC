@@ -242,8 +242,8 @@ void IrcServ::run()
     socklen_t clientAddrLen;
     int messageLen(0);
     IrcDB db; 
-    IrcCommand command(&db);
     IrcClient *clientClass;
+
     while (42)
     {
         initSelect();
