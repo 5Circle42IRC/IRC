@@ -278,9 +278,8 @@ void IrcServ::run()
                         try {
                             std::string passStr = clientClass->getNextLineReadBuffer();
                             if (passStr.length() != 0)
-                                clientClass->reduceReadBuffer(passStr.length());
+                                clientClass->reduceReadBuffer(passStr.length() + 1);
                             std::cout << "passStr:" << passStr << std::endl;
-                            passStr.erase(0, passStr.find_first_of('P'));
                             if (passStr.compare(0, 4, "PASS")) {
                                 std::cerr << "Pass 통과 못함" << std::endl;
                             } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
