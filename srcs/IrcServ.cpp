@@ -284,10 +284,9 @@ void IrcServ::run()
                         //     i++;
                         // }
                         // return ;
-                        std::cout << "<" << !strncmp("PASS ", _recvMessage, 5) << ">" << std::endl;
-                        std::cout << "<" << !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage) - 2) << ">" << std::endl;
+                        _recvMessage[sizeof(_recvMessage) - 2] = '\0';
                         if (!strncmp("PASS ", _recvMessage, 5) 
-                            && !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage) - 2)){
+                            && !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage))){
                             clientClass->setPasswordFlag(1);
                             clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
                         }
