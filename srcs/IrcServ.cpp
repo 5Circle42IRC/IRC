@@ -85,7 +85,6 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
 
 void IrcServ::deleteClient(int clientFd, IrcDB& db)
 {
-    FD_CLR(clientFd, &_activeReads);
     std::map<std::string , IrcChannel*>_channels = db.getAllChannels();
     std::map<std::string , IrcChannel*>::iterator it;
     for (it = _channels.begin(); it != _channels.end(); it++)
@@ -94,7 +93,7 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
             it->second->deleteUser(clientFd);
     }    
     db.deleteClient(clientFd);
-
+    FD_CLR(clientFd, &_activeReads);
     close(clientFd);
 }
 
@@ -261,7 +260,7 @@ void IrcServ::run()
             {
                 switch (static_cast<int>(clientFd == _servFd))
                 {
-                case ENTER_CLIENT:
+                case ENTER_CLIENT:        
                     if (!acceptClient(acceptFd, clientAddr, clientAddrLen, db))
                         std::cerr << "failed accept" << std::endl;
                     break;
@@ -277,14 +276,27 @@ void IrcServ::run()
                     if (!clientClass->getPasswordFlag())
                     {
                         //pass 
-                        std::cout << "_recv : " << _recvMessage << std::endl;
+                        // std::cout << "recieved message:**" << _recvMessage << std::endl;
+                        // int i = 0;
+                        // while (_recvMessage[i])
+                        // {
+                        //     std::cout << "<" << (int)_recvMessage[i] << ">" << std::endl;
+                        //     i++;
+                        // }
+                        // return ;
+                        std::cout << "<" << !strncmp("PASS ", _recvMessage, 5) << ">" << std::endl;
+                        std::cout << "<" << !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage)) << ">" << std::endl;
                         if (!strncmp("PASS ", _recvMessage, 5) 
-                            && !_passWord.compare(0, _passWord.size() + 1, _recvMessage, 5, sizeof(_recvMessage)))
+                            && !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage))){
                             clientClass->setPasswordFlag(1);
+                            clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                        }
+                        else
+                            clientClass->addBackCarriageBuffer("input server password");
                         break;
                     }
 
-                    sendTo(clientFd, "input server password");
+                    
                     switch (_readLen)
                     {
                     case EXIT_CLIENT:
