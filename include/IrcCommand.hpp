@@ -74,7 +74,7 @@ class IrcCommand {
         class ERR_NICKNAMEINUSE: public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_NO_NICKNAME_GIVEN : public std::exception {
+        class ERR_NONICKNAMEGIVEN : public std::exception {
             virtual const char *what() const throw();
         };
         class ERR_ERRONEUSNICKNAME : public std::exception {

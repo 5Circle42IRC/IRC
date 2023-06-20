@@ -149,16 +149,16 @@ const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return ":canno
 const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return ":is already on channel"; }
 const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return ":Not enough parameters"; }
 const char* IrcCommand::ERR_OUTOFLIMIT::what() const throw() { return "ERR_OUTOFLIMIT";}
-const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return "ERR_INVITEONLYCHAN";}
+const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return ":cannot join channel (+i)";}
 
 //PARSING
-const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return "ERR_UNKNOWNCOMMAND";}
+const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return ":Unknown command";}
 const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
 const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
 
 //NICK
-const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ": Nickname is already in use"; }
-const char* IrcCommand::ERR_NO_NICKNAME_GIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ":Nickname is already in use"; }
+const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
 const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART
 const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOTONCHANNEL"; }
