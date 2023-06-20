@@ -203,7 +203,6 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
         if (messageLen > 1)
             command.setClientFd(clientFd).parsing(_recvMessage);
     } catch (std::exception& e){
-        clientClass->addBackCarriageBuffer(e.what());
     }
 
 }

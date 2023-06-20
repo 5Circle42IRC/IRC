@@ -133,9 +133,7 @@ void IrcCommand::parsing(std::string message){
 		_args.pop_front();
 		try {
 			checkRunCMD();
-		} catch (std::exception &e){
-			_db->findClientByFd(_clientFd)->addBackCarriageBuffer(e.what());
-		}
+		} catch (std::exception &e){}
 	}
 }
 
