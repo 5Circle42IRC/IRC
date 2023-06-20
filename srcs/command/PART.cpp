@@ -8,7 +8,9 @@ void IrcCommand::PART(){
     IrcChannel *channel;
     IrcClient *client;
 
-    if (_args.size() < 1)
+    std::vector<std::string> channelList;
+
+    if (_args.size() != 1)
     {
         std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
         /*
@@ -18,21 +20,25 @@ void IrcCommand::PART(){
         throw ERR_NEEDMOREPARAMS();
     }
 
+    for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
+		channelList.push_back(_args[0].substr(0, end));
+		_args[0].erase(0, end + 1);
+	}
+	channelList.push_back(_args[0]);
 
     
 
     client = _db->findClientByFd(_clientFd);
+
     int i = 0;
 
 
     std::string chname;
     std::string chnameSum;
 
-    while (i < _args.size())
-    {
-
+    for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
         chname = _args[i]; 
-        channel =_db->findChannel(chname);
+        channel =_db->findChannel(*it);
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
@@ -68,7 +74,7 @@ void IrcCommand::PART(){
         }
         chnameSum += (chname + " ");
         i++;
+        client->addBackBuffer(client->getNickname() + ": PART " + chnameSum + "\r\n");
     }
-    client->addBackBuffer(client->getNickname() + ": PART " + chnameSum + "\r\n");
     return ;
 }

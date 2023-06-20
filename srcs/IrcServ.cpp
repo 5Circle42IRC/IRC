@@ -242,8 +242,8 @@ void IrcServ::run()
     socklen_t clientAddrLen;
     int messageLen(0);
     IrcDB db; 
+    IrcCommand command(&db);
     IrcClient *clientClass;
-
     while (42)
     {
         initSelect();
@@ -273,13 +273,21 @@ void IrcServ::run()
                         std::cerr << "failed recv" << std::endl;
                         break;
                     }
-                    if (!clientClass->getPasswordFlag() || sizeof(_recvMessage) < 3)
+                    if (!clientClass->getPasswordFlag())
                     {
-                        std::string passStr = _recvMessage;
-                        passStr.erase(0, passStr.find_first_of('P'));
-                        if (!passStr.compare(0, 5, "PASS")) {
-                            std::cerr << "Pass 통과" << std::endl;
-                        } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
+                        //pass 
+                        // std::cout << "recieved message:**" << _recvMessage << std::endl;
+                        // int i = 0;
+                        // while (_recvMessage[i])
+                        // {
+                        //     std::cout << "<" << (int)_recvMessage[i] << ">" << std::endl;
+                        //     i++;
+                        // }
+                        // return ;
+                        std::cout << "<" << !strncmp("PASS ", _recvMessage, 5) << ">" << std::endl;
+                        std::cout << "<" << !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage)) << ">" << std::endl;
+                        if (!strncmp("PASS ", _recvMessage, 5) 
+                            && !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage))){
                             clientClass->setPasswordFlag(1);
                             clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
                         }

@@ -13,8 +13,6 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		throw ERR_INVALID_NAME_OF_CHANNEL();
 	try {
 		channel =_db->findChannel(name);
-		// if (name.find_first_of(",") >= 0 || name.find_first_of(",") >= 0)
-		// 	throw ERR_INVALID_CHAR_IN_NAME();
 		if (channel->isJoinedUser(_clientFd))
 				throw ERR_USER_ON_CHANNEL();
 		// grant 검사(mode)
