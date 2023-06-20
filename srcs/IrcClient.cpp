@@ -1,6 +1,7 @@
 #include "../include/IrcClient.hpp"
 #include <string>
 #include <iostream>
+#include <sstream>
 
 IrcClient::IrcClient(int fd
                     , std::string nickname
@@ -79,6 +80,17 @@ const std::string &IrcClient::getBuffer() const
     return _buffer;
 }
 
+const std::string IrcClient::getNextLineReadBuffer() 
+{
+    std::string ret;
+    std::istringstream origin(_readBuffer);
+    std::getline(origin, ret, '\n');
+
+    std::cout << "ret:" << ret << std::endl;
+
+    return ret;
+}
+
 void IrcClient::setNickname(std::string newNickname)
 {
     _nickname = newNickname;
@@ -120,6 +132,11 @@ void IrcClient::addBackBuffer(const std::string str)
     _buffer += str;
 }
 
+void IrcClient::addBackReadBuffer(const std::string readMassage)
+{
+    _readBuffer += readMassage;
+}
+
 void IrcClient::addBackCarriageBuffer(const std::string str)
 {
     _buffer += str + "\r\n";
@@ -128,6 +145,11 @@ void IrcClient::addBackCarriageBuffer(const std::string str)
 void IrcClient::reduceBuffer(int result)
 {
     _buffer.erase(0, result);
+}
+
+void IrcClient::reduceReadBuffer(int result)
+{
+    _readBuffer.erase(0, result);
 }
 
 void IrcClient::setPasswordFlag(int number)
