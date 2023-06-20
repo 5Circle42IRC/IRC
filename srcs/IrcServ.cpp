@@ -284,6 +284,9 @@ void IrcServ::run()
                         //     i++;
                         // }
                         // return ;
+                        std::string passStr = _recvMessage;
+                        passStr.erase(0, passStr.find_first_of('P'));
+                        std::cerr << "PassStr" << std::endl;
                         _recvMessage[sizeof(_recvMessage) - 2] = '\0';
                         if (!strncmp("PASS ", _recvMessage, 5) 
                             && !_passWord.compare(0, _passWord.size(), _recvMessage, 5, sizeof(_recvMessage))){
