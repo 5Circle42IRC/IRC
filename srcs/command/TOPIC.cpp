@@ -49,9 +49,11 @@ void IrcCommand::TOPIC(){
 
         if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
             //"<client> <channel> :No topic is set"
+            
             client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
         else
             //"<client> <channel> :<topic>"
-            client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
+            client->addBackBuffer(":" + client->getNickname() + " TOPIC :" + channel->getName()+ " :" + topic +"\r\n");
+            //client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
     }
 }
