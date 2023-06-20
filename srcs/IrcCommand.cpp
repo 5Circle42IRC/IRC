@@ -76,7 +76,8 @@ void IrcCommand::parsing(std::string message){
 					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
 				client->setPasswordFlag(1);
-				client->addBackCarriageBuffer("Welcome to our chat");
+				std::string test("hi  test   ");
+				client->addBackCarriageBuffer("001 " + test + " :Welcome " + "dldldl" + " to irc ysungwon");
 				return ;
 			}
 			else {
@@ -154,7 +155,7 @@ const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return 
 
 
 //NICK
-const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "ERR_NICKNAMEINUSE"; }
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return "433 :ERR_NICKNAMEINUSE"; }
 const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
 const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART
