@@ -145,9 +145,9 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
 //JOIN
-const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return "ERR_BADCHANNELKEY"; }
-const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }
-const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
+const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return ":cannot join channel (+k)"; }
+const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return ":is already on channel"; }
+const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return ":Not enough parameters"; }
 const char* IrcCommand::ERR_OUTOFLIMIT::what() const throw() { return "ERR_OUTOFLIMIT";}
 const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return "ERR_INVITEONLYCHAN";}
 
@@ -155,8 +155,6 @@ const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return "ERR_I
 const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return "ERR_UNKNOWNCOMMAND";}
 const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
 const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
-const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
-
 
 //NICK
 const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ": Nickname is already in use"; }
@@ -165,7 +163,6 @@ const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR
 //PART
 const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOTONCHANNEL"; }
 //TOPIC
-const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
 const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR_CHANOPRIVSNEEDED"; }
 
 //MODE
