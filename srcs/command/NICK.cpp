@@ -22,7 +22,7 @@ void IrcCommand::NICK(){
         IrcClient* client = _db->findClientByFd(_clientFd);
         if (getArgs().size() != 1)
         {
-            throw ERR_NO_NICKNAME_GIVEN();               
+            throw ERR_NONICKNAMEGIVEN();               
         }
         else
         {
