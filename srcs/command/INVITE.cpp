@@ -21,6 +21,7 @@ void IrcCommand::INVITE(){
 	if (channel->isJoinedUser(target->getFd()))
 		throw ERR_USERONCHANNEL();
 	channel->addUser(target->getFd());
+	
 	host->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
 	target->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
 	//가입한 채널 정보 띄워주기
