@@ -37,11 +37,11 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
 		if (channel->getGrant() & M_KEY){
-			client->addBackCarriageBuffer(client->getNickname() + ": JOIN " + channel->getName()+ " using key " + key);
+			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 			makeBufferString(channel, client);
 		}
 		else {
-			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName() + "\r\n");
+			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
 		}
 	} catch(IrcDB::ERR_CHANNEL_NOT_IN_DB &e){
@@ -55,7 +55,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			makeBufferString(channel, client);
 		}
 		else{
-			client->addBackBuffer(client->getNickname() + ": JOIN " + channel->getName()+ "\r\n");	
+			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
 		}	
 		_db->insertChannel(channel);
