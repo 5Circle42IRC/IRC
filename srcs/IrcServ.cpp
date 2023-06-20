@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <exception>
 
 IrcServ::IrcServ(){};
 IrcServ::~IrcServ(){};
@@ -275,17 +276,22 @@ void IrcServ::run()
                     }
                     if (!clientClass->getPasswordFlag() || sizeof(_recvMessage) < 3)
                     {
-                        std::string passStr = _recvMessage;
-                        passStr.erase(0, passStr.find_first_of('P'));
-                        if (!passStr.compare(0, 5, "PASS")) {
-                            std::cerr << "Pass 통과" << std::endl;
-                        } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
-                            clientClass->setPasswordFlag(1);
-                            clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                        try {
+                            std::string passStr(_recvMessage);
+                            passStr.erase(0, passStr.find_first_of('P'));
+                            if (passStr.compare(0, 5, "PASS")) 
+                                throw std::invalid_argument("not PASS");
+                            if (!passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_of("\r\n"), _passWord)){
+                                clientClass->setPasswordFlag(1);
+                                clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
+                            }
+                            else
+                                clientClass->addBackCarriageBuffer("input server password");
+                            break;
+
+                        } catch (std::exception& e) {
+                            break;
                         }
-                        else
-                            clientClass->addBackCarriageBuffer("input server password");
-                        break;
                     }
 
                     
