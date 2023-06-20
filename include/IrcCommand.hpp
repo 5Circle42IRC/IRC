@@ -10,7 +10,6 @@
 class IrcCommand {
 	public :
 		/*db만 받는 생성자는 테스트 이후 삭제해도 됨.*/
-		IrcCommand(IrcDB *db);
 		IrcCommand(IrcDB *db, int clientFd);
 		~IrcCommand();
 
@@ -48,10 +47,8 @@ class IrcCommand {
 		std::string 				_command;
 		int							_clientFd;
 
-		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[12];
-		std::vector<std::string>	_commandNames;
-		std::map<std::string, commandPtrArr> _commandList;
+		typedef void (IrcCommand::*commandPtr)();
+		std::map<std::string, commandPtr> _commandList;
 
 		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);

@@ -1,39 +1,6 @@
 #include "../include/IrcCommand.hpp"
 #include "../include/IrcClient.hpp"
 
-IrcCommand::IrcCommand(IrcDB *db): _db(db) {
-	_commandList["INVITE"] = &IrcCommand::INVITE;
-	_commandList["JOIN"] = &IrcCommand::JOIN;
-	_commandList["NICK"] = &IrcCommand::NICK;
-	_commandList["PART"] = &IrcCommand::PART;
-	_commandList["PING"] = &IrcCommand::PING;
-	_commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
-	_commandList["TOPIC"] = &IrcCommand::TOPIC;
-	_commandList["USER"] = &IrcCommand::USER;
-	_commandList["MODE"] = &IrcCommand::MODE;
-	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
-	_commandNames.push_back("INVITE");
-	_commandNames.push_back("JOIN");
-	_commandNames.push_back("NICK");
-	_commandNames.push_back("PART");
-	_commandNames.push_back("PING");
-	_commandNames.push_back("PRIVMSG");
-	_commandNames.push_back("TOPIC");
-	_commandNames.push_back("USER");
-	_commandNames.push_back("MODE");
-	_commandNames.push_back("DISPLAY");
-	_commandPointers[0] = &IrcCommand::INVITE;
-	_commandPointers[1] = &IrcCommand::JOIN;
-	_commandPointers[2] = &IrcCommand::NICK;
-	_commandPointers[3] = &IrcCommand::PART;
-	_commandPointers[4] = &IrcCommand::PING;
-	_commandPointers[5] = &IrcCommand::PRIVMSG;
-	_commandPointers[6] = &IrcCommand::TOPIC;
-	_commandPointers[7] = &IrcCommand::USER;
-	_commandPointers[8] = &IrcCommand::MODE;
-	_commandPointers[9] = &IrcCommand::DISPLAY;
-
-}
 IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["INVITE"] = &IrcCommand::INVITE;
 	_commandList["JOIN"] = &IrcCommand::JOIN;
@@ -45,41 +12,22 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
-	_commandNames.push_back("INVITE");
-	_commandNames.push_back("JOIN");
-	_commandNames.push_back("NICK");
-	_commandNames.push_back("PART");
-	_commandNames.push_back("PING");
-	_commandNames.push_back("PRIVMSG");
-	_commandNames.push_back("TOPIC");
-	_commandNames.push_back("USER");
-	_commandNames.push_back("MODE");
-	_commandNames.push_back("DISPLAY");
-	_commandPointers[0] = &IrcCommand::INVITE;
-	_commandPointers[1] = &IrcCommand::JOIN;
-	_commandPointers[2] = &IrcCommand::NICK;
-	_commandPointers[3] = &IrcCommand::PART;
-	_commandPointers[4] = &IrcCommand::PING;
-	_commandPointers[5] = &IrcCommand::PRIVMSG;
-	_commandPointers[6] = &IrcCommand::TOPIC;
-	_commandPointers[7] = &IrcCommand::USER;
-	_commandPointers[8] = &IrcCommand::MODE;
-	_commandPointers[9] = &IrcCommand::DISPLAY;
+	_commandList["KICK"] = &IrcCommand::KICK;
+	_commandList["PASS"] = &IrcCommand::PASS;
 }
 IrcCommand::~IrcCommand(){}
 
 void IrcCommand::checkRunCMD(){
 	int index = 0;
-	// std::map<std::string, commandPtrArr>
-	for (std::vector<std::string>::iterator it = _commandNames.begin();
-			it != _commandNames.end(); it++) {
-		if (*it == _command){
-			(this->*_commandPointers[index])();
+	std::map<std::string, commandPtr>::iterator commandIter;
+	for (commandIter = _commandList.begin(); commandIter != _commandList.end(); commandIter++){
+		if (commandIter->first == _command){
+			commandPtr funcPtr = commandIter->second;
+			(this->*funcPtr)();
 			return ;
 		}
-		index++;
 	}
-	_db->findClientByFd(_clientFd)->addBackBuffer("ERR_INVALID_COMMAND\n");
+	_db->findClientByFd(_clientFd)->addBackCarriageBuffer("ERR_INVALID_COMMAND\n");
 }
 
 void IrcCommand::parsing(std::string message){
@@ -95,13 +43,16 @@ void IrcCommand::parsing(std::string message){
 	if (client->getPasswordFlag() < 3){
 		if (client->getNickname().size() == 0){
 			if (message.substr(0, 5) == "NICK "){
-				message.erase(0, 5);
+				message.erase(0, 4);
+				message.erase(0, message.find_first_not_of(delim));
 				_command = "NICK";
 				for (end = message.find_first_of(delim); end != -1; end = message.find_first_of(delim)){
 					_args.push_back(message.substr(0, end));
-					message.erase(0, end + 1);
+					message.erase(0, end);
+					message.erase(0, message.find_first_not_of(delim));
 				}
-				_args.push_back(message.substr(0, end));
+				if (message.size() > 0)
+					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
 				client->setPasswordFlag(1);
 				client->addBackCarriageBuffer("input your Username using USER command");
@@ -118,9 +69,11 @@ void IrcCommand::parsing(std::string message){
 				_command = "USER";
 				for (end = message.find_first_of(delim); end != -1; end = message.find_first_of(delim)){
 					_args.push_back(message.substr(0, end));
-					message.erase(0, end + 1);
+					message.erase(0, end);
+					message.erase(0, message.find_first_not_of(delim));
 				}
-				_args.push_back(message.substr(0, end));
+				if (message.size() > 0)
+					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
 				client->setPasswordFlag(1);
 				client->addBackCarriageBuffer("Welcome to our chat");
@@ -151,7 +104,8 @@ void IrcCommand::parsing(std::string message){
 		_args.clear();
 		for (end = it->find_first_of(delim); end != -1; end = it->find_first_of(delim)){
 			_args.push_back(it->substr(0, end));
-			it->erase(0, end + 1);
+			it->erase(0, end);
+			it->erase(0, it->find_first_not_of(delim));
 			if (i == 0){
 				_command = _args[0];
 				if (_command == "JOIN" || _command == "KICK")
@@ -163,8 +117,12 @@ void IrcCommand::parsing(std::string message){
 				break;
 			i++;
 		}
-		if (*it != "")
+		if ((*it).size() > 0)
 			_args.push_back(*it);
+		//파싱 확인 출력
+		// for (std::deque<std::string>::iterator it2 = _args.begin(); it2 != _args.end(); it2++){
+		// 	std::cout << "<" << *it2 << ">" << std::endl;
+		// }
 		if (_args.size() == 1)
 			_command = _args[0];
 		_args.pop_front();
