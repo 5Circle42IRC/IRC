@@ -267,9 +267,12 @@ void IrcServ::run()
                 default:
                     memset(_recvMessage, 0, sizeof(_recvMessage));
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
-                    if (clientClass->getPasswordFlag() && _readLen == -1)
-                    {
+                    if (clientClass->getPasswordFlag() && _readLen == -1) {
                         std::cerr << "failed recv" << std::endl;
+                        break;
+                    } else if (!_readLen) {
+                        std::cerr << "exit_Client" << std::endl;
+                        deleteClient(clientFd, db);
                         break;
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
@@ -279,7 +282,7 @@ void IrcServ::run()
                             std::string passStr = clientClass->getNextLineReadBuffer();
                             if (passStr.length() != 0)
                                 clientClass->reduceReadBuffer(passStr.length() + 1);
-                            std::cout << "passStr:" << passStr << std::endl;
+                            // std::cout << "passStr:" << passStr << std::endl;
                             if (passStr.compare(0, 4, "PASS")) {
                                 std::cerr << "Pass 통과 못함" << std::endl;
                             } else if (passStr.compare(passStr.find_first_not_of(" ,\t\v\f\r"), passStr.find_first_not_of("\r\n"), _passWord)){
@@ -293,22 +296,10 @@ void IrcServ::run()
                         }
                         break;
                     }
-
-                    
-                    switch (_readLen)
-                    {
-                    case EXIT_CLIENT:
-                        std::cerr << "exit_Client" << std::endl;
-                        deleteClient(clientFd, db);
-                        break;
-                    default:
-                        messageLen = std::strlen(_recvMessage);
-                        IrcCommand command1(&db, clientFd);
-                        excuteCommand(command1, clientFd, messageLen, clientClass);
-                        displayServerParam(clientFd, db);
-                        break;
-                    }
-                    break;
+                    messageLen = std::strlen(_recvMessage);
+                    IrcCommand command1(&db, clientFd);
+                    excuteCommand(command1, clientFd, messageLen, clientClass);
+                    displayServerParam(clientFd, db);
                 }
             } else if (FD_ISSET(clientFd, &_cpyWrites)) {
                 writeUserBuffer(clientFd, clientClass);

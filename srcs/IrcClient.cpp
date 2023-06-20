@@ -1,5 +1,6 @@
 #include "../include/IrcClient.hpp"
 #include <string>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 
@@ -84,10 +85,9 @@ const std::string IrcClient::getNextLineReadBuffer()
 {
     std::string ret;
     std::istringstream origin(_readBuffer);
-    std::getline(origin, ret, '\n');
-
-    std::cout << "ret:" << ret << std::endl;
-
+    if (std::getline(origin, ret).eof())
+        return "";
+    std::cerr << ret << std::endl;
     return ret;
 }
 
@@ -132,7 +132,7 @@ void IrcClient::addBackBuffer(const std::string str)
     _buffer += str;
 }
 
-void IrcClient::addBackReadBuffer(const std::string readMassage)
+void IrcClient::addBackReadBuffer(std::string readMassage)
 {
     _readBuffer += readMassage;
 }
