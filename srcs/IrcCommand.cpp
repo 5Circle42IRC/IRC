@@ -27,7 +27,7 @@ void IrcCommand::checkRunCMD(){
 			return ;
 		}
 	}
-	_db->findClientByFd(_clientFd)->addBackCarriageBuffer("ERR_INVALID_COMMAND\n");
+	_db->findClientByFd(_clientFd)->addBackCarriageBuffer("ERR_UNKNOWNCOMMAND\n");
 }
 
 void IrcCommand::parsing(std::string message){
@@ -87,7 +87,7 @@ void IrcCommand::parsing(std::string message){
 		}
 	}
 	if (message.size() > 512)
-		throw ERR_OUT_OF_BOUND_MESSAGE();
+		throw ERR_OUTOFBOUNDMESSAGE();
 	message.erase(0, message.find_first_not_of(delim));
 	// 다중메세지 개행, 캐리지리턴 기준으로 나누기 (동작 확인)
 	for (end = message.find_first_of(endl); message.size() != 0 && end != -1; end = message.find_first_of(endl)){
@@ -145,32 +145,32 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
 //JOIN
-const char* IrcCommand::ERR_INVALID_PASSWORD::what() const throw() { return "ERR_INVALID_PASSWORD"; }
-const char* IrcCommand::ERR_USER_ON_CHANNEL::what() const throw() { return "ERR_USER_ON_CHANNEL"; }
-const char* IrcCommand::ERR_INVALID_ARGUMENT::what() const throw() { return "ERR_INVALID_ARGUMENT"; }
-const char* IrcCommand::ERR_OUT_OF_LIMIT::what() const throw() { return "ERR_OUT_OF_LIMIT";}
-const char* IrcCommand::ERR_INVITE_PERSON_ONLY::what() const throw() { return "ERR_INVITE_PERSON_ONLY";}
+const char* IrcCommand::ERR_BADPASSWORD::what() const throw() { return "ERR_BADPASSWORD"; }
+const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return "ERR_USERONCHANNEL"; }
+const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
+const char* IrcCommand::ERR_OUTOFLIMIT::what() const throw() { return "ERR_OUTOFLIMIT";}
+const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return "ERR_INVITEONLYCHAN";}
 
 //PARSING
-const char* IrcCommand::ERR_INVALID_COMMAND::what() const throw() { return "ERR_INVALID_COMMAND";}
-const char* IrcCommand::ERR_OUT_OF_BOUND_MESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
+const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return "ERR_UNKNOWNCOMMAND";}
+const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return "ERR_OUT_OF_BOUND_MESSAGE"; }
 const char* IrcCommand::ERR_INVALID_NAME_OF_CHANNEL::what() const throw() { return "ERR_INVALID_NAME_OF_CHANNEL";}
-const char* IrcCommand::ERR_INVALID_CHAR_IN_NAME::what() const throw() { return "ERR_INVALID_CHAR_IN_NAME"; }
+const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 
 
 //NICK
-const char* IrcCommand::ERR_NICKNAME_IN_USE::what() const throw() { return ": Nickname is already in use"; }
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ": Nickname is already in use"; }
 const char* IrcCommand::ERR_NO_NICKNAME_GIVEN::what() const throw() { return "ERR_NONICKNAMEGIVEN"; }
-const char* IrcCommand::ERR_ERRONEUS_NICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
+const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return "ERR_ERRONEUSNICKNAME"; }
 //PART
-const char* IrcCommand::ERR_NOT_ON_CHANNEL::what() const throw() { return "ERR_NOT_ON_CHANNEL"; }
+const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return "ERR_NOTONCHANNEL"; }
 //TOPIC
-const char* IrcCommand::ERR_NEED_MORE_PARAMS::what() const throw() { return "ERR_NEED_MORE_PARAMS"; }
-const char* IrcCommand::ERR_CHAN_OPRIVS_NEEDED::what() const throw() { return "ERR_CHAN_OPRIVS_NEEDED"; }
+const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return "ERR_NEEDMOREPARAMS"; }
+const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return "ERR_CHANOPRIVSNEEDED"; }
 
 //MODE
-const char* IrcCommand::ERR_UNKNOWN_MODE::what() const throw() { return "ERR_UNKNOWN_MODE"; }
+const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return "ERR_UNKNOWNMODE"; }
 
 //KICK
-const char* IrcCommand::ERR_NOT_OPERATOR::what() const throw() { return "ERR_NOT_OPERATOR"; }
+const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return "ERR_NOPRIVILEGES"; }
 

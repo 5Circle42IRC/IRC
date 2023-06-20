@@ -23,18 +23,18 @@ void IrcCommand::MODE()
     
     if (channel->isJoinedUser(_clientFd) == false)
     {
-        throw ERR_NOT_ON_CHANNEL();
+        throw ERR_NOTONCHANNEL();
     }
     //channel operator check
     if (channel->isOperator(_clientFd) == false)
     {
         std::cout << "<" << _db->findClientByFd(_clientFd)->getNickname() << "> is not a operator to <" << channel->getName() << ">" << std::endl;
-        throw ERR_CHAN_OPRIVS_NEEDED();
+        throw ERR_CHANOPRIVSNEEDED();
     }
 
     std::string option = _args[1];
     if (option.size() < 2)
-        throw ERR_NEED_MORE_PARAMS();
+        throw ERR_NEEDMOREPARAMS();
 
     int mustOp = 0;///if mustOp == 0, next char have to be + or -
                     // if mustOp ==1, next char have to be option character
@@ -54,7 +54,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
-                throw ERR_UNKNOWN_MODE();
+                throw ERR_UNKNOWNMODE();
             }                  
             std::cout << "mode +" << std::endl;
             sign = 1;
@@ -65,7 +65,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
-                throw ERR_UNKNOWN_MODE();
+                throw ERR_UNKNOWNMODE();
             }                 
             std::cout << "mode -" << std::endl;
             sign = 0;
@@ -79,7 +79,7 @@ void IrcCommand::MODE()
             if (option[i] == '+' || option[i] == '-')
             {
                 std::cout << "there is no option+- : <" << option[i] << ">" << std::endl;
-                throw ERR_UNKNOWN_MODE();  
+                throw ERR_UNKNOWNMODE();  
             }
             else if (option[i] == 'i')
             {
@@ -119,7 +119,7 @@ void IrcCommand::MODE()
             else
             {
                 std::cout << "there is no option : <" << option[i] << ">" << std::endl;
-                throw ERR_UNKNOWN_MODE();
+                throw ERR_UNKNOWNMODE();
             }  
         }
         i++;

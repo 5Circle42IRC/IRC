@@ -1,6 +1,6 @@
 void IrcCommand::INVITE(){
 	if (_args.size() != 2)
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 
 	IrcClient *host = _db->findClientByFd(_clientFd);
 	IrcClient *target = _db->findClientByName(_args[1]);

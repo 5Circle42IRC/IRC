@@ -7,12 +7,12 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
     std::string oldNick = _db->findClientByFd(_clientFd)->getNickname();
     if (newNick.size() > 9)
     {
-        throw ERR_ERRONEUS_NICKNAME();  
+        throw ERR_ERRONEUSNICKNAME();  
     }
     if (_db->findClientByFd(_clientFd)->getNickname() == newNick)
     {
         _db->findClientByFd(_clientFd)->addBackBuffer("433 " + newNick + " " + newNick);
-        throw ERR_NICKNAME_IN_USE();
+        throw ERR_NICKNAMEINUSE();
     } 
     return 0;
 }

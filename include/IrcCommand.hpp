@@ -56,58 +56,51 @@ class IrcCommand {
 		void kickUser(std::string channel, std::string name, std::string comment);
 		void makeBufferString(IrcChannel *channel, IrcClient *client);
 
-		class ERR_INVALID_ARGUMENT: public std::exception {
+		class ERR_BADPASSWORD: public std::exception {
 			virtual const char *what() const throw();
 		};
-		
-		class ERR_INVALID_PASSWORD: public std::exception {
+		class ERR_USERONCHANNEL: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_USER_ON_CHANNEL: public std::exception {
+		class ERR_UNKNOWNCOMMAND: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVALID_COMMAND: public std::exception {
-			virtual const char *what() const throw();
-		};
-		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
+		class ERR_OUTOFBOUNDMESSAGE: public std::exception {
 			virtual const char *what() const throw();
 		};
 		class ERR_INVALID_NAME_OF_CHANNEL: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVALID_CHAR_IN_NAME: public std::exception {
-			virtual const char *what() const throw();
-		};
-        class ERR_NICKNAME_IN_USE: public std::exception {
+        class ERR_NICKNAMEINUSE: public std::exception {
             virtual const char *what() const throw();
         };
         class ERR_NO_NICKNAME_GIVEN : public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_ERRONEUS_NICKNAME : public std::exception {
+        class ERR_ERRONEUSNICKNAME : public std::exception {
             virtual const char *what() const throw();
         };
         //PART
-        class ERR_NOT_ON_CHANNEL : public std::exception {
+        class ERR_NOTONCHANNEL : public std::exception {
             virtual const char *what() const throw();
         };
         //TOPIC
-        class ERR_NEED_MORE_PARAMS : public std::exception {
+        class ERR_NEEDMOREPARAMS : public std::exception {
             virtual const char *what() const throw();
         };
-        class ERR_CHAN_OPRIVS_NEEDED : public std::exception {
+        class ERR_CHANOPRIVSNEEDED : public std::exception {
             virtual const char *what() const throw();
         };
-		class ERR_UNKNOWN_MODE : public std::exception {
+		class ERR_UNKNOWNMODE : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_OUT_OF_LIMIT : public std::exception {
+		class ERR_OUTOFLIMIT : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVITE_PERSON_ONLY : public std::exception {
+		class ERR_INVITEONLYCHAN : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_NOT_OPERATOR : public std::exception {
+		class ERR_NOPRIVILEGES : public std::exception {
 			virtual const char *what() const throw();
 		};
 };

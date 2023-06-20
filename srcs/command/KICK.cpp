@@ -11,12 +11,12 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 	std::cout << "2" << std::endl;
 	channel = _db->findChannel(channelName);
 	if (channel->isOperator(_clientFd) == false)
-		throw ERR_NOT_OPERATOR();
+		throw ERR_NOPRIVILEGES();
 	//channel 및 user 유무 확인
 	target = _db->findClientByName(clientName);
 	std::cout << "3" << std::endl;
 	if (channel->isJoinedUser(target->getFd()) == false)
-		throw ERR_NOT_ON_CHANNEL();
+		throw ERR_NOTONCHANNEL();
 	channel->deleteUser(target->getFd());
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
@@ -32,7 +32,7 @@ void IrcCommand::KICK(){
 	int i = 0;
 
 	if(_args.size() > 3 || _args.size() < 2)
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 	for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
 		channelList.push_back(_args[0].substr(0, end));
 		_args[0].erase(0, end + 1);
@@ -48,7 +48,7 @@ void IrcCommand::KICK(){
 	if (userList.back().size() == 0)
 		userList.pop_back();
 	if (userList.size() != channelList.size())
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 	for (std::deque<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
 		if (_args.size() == 3)
 			kickUser(*it, userList[i], _args[2]);

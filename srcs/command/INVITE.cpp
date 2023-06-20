@@ -4,7 +4,7 @@
 
 void IrcCommand::INVITE(){
 	if (_args.size() != 2)
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 
 	std::cout << "_args list : " << "<" << _args[0] << "> " << "<" << _args[1] << ">" << std::endl;
 	IrcClient *host = _db->findClientByFd(_clientFd);
@@ -16,10 +16,10 @@ void IrcCommand::INVITE(){
 		host->addBackCarriageBuffer("The channel is full");
 	//권한 검사
 	if ((channel->getGrant() & M_INVITE) && !channel->isOperator(_clientFd))
-		throw ERR_NOT_OPERATOR();
+		throw ERR_NOPRIVILEGES();
 	//이미 존재하는 유저인지 검사
 	if (channel->isJoinedUser(target->getFd()))
-		throw ERR_USER_ON_CHANNEL();
+		throw ERR_USERONCHANNEL();
 	channel->addUser(target->getFd());
 	host->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());
 	target->addBackCarriageBuffer(":" + host->getNickname() + " INVITE " + target->getNickname() + " " + channel->getName());

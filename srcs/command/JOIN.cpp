@@ -26,14 +26,14 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 	try {
 		channel =_db->findChannel(name);
 		if (channel->isJoinedUser(_clientFd))
-				throw ERR_USER_ON_CHANNEL();
+				throw ERR_USERONCHANNEL();
 		// grant 검사(mode)
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key))
-				throw ERR_INVALID_PASSWORD();
+				throw ERR_BADPASSWORD();
 		if ((channel->getGrant() & M_LIMIT) && channel->getLimit() <= channel->getUser().size())
-				throw ERR_OUT_OF_LIMIT();
+				throw ERR_OUTOFLIMIT();
 		if ((channel->getGrant() & M_INVITE))
-				throw ERR_INVITE_PERSON_ONLY();
+				throw ERR_INVITEONLYCHAN();
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
 		if (channel->getGrant() & M_KEY){
@@ -71,7 +71,7 @@ void IrcCommand::JOIN(){
 	std::deque<std::string> passwordList;
 	std::multimap<std::string, std::string>keypair;
 	if (_args.size() != 2 && _args.size() != 1)
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 	for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
 		channelList.push_back(_args[0].substr(0, end));
 		_args[0].erase(0, end + 1);
@@ -89,7 +89,7 @@ void IrcCommand::JOIN(){
 			passwordList.pop_back();
 	}
 	if (channelList.size() < passwordList.size())
-		throw ERR_INVALID_ARGUMENT();
+		throw ERR_NEEDMOREPARAMS();
 	for (int i = 0; i < channelList.size(); i++){
 		if (i < passwordList.size())
 			keypair.insert(std::make_pair(channelList[i], passwordList[i]));
