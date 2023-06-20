@@ -24,11 +24,15 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 	channel->deleteUser(target->getFd());
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
-	
-		target->addBackCarriageBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment);
+	{
+		target->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+		client->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+	}
 	else
-		target->addBackCarriageBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname());
-
+	{
+		target->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname()+ "\r\n");
+		client->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+	}
 }
 
 void IrcCommand::KICK(){
