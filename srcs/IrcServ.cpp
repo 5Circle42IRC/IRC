@@ -17,7 +17,7 @@ IrcServ::IrcServ(int port, std::string passWord)
     , _fdNum(0)
     , _opt(1)
     , _readLen(0)
-    , _writeLen(0)
+    , _writeLen(0) 
 { }
 
 int IrcServ::on()
