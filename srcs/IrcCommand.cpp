@@ -41,7 +41,29 @@ void IrcCommand::parsing(std::string message){
 
 	std::cout << "password flag : " << client->getPasswordFlag() << std::endl;
 	if (client->getPasswordFlag() < 3){
-		if (client->getNickname().size() == 0){
+		client->addBackCarriageBuffer("input your password using PASS command");
+		if (client->getPasswordFlag() == 0){
+			if (message.substr(0, 5) == "PASS "){
+				message.erase(0, 4);
+				message.erase(0, message.find_first_not_of(delim));
+				_command = "PASS";
+				for (end = message.find_first_of(delim); end != -1; end = message.find_first_of(delim)){
+					_args.push_back(message.substr(0, end));
+					message.erase(0, end);
+					message.erase(0, message.find_first_not_of(delim));
+				}
+				if (message.size() > 0)
+					_args.push_back(message.substr(0, message.find_first_of(endl)));
+				if (_args.size() != 1)
+					return ;
+				if (_args[0].compare(_db->getServPass()))
+					checkRunCMD();
+				client->setPasswordFlag(1);
+				client->addBackCarriageBuffer("input your nickname using NICK command");
+				return ;
+			}
+		}
+		if (client->getPasswordFlag() == 1){
 			if (message.substr(0, 5) == "NICK "){
 				message.erase(0, 4);
 				message.erase(0, message.find_first_not_of(delim));
@@ -54,16 +76,16 @@ void IrcCommand::parsing(std::string message){
 				if (message.size() > 0)
 					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
-				client->setPasswordFlag(1);
-				client->addBackCarriageBuffer("input your Username using USER command");
+				client->setPasswordFlag(2);
+				client->addBackCarriageBuffer("input your username using USER command");
 				return ;
 			}
 			else {
-				client->addBackCarriageBuffer("input your Nickname using NICK command");
+				client->addBackCarriageBuffer("input your nickname using NICK command");
 				return ;
 			}
 		}
-		if (client->getUsername().size() == 0){
+		if (client->getPasswordFlag() == 2){
 			if (message.substr(0, 5) == "USER "){
 				message.erase(0, 5);
 				_command = "USER";
@@ -75,13 +97,13 @@ void IrcCommand::parsing(std::string message){
 				if (message.size() > 0)
 					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				checkRunCMD();
-				client->setPasswordFlag(1);
+				client->setPasswordFlag(3);
 				std::string test("hi  test   ");
 				client->addBackCarriageBuffer("001 " + test + " :Welcome " + "dldldl" + " to irc ysungwon");
 				return ;
 			}
 			else {
-				client->addBackCarriageBuffer("input your Username using USER command");
+				client->addBackCarriageBuffer("input your username using USER command");
 				return ;
 			}
 		}
@@ -133,7 +155,14 @@ void IrcCommand::parsing(std::string message){
 		_args.pop_front();
 		try {
 			checkRunCMD();
-		} catch (std::exception &e){
+		} catch (std::string name) {
+			client->addBackCarriageBuffer("403 <" + name + "> :No such channel");
+		} catch (char *name){
+			client->addBackBuffer("401 <");
+			client->addBackBuffer(name);
+			client->addBackCarriageBuffer("> :No such nick/channel");
+		}
+		 catch (std::exception &e){
 			client->addBackCarriageBuffer(e.what());
 		}
 	}
@@ -145,28 +174,28 @@ IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return 
 
 //에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
 //JOIN
-const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return ":cannot join channel (+k)"; }
-const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return ":is already on channel"; }
-const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return ":Not enough parameters"; }
-const char* IrcCommand::ERR_CHANNELISFULL::what() const throw() { return ":cannot join channel (+l)";}
-const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return ":cannot join channel (+i)";}
+const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return " :cannot join channel (+k)"; }
+const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return " :is already on channel"; }
+const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return " :Not enough parameters"; }
+const char* IrcCommand::ERR_CHANNELISFULL::what() const throw() { return " :cannot join channel (+l)";}
+const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return " :cannot join channel (+i)";}
 
 //PARSING
-const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return ":Unknown command";}
-const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return ":command is too long"; }
-const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return ":channel name is too long";}
+const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return " :Unknown command";}
+const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return " :command is too long"; }
+const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return " :channel name is too long";}
 
 //NICK
-const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ":Nickname is already in use"; }
-const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return ":No nickname given"; }
-const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return ":Erroneus nickname"; }
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return " :Nickname is already in use"; }
+const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return " :No nickname given"; }
+const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return " :Erroneus nickname"; }
 //PART
-const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return ":You're not on that channel"; }
+const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return " :You're not on that channel"; }
 //TOPIC
-const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return ":You're not channel operator"; }
+const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return " :You're not channel operator"; }
 
 //MODE
-const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return ":is unknwon mode char to me"; }
+const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return " :is unknwon mode char to me"; }
 
 //KICK
-const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return ":Permission Denied- You're not an IRC operator"; }
+const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return " :Permission Denied- You're not an IRC operator"; }
