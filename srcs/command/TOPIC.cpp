@@ -36,7 +36,7 @@ void IrcCommand::TOPIC(){
     {
         std::cout << "topic test1" << std::endl;
         // define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " #" + channel         + " " + topic + "\r\n")
-        client->addBackBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
+        client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
         //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+ " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
         
         

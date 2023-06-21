@@ -55,6 +55,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			makeBufferString(channel, client);
 		}
 		else{
+			
 			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
 		}	
