@@ -11,7 +11,7 @@ public:
     ~IrcClient();
 
     int getFd() const;
-    const int getPasswordFlag() const;
+    int getPasswordFlag() const;
     const std::string &getNickname() const;
     const std::string &getUsername() const;
     const std::string &getHostname() const;

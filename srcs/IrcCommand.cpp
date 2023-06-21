@@ -18,7 +18,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 IrcCommand::~IrcCommand(){}
 
 void IrcCommand::checkRunCMD(){
-	int index = 0;
 	std::map<std::string, commandPtr>::iterator commandIter;
 	for (commandIter = _commandList.begin(); commandIter != _commandList.end(); commandIter++){
 		if (commandIter->first == _command){
@@ -205,7 +204,7 @@ const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return " :can
 //PARSING
 const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return " :Unknown command";}
 const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return " :command is too long"; }
-const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return " :channel name is too long";}
+const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return " :invalid channel name";}
 
 //NICK
 const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return " :Nickname is already in use"; }

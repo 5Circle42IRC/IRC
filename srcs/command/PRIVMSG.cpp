@@ -4,10 +4,9 @@
 #include "../../include/IrcDB.hpp"
 
 void IrcCommand::PRIVMSG(){
-
+		IrcClient* client = _db->findClientByFd(_clientFd);
     if (_args.size() < 2)
     {
-		IrcClient* client = _db->findClientByFd(_clientFd);
 		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PRIVMSG ");
         throw ERR_NEEDMOREPARAMS();
     }
@@ -18,7 +17,6 @@ void IrcCommand::PRIVMSG(){
     {
         std::cout << "In PRIVMSG # start, so channel" << std::endl;
         IrcChannel* channel = _db->findChannel(firstArg);
-        IrcClient* client = _db->findClientByFd(_clientFd);
         
         std::map<int, bool>	users = channel->getUser();
         std::map<int, bool>::iterator it;

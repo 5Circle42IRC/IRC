@@ -157,7 +157,7 @@ void IrcClient::setPasswordFlag(int number)
     _passwordFlag = number;
 }
 
-const int IrcClient::getPasswordFlag() const
+int IrcClient::getPasswordFlag() const
 {
     return _passwordFlag;
 }

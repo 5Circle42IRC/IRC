@@ -38,7 +38,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			client->addBackBuffer("475 <" + channel->getName() + "> ");
 			throw ERR_BADCHANNELKEY();
 		}
-		if ((channel->getGrant() & M_LIMIT) && channel->getLimit() <= channel->getUser().size()){
+		if ((channel->getGrant() & M_LIMIT) && static_cast<unsigned long>(channel->getLimit()) <= channel->getUser().size()){
 			client->addBackBuffer("471 <" + channel->getName() + "> ");
 			throw ERR_CHANNELISFULL();
 		}
@@ -108,7 +108,7 @@ void IrcCommand::JOIN(){
 		client->addBackBuffer("461 <" + _command + "> ");
 		throw ERR_NEEDMOREPARAMS();
 	}
-	for (int i = 0; i < channelList.size(); i++){
+	for (unsigned long i = 0; i < channelList.size(); i++){
 		if (i < passwordList.size())
 			keypair.insert(std::make_pair(channelList[i], passwordList[i]));
 		else
