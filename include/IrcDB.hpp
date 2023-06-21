@@ -24,6 +24,7 @@ public:
 
 	void deleteClient(int clientFd);
 	void deleteChannel(std::string name);
+	void setServPass(const std::string& pass);
 
 	const std::map<std::string, IrcChannel*> getAllChannels() const;
 	const std::map<int, IrcClient*> getAllClients() const;

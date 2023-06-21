@@ -13,6 +13,11 @@ const std::map<int, IrcClient*> IrcDB::getAllClients() const
 }
 const std::string& IrcDB::getServPass() const { return _servPass; }
 
+void IrcDB::setServPass(const std::string& pass) 
+{
+	_servPass = pass;
+}
+
 IrcDB::IrcDB(){}
 IrcDB::~IrcDB(){}
 

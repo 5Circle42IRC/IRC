@@ -22,7 +22,6 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 int IrcServ::on()
 {
-    _passWord.append("\n");
     std::memset(_recvMessage, 0, sizeof(_recvMessage));
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;
@@ -206,6 +205,8 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
             clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
         }
     } catch (std::exception& e){
+    } catch (...) {
+        
     }
 
 }
@@ -246,6 +247,8 @@ void IrcServ::run()
     IrcDB db; 
     IrcClient *clientClass;
 
+    db.setServPass(_passWord);
+
     while (42)
     {
         initSelect();
@@ -257,7 +260,8 @@ void IrcServ::run()
                 {
                     FD_SET(clientFd, &_activeWrites);
                 }
-            } catch (std::exception& e) { }
+            } catch (std::exception& e) {
+            } catch (...) { }
 
             if (FD_ISSET(clientFd, &_cpyReads))
             {
@@ -281,50 +285,11 @@ void IrcServ::run()
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    std::cout << "first passStr : <" << passStr << ">" << std::endl;
                     if (passStr.length() != 0) {
                         // password check
-                        if (!clientClass->getPasswordFlag())
-                        {
-                            clientClass->reduceReadBuffer(passStr.length() + 1);
-                            try {
-                                std::cout << "in try passStr : <" << passStr << ">" << std::endl;
-                                std::cout << "passStr.compare(0, 4, PASS) : <" << passStr.compare(0, 4, "PASS") << ">" << std::endl;
-                                if (passStr.compare(0, 4, "PASS")) {
-                                    std::cerr << "Pass 통과 못함" << std::endl;
-                                    break;
-                                }
-                                std::cout << "after if passStr : <" << passStr << ">" << std::endl;
-                                passStr.erase(0, 4);
-                                std::cout << "after erase 4 passStr : <" << passStr << ">" << std::endl;
-                                if (passStr.find("\r\n")) {
-                                    std::cout << "ch1" << std::endl;
-                                    passStr.pop_back();
-                                    passStr.pop_back();
-                                } else if (passStr.find("\n")) {
-                                    std::cout << "ch2" << std::endl;
-                                    passStr.pop_back();
-                                }
-                                std::cout << "after if elseif passStr : <" << passStr << ">" << std::endl;
-                                std::cout << "passStr.find_first_not_of( \t\v\f\r) :<" << passStr.find_first_not_of(" \t\v\f\r") << ">" << std::endl;
-                                if (passStr.compare(passStr.find_first_not_of(" \t\v\f\r"), passStr.length(), _passWord)){
-                                    clientClass->setPasswordFlag(1);
-                                    clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
-                                }
-                                else
-                                    clientClass->addBackCarriageBuffer("input server password");
-                            } catch(const std::exception& e) {
-                                std::cerr << e.what() << '\n';
-                            }
-                            break;
-                        }
-                        // execute cmd 
-                        else {
-                            messageLen = std::strlen(_recvMessage);
-                            IrcCommand command1(&db, clientFd);
-                            excuteCommand(command1, clientFd, messageLen, clientClass);
-                            displayServerParam(clientFd, db);
-                        }
+                        IrcCommand command1(&db, clientFd);
+                        excuteCommand(command1, clientFd, passStr.length(), clientClass);
+                        displayServerParam(clientFd, db);
                     }
                 }
             } else if (FD_ISSET(clientFd, &_cpyWrites)) {
