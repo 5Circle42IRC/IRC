@@ -36,7 +36,7 @@ public:
     std::string&                getName();
     const std::string&          getPassword() const;
     const std::map<int, bool>&  getUser() const;
-    const int                   getLimit() const;
+    int                   getLimit() const;
 
 private:
     IrcChannel(const IrcChannel& copy);
