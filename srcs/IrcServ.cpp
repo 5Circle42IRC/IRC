@@ -201,7 +201,10 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
 {
     try {
         if (messageLen > 1)
-            command.setClientFd(clientFd).parsing(_recvMessage);
+        {
+            command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
+            clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
+        }
     } catch (std::exception& e){
     }
 
