@@ -12,18 +12,13 @@ void IrcCommand::TOPIC(){
     }
     std::string chname = _args[0];
     std::string topic = _args[1];
-    IrcChannel* channel = _db->findChannel(chname);/*
-                                                        ERR_NOSUCHCHANNEL (403) 
-                                                        "<client> <channel> :No such channel"
-                                                    */
-
+    IrcChannel* channel = _db->findChannel(chname);
     IrcClient* client = _db->findClientByFd(_clientFd);
 
-    std::cout << "TOPIC SIZE befe : <" << channel->getTopic().size() << ">" << std::endl;
-    std::cout << "TOPIC : <" << channel->getTopic() << ">" << std::endl;
     if (channel->isJoinedUser(_clientFd) == false)
     {
         std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
+        client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
         throw ERR_NOTONCHANNEL();
         /*
             ERR_NOTONCHANNEL (442) 
@@ -35,11 +30,7 @@ void IrcCommand::TOPIC(){
     if (_args.size() == 1)
     {
         std::cout << "topic test1" << std::endl;
-        // define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " #" + channel         + " " + topic + "\r\n")
         client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
-        //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+ " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
-        
-        
     }
     else if (_args.size() == 2)
     {
@@ -60,21 +51,15 @@ void IrcCommand::TOPIC(){
             std::cout << "After change TOPIC : <" << channel->getTopic() << ">" << std::endl; 
             std::cout << "after topic change; hannel->getTopic().size() : <" << channel->getTopic().size() << ">" << std::endl;
             if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
-                {std::cout << "topic test2" << std::endl;    
-                //"<client> <channel> :No topic is set"
-                //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+ " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
-                //client->addBackBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName()+ " " + topic +"\r\n");
-                client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
+                {
+                    std::cout << "topic test2" << std::endl;    
+                    client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
                 }
             else
-                {//"<client> <channel> :<topic>"
-                //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+  " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
-                //client->addBackBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName()+ " " + topic +"\r\n");
-
-                //channel.broadcast(command->getUser(), "TOPIC " + channel.getName() + " :" + channel.getTopic());
-                std::cout << "topic test3" << std::endl;
-                client->addBackBuffer(":" + client->getNickname() + " TOPIC " + client->getNickname() + " :" + channel->getName()+ " " + topic +"\r\n");
-                //client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
+                {
+                    std::cout << "topic test3" << std::endl;
+                    client->addBackBuffer(":" + client->getNickname() + " TOPIC " + client->getNickname() + " :" + channel->getName()+ " " + topic +"\r\n");
+                
                 }
         }
     }
