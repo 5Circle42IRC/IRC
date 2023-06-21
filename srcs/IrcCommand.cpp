@@ -156,7 +156,7 @@ void IrcCommand::parsing(std::string message){
 			it->erase(0, it->find_first_not_of(delim));
 			if (i == 0){
 				_command = _args[0];
-				if (_command == "JOIN" || _command == "KICK" || _command == "PART")
+				if (_command == "JOIN" || _command == "KICK" || _command == "PART" || _command == "PRIVMSG")
 					delim = " \t\v\f";
 			}
 			if ((!_command.compare("PRIVMSG") || !_command.compare("TOPIC")) && i > 0)
