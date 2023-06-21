@@ -68,7 +68,7 @@ class IrcCommand {
 		class ERR_OUTOFBOUNDMESSAGE: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVALID_NAME_OF_CHANNEL: public std::exception {
+		class ERR_BADCHANNELNAME: public std::exception {
 			virtual const char *what() const throw();
 		};
         class ERR_NICKNAMEINUSE: public std::exception {

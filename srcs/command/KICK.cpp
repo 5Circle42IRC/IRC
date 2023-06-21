@@ -71,7 +71,11 @@ void IrcCommand::KICK(){
 	if (userList.back().size() == 0)
 		userList.pop_back();
 	if (userList.size() != channelList.size())
+	{
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " KICK ");
 		throw ERR_NEEDMOREPARAMS();
+	}
 	for (std::deque<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
 		if (_args.size() == 3)
 			kickUser(*it, userList[i], _args[2]);
