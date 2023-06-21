@@ -11,11 +11,19 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
         client->addBackBuffer(":localhost 432 " + client->getNickname() + " " + newNick);
         throw ERR_ERRONEUSNICKNAME();  
     }
-    if (client->getNickname() == newNick)
-    {        
-        client->addBackBuffer(":localhost 433 " + client->getNickname() + " " + newNick);   
-        throw ERR_NICKNAMEINUSE();
-    } 
+
+    std::map<int, IrcClient*>clients = _db->getAllClients();
+    std::map<int, IrcClient*>::iterator it;
+    for (it = clients.begin(); it != clients.end(); it ++)
+    {
+        
+        if (it->second->getNickname() == newNick)
+        {        
+            client->addBackBuffer(":localhost 433 " + client->getNickname() + " " + newNick);   
+            throw ERR_NICKNAMEINUSE();
+        }         
+    }
+
     return 0;
 }
 
