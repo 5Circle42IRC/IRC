@@ -6,7 +6,11 @@ void IrcCommand::USER(){
     IrcClient* client = _db->findClientByFd(_clientFd);
     std::string oldNick = client->getNickname();
     if (getArgs().size() != 4)
+    {
         std::cout << "in USER command, args size is not 4. " << std::endl;
+        client->addBackBuffer("461 <" + _command + "> ");
+        throw ERR_NEEDMOREPARAMS();
+    }
     else    
     {
         _db->findClientByFd(_clientFd)->setUsername(getArgs()[0]);

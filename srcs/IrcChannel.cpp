@@ -40,6 +40,7 @@ void IrcChannel::setGrant(typeMode grant, bool on) {
         _grant &= ~grant;
 }
 
+void IrcChannel::setLimit(int limit) { _limit = limit; }
 void IrcChannel::setOperator(const int clientFd, const int target) {
     if (_user.size() == 1 && isJoinedUser(clientFd)) {
         _user[target] = true;
@@ -63,4 +64,4 @@ const std::map<int, bool>& IrcChannel::getUser() const { return _user; }
 const std::string& IrcChannel::getTopic() const { return _topic; }
 std::string& IrcChannel::getName() { return _name; }
 const std::string& IrcChannel::getPassword() const { return _password; }
-const int IrcChannel::getLimit() const { return _limit; }
+int IrcChannel::getLimit() const { return _limit; }

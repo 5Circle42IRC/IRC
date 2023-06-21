@@ -7,11 +7,12 @@ void IrcCommand::PASS(){
 
         if (getArgs().size() != 1)
         {
-            throw ERR_NONICKNAMEGIVEN();               
+            IrcClient* client = _db->findClientByFd(_clientFd);
+		    client->addBackBuffer(":localhost 461 " + client->getNickname() + " PASS ");
+            throw ERR_NEEDMOREPARAMS();               
         }
         else
         {
-            client->setPassword(_args[0]);
             client->addBackBuffer(":" + client->getNickname() + " PASS " + _args[0] + "\r\n");
         }    
 }

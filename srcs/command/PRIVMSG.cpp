@@ -4,48 +4,60 @@
 #include "../../include/IrcDB.hpp"
 
 void IrcCommand::PRIVMSG(){
-    std::string firstArg = _args[0];
+		IrcClient* client = _db->findClientByFd(_clientFd);
+    if (_args.size() != 2)
+    {
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PRIVMSG ");
+        throw ERR_NEEDMOREPARAMS();
+    }
     std::string msg = _args[1];
 
-    if (firstArg.front() == '#')    
-    {
-        /*
-        std::cout << "In PRIVMSG # start, so channel" << std::endl;
-        std::cout << "firstArg : <" << firstArg << ">  msg : <" << msg << "> _args.front() : <" << firstArg.front() << ">" << std::endl;
-        IrcClient *client = _db->findClientByFd(_clientFd);
-        IrcClient *channel = _db->findChannel(firstArg);
-        std::cout << "client fd : <" << client->getFd() << ">  nickname : <" << client->getNickname() << ">" << std::endl;
-        std::cout << "target name : <" << target->getName() << ">" << std::endl;
+    std::deque<std::string> clientList;
+	for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
+		clientList.push_back(_args[0].substr(0, end));
+		_args[0].erase(0, end + 1);
+	}
+	clientList.push_back(_args[0]);
+	if (clientList.back().size() == 0)
+		clientList.pop_back();
 
 
-        //:Angel PRIVMSG Wiz :Hello are you receiving this message ?
-        std::cout << "bf client buffer : <" << client->getBuffer() << ">" << std::endl;
-        std::cout << "bf target buffer : <" << target->getBuffer() << ">" << std::endl;
-        target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+    for (std::deque<std::string>::iterator it3 = clientList.begin(); it3 != clientList.end(); it3++){
+        if (it3->at(0) == '#')
+        {
+            std::cout << "In PRIVMSG # start, so channel" << std::endl;
+            IrcChannel* channel = _db->findChannel(*it3);
+            std::map<int, bool>	users = channel->getUser();
+            std::map<int, bool>::iterator it;
 
-        //PRIVMSG Angel :
-        client->addBackCarriageBuffer("PRIVMSG " + target->getNickname() + " :" + msg);
-        std::cout << "af client buffer : <" << client->getBuffer() << ">" << std::endl;
-        std::cout << "af target buffer : <" << target->getBuffer() << ">" << std::endl;
-        */        
-    }
-    else
-    {
-        std::cout << "firstArg : <" << firstArg << ">  msg : <" << msg << "> _args.front() : <" << firstArg.front() << ">" << std::endl;
-        IrcClient *client = _db->findClientByFd(_clientFd);
-        IrcClient *target = _db->findClientByName(firstArg);
-        std::cout << "client fd : <" << client->getFd() << ">  nickname : <" << client->getNickname() << ">" << std::endl;
-        std::cout << "target fd : <" << target->getFd() << ">  nickname : <" << target->getNickname() << ">" << std::endl;
-
-
-        //:Angel PRIVMSG Wiz :Hello are you receiving this message ?
-        std::cout << "bf client buffer : <" << client->getBuffer() << ">" << std::endl;
-        std::cout << "bf target buffer : <" << target->getBuffer() << ">" << std::endl;
-        target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
-
-        //PRIVMSG Angel :
-        client->addBackCarriageBuffer("PRIVMSG " + target->getNickname() + " :" + msg);
-        std::cout << "af client buffer : <" << client->getBuffer() << ">" << std::endl;
-        std::cout << "af target buffer : <" << target->getBuffer() << ">" << std::endl;
+            if (!channel->isJoinedUser(_clientFd))
+            {
+                //":localhost 442 " + client + " #" + channel + " 
+                client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
+                throw ERR_NOTONCHANNEL();
+            }
+            for (it = users.begin();
+                    it != users.end();
+                    it++)
+                    {
+                        IrcClient *client = _db->findClientByFd(_clientFd);
+                        IrcClient *target = _db->findClientByFd(it->first);                    
+                        if (_clientFd != target->getFd())
+                        { 
+                            target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+                            client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+                        }
+                    }      
+        }
+        else
+        {
+                IrcClient *client = _db->findClientByFd(_clientFd);
+                IrcClient *target = _db->findClientByName(*it3);        
+            if (_clientFd != target->getFd())
+            {
+                target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+                client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+            }
+        }
     }
 }

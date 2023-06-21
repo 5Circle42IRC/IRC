@@ -10,7 +10,6 @@
 class IrcCommand {
 	public :
 		/*db만 받는 생성자는 테스트 이후 삭제해도 됨.*/
-		IrcCommand(IrcDB *db);
 		IrcCommand(IrcDB *db, int clientFd);
 		~IrcCommand();
 
@@ -28,10 +27,11 @@ class IrcCommand {
 		void MODE();
 
 		void PART();
-		void PONG();
+		void PING();
 		void USER();
 		void PASS();
 		void DISPLAY();
+		void KICK();
 
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
@@ -47,35 +47,28 @@ class IrcCommand {
 		std::string 				_command;
 		int							_clientFd;
 
-		typedef void (IrcCommand::*commandPtrArr)();
-		commandPtrArr				_commandPointers[11];
-		std::vector<std::string>	_commandNames;
-		std::map<std::string, commandPtrArr> _commandList;
+		typedef void (IrcCommand::*commandPtr)();
+		std::map<std::string, commandPtr> _commandList;
 
 		void joinChannel(std::string name, std::string key);
 		int checkValidNICK(std::deque<std::string> args, IrcDB *_db);
 		void checkRunCMD();
+		void kickUser(std::string channel, std::string name, std::string comment);
+		void makeBufferString(IrcChannel *channel, IrcClient *client);
 
-		class ERR_INVALID_ARGUMENT: public std::exception {
+		class ERR_BADCHANNELKEY: public std::exception {
 			virtual const char *what() const throw();
 		};
-		
-		class ERR_INVALID_PASSWORD: public std::exception {
+		class ERR_USERONCHANNEL: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_USER_ON_CHANNEL: public std::exception {
+		class ERR_UNKNOWNCOMMAND: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVALID_COMMAND: public std::exception {
+		class ERR_OUTOFBOUNDMESSAGE: public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_OUT_OF_BOUND_MESSAGE: public std::exception {
-			virtual const char *what() const throw();
-		};
-		class ERR_INVALID_NAME_OF_CHANNEL: public std::exception {
-			virtual const char *what() const throw();
-		};
-		class ERR_INVALID_CHAR_IN_NAME: public std::exception {
+		class ERR_BADCHANNELNAME: public std::exception {
 			virtual const char *what() const throw();
 		};
         class ERR_NICKNAMEINUSE: public std::exception {
@@ -101,10 +94,13 @@ class IrcCommand {
 		class ERR_UNKNOWNMODE : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_OUT_OF_LIMIT : public std::exception {
+		class ERR_CHANNELISFULL : public std::exception {
 			virtual const char *what() const throw();
 		};
-		class ERR_INVITE_PERSON_ONLY : public std::exception {
+		class ERR_INVITEONLYCHAN : public std::exception {
+			virtual const char *what() const throw();
+		};
+		class ERR_NOPRIVILEGES : public std::exception {
 			virtual const char *what() const throw();
 		};
 };

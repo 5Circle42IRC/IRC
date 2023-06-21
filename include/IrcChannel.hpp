@@ -27,6 +27,7 @@ public:
     void setOperator(const int clientFd, const int target);
     void setTopic(std::string& newTopic);
     void setPassword(std::string& newPassword);
+    void setLimit(int limit);
     bool isOperator(const int clientFd) const;
 
     int getGrant() const;
@@ -35,7 +36,7 @@ public:
     std::string&                getName();
     const std::string&          getPassword() const;
     const std::map<int, bool>&  getUser() const;
-    const int                   getLimit() const;
+    int                   getLimit() const;
 
 private:
     IrcChannel(const IrcChannel& copy);

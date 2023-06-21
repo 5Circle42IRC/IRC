@@ -8,31 +8,40 @@ void IrcCommand::PART(){
     IrcChannel *channel;
     IrcClient *client;
 
-    if (_args.size() < 1)
+    std::vector<std::string> channelList;
+
+    if (_args.size() != 1)
     {
         std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
         /*
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"
         */
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PART ");
         throw ERR_NEEDMOREPARAMS();
     }
 
+    for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
+		channelList.push_back(_args[0].substr(0, end));
+		_args[0].erase(0, end + 1);
+	}
+	channelList.push_back(_args[0]);
 
     
 
     client = _db->findClientByFd(_clientFd);
+
     int i = 0;
 
 
     std::string chname;
     std::string chnameSum;
 
-    while (i < _args.size())
-    {
-
-        chname = _args[i]; 
-        channel =_db->findChannel(chname);
+    for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
+       
+        channel =_db->findChannel(*it);
+        chname = channel->getName(); 
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
@@ -51,6 +60,7 @@ void IrcCommand::PART(){
         if (channel->isJoinedUser(_clientFd) == false)
         {
             std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
+            client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
             throw ERR_NOTONCHANNEL();
         }              
 
@@ -67,8 +77,10 @@ void IrcCommand::PART(){
             throw std::exception();
         }
         chnameSum += (chname + " ");
+        client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
         i++;
+        
     }
-    client->addBackBuffer(client->getNickname() + ": PART " + chnameSum);
+    //client->addBackBuffer(":" + client->getNickname() + " PART :" + chnameSum + "\r\n");
     return ;
 }

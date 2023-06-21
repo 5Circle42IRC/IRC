@@ -1,6 +1,8 @@
 #include "../include/IrcClient.hpp"
 #include <string>
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 IrcClient::IrcClient(int fd
                     , std::string nickname
@@ -79,6 +81,16 @@ const std::string &IrcClient::getBuffer() const
     return _buffer;
 }
 
+const std::string IrcClient::getNextLineReadBuffer() 
+{
+    std::string ret;
+    std::istringstream origin(_readBuffer);
+    if (std::getline(origin, ret).eof())
+        return "";
+    std::cerr << ret << std::endl;
+    return ret;
+}
+
 void IrcClient::setNickname(std::string newNickname)
 {
     _nickname = newNickname;
@@ -120,6 +132,11 @@ void IrcClient::addBackBuffer(const std::string str)
     _buffer += str;
 }
 
+void IrcClient::addBackReadBuffer(std::string readMassage)
+{
+    _readBuffer += readMassage;
+}
+
 void IrcClient::addBackCarriageBuffer(const std::string str)
 {
     _buffer += str + "\r\n";
@@ -130,12 +147,18 @@ void IrcClient::reduceBuffer(int result)
     _buffer.erase(0, result);
 }
 
-void IrcClient::setPasswordFlag(bool flag)
+void IrcClient::reduceReadBuffer(int result)
 {
-    _passwordFlag = flag;
+    _readBuffer.erase(0, result);
 }
 
-const bool IrcClient::getPasswordFlag() const
+void IrcClient::setPasswordFlag(int number)
+{
+    if (_passwordFlag != 3)
+        _passwordFlag = number;
+}
+
+int IrcClient::getPasswordFlag() const
 {
     return _passwordFlag;
 }

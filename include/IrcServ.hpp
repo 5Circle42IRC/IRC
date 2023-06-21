@@ -47,12 +47,12 @@ private:
 
     bool initSelect();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
-    void deleteClient(int fd);
-    void displayServerParam(const int clientFd, const IrcDB& db);
+    void deleteClient(int fd, IrcDB& db);
+    void displayServerParam(const IrcDB& db);
     bool isSameNickname(IrcDB& db, std::string message);
     void sendTo(int clientFd, std::string message);
 
-    void checkServerPassword(const int clientFd, IrcClient* clientClass);
+    void checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db);
     void checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass);
     void checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass);
     void checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass);

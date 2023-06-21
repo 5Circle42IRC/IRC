@@ -5,25 +5,21 @@
 
 void IrcCommand::TOPIC(){
      
-    if (_args.size() != 2)
+    if (_args.size() > 2)
     {
-        std::cout << "TOPIC args size is not 2" << std::endl;   
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " TOPIC ");
         throw ERR_NEEDMOREPARAMS();
     }
     std::string chname = _args[0];
     std::string topic = _args[1];
-    IrcChannel* channel = _db->findChannel(chname);/*
-                                                        ERR_NOSUCHCHANNEL (403) 
-                                                        "<client> <channel> :No such channel"
-                                                    */
-
+    IrcChannel* channel = _db->findChannel(chname);
     IrcClient* client = _db->findClientByFd(_clientFd);
 
-    std::cout << "TOPIC SIZE befe : <" << channel->getTopic().size() << ">" << std::endl;
-    std::cout << "TOPIC : <" << channel->getTopic() << ">" << std::endl;
     if (channel->isJoinedUser(_clientFd) == false)
     {
         std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
+        client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
         throw ERR_NOTONCHANNEL();
         /*
             ERR_NOTONCHANNEL (442) 
@@ -31,27 +27,42 @@ void IrcCommand::TOPIC(){
         
         */
     }
-    if (channel->isOperator(_clientFd) == false)
+
+    if (_args.size() == 1)
     {
-        std::cout << "Don't have privillege to change topic" << std::endl;
-        throw ERR_CHANOPRIVSNEEDED();
-        /*
-            ERR_CHANOPRIVSNEEDED (482) 
-            "<client> <channel> :You're not channel operator"
-        */
+        std::cout << "topic test1" << std::endl;
+        client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
     }
-    else
+    else if (_args.size() == 2)
     {
-
-        std::cout << "Before change TOPIC : <" << channel->getTopic() << ">" << std::endl;
-        channel->setTopic(topic);
-        std::cout << "After change TOPIC : <" << channel->getTopic() << ">" << std::endl; 
-
-        if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
-            //"<client> <channel> :No topic is set"
-            client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
+        if (  (channel->getGrant() & M_TOPIC) && (channel->isOperator(_clientFd) == false))
+        {
+            std::cout << "Don't have privillege to change topic" << std::endl;
+            client->addBackBuffer(":localhost 482 " + client->getNickname() + " " + channel->getName());
+            throw ERR_CHANOPRIVSNEEDED();
+            /*
+                ERR_CHANOPRIVSNEEDED (482) 
+                "<client> <channel> :You're not channel operator"
+            */
+        }
         else
-            //"<client> <channel> :<topic>"
-            client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
+        {
+
+            std::cout << "Before change TOPIC : <" << channel->getTopic() << ">" << std::endl;
+            channel->setTopic(topic);
+            std::cout << "After change TOPIC : <" << channel->getTopic() << ">" << std::endl; 
+            std::cout << "after topic change; hannel->getTopic().size() : <" << channel->getTopic().size() << ">" << std::endl;
+            if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
+                {
+                    std::cout << "topic test2" << std::endl;    
+                    client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
+                }
+            else
+                {
+                    std::cout << "topic test3" << std::endl;
+                    client->addBackBuffer(":" + client->getNickname() + " TOPIC " + client->getNickname() + " :" + channel->getName()+ " " + topic +"\r\n");
+                
+                }
+        }
     }
 }
