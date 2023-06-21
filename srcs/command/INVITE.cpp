@@ -14,7 +14,7 @@ void IrcCommand::INVITE(){
 	IrcChannel *channel = _db->findChannel(_args[1]);
 
 	// 채널 limit 검사
-	if ((channel->getGrant() & M_LIMIT) && (channel->getLimit() <= channel->getUser().size())){
+	if ((channel->getGrant() & M_LIMIT) && (static_cast<unsigned long>(channel->getLimit()) <= channel->getUser().size())){
 		host->addBackBuffer("471 <" + channel->getName() + "> ");
 		throw ERR_CHANNELISFULL();
 	}

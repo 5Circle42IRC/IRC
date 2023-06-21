@@ -239,6 +239,7 @@ void IrcServ::run()
     IrcDB db; 
     IrcClient *clientClass;
 
+    std::cout << "*" << _passWord << "*" << std::endl;
     db.setServPass(_passWord);
 
     while (42)
