@@ -5,7 +5,7 @@
 
 void IrcCommand::TOPIC(){
      
-    if (_args.size() != 2)
+    if (_args.size() > 2)
     {
         std::cout << "TOPIC args size is not 2" << std::endl;   
         throw ERR_NEEDMOREPARAMS();
@@ -31,29 +31,51 @@ void IrcCommand::TOPIC(){
         
         */
     }
-    if (channel->isOperator(_clientFd) == false)
+
+    if (_args.size() == 1)
     {
-        std::cout << "Don't have privillege to change topic" << std::endl;
-        throw ERR_CHANOPRIVSNEEDED();
-        /*
-            ERR_CHANOPRIVSNEEDED (482) 
-            "<client> <channel> :You're not channel operator"
-        */
+        std::cout << "topic test1" << std::endl;
+        // define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " #" + channel         + " " + topic + "\r\n")
+        client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
+        //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+ " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
+        
+        
     }
-    else
+    else if (_args.size() == 2)
     {
-
-        std::cout << "Before change TOPIC : <" << channel->getTopic() << ">" << std::endl;
-        channel->setTopic(topic);
-        std::cout << "After change TOPIC : <" << channel->getTopic() << ">" << std::endl; 
-
-        if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
-            //"<client> <channel> :No topic is set"
-            
-            client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
+        if (channel->isOperator(_clientFd) == false)
+        {
+            std::cout << "Don't have privillege to change topic" << std::endl;
+            throw ERR_CHANOPRIVSNEEDED();
+            /*
+                ERR_CHANOPRIVSNEEDED (482) 
+                "<client> <channel> :You're not channel operator"
+            */
+        }
         else
-            //"<client> <channel> :<topic>"
-            client->addBackBuffer(":" + client->getNickname() + " TOPIC :" + channel->getName()+ " :" + topic +"\r\n");
-            //client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
+        {
+
+            std::cout << "Before change TOPIC : <" << channel->getTopic() << ">" << std::endl;
+            channel->setTopic(topic);
+            std::cout << "After change TOPIC : <" << channel->getTopic() << ">" << std::endl; 
+            std::cout << "after topic change; hannel->getTopic().size() : <" << channel->getTopic().size() << ">" << std::endl;
+            if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
+                {std::cout << "topic test2" << std::endl;    
+                //"<client> <channel> :No topic is set"
+                //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+ " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
+                //client->addBackBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName()+ " " + topic +"\r\n");
+                client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
+                }
+            else
+                {//"<client> <channel> :<topic>"
+                //client->addBackBuffer(":" + client->getNickname()+"@a" + " 332"+  " " + client->getNickname() + " " + channel->getName() + " :" + topic + "\r\n");
+                //client->addBackBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName()+ " " + topic +"\r\n");
+
+                //channel.broadcast(command->getUser(), "TOPIC " + channel.getName() + " :" + channel.getTopic());
+                std::cout << "topic test3" << std::endl;
+                client->addBackBuffer(":" + client->getNickname() + " TOPIC " + client->getNickname() + " :" + channel->getName()+ " " + topic +"\r\n");
+                //client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n");
+                }
+        }
     }
 }
