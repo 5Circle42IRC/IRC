@@ -17,7 +17,8 @@ void IrcCommand::PART(){
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"
         */
-        client->addBackBuffer("461 <" + _command + "> ");
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PART ");
         throw ERR_NEEDMOREPARAMS();
     }
 

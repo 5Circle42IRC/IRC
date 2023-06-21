@@ -7,7 +7,8 @@ void IrcCommand::PRIVMSG(){
 
     if (_args.size() < 2)
     {
-        client->addBackBuffer("461 <" + _command + "> ");
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PRIVMSG ");
         throw ERR_NEEDMOREPARAMS();
     }
     std::string firstArg = _args[0];

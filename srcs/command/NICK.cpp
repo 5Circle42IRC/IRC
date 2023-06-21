@@ -26,7 +26,7 @@ void IrcCommand::NICK(){
         {
             std::cout << "no nick given" << std::endl;
             //":localhost 431 " + client + " :There is no nickname.\r\n"
-            client->addBackBuffer(":localhost 431 " + client->getNickname() + " ");
+            client->addBackBuffer(":localhost 431 " + client->getNickname() + " ");            
             throw ERR_NONICKNAMEGIVEN();               
         }
         else
