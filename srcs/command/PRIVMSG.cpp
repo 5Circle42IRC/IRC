@@ -18,7 +18,6 @@ void IrcCommand::PRIVMSG(){
     {
         std::cout << "In PRIVMSG # start, so channel" << std::endl;
         IrcChannel* channel = _db->findChannel(firstArg);
-        IrcClient* client = _db->findClientByFd(_clientFd);
         
         std::map<int, bool>	users = channel->getUser();
         std::map<int, bool>::iterator it;

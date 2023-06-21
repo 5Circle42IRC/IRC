@@ -47,7 +47,6 @@ void IrcCommand::MODE()
     while(option[i])
     {
         std::cout << "option[" << i << "] : <" << option[i] << ">" << std::endl;
-        int grant = channel->getGrant();
 
         if (option[i] == '+')
         {

@@ -108,7 +108,7 @@ bool IrcServ::isSameNickname(IrcDB& db, std::string message)
     return false;
 }
 
-void IrcServ::displayServerParam(const int clientFd, const IrcDB& db)
+void IrcServ::displayServerParam(const IrcDB& db)
 {
 	std::map<std::string , IrcChannel*> channels(db.getAllChannels());
 	std::map<int, IrcClient *> clients(db.getAllClients());
@@ -215,7 +215,6 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
 {
     if (clientClass->getBuffer().size())
     {
-        //_sendMessage = "\033[38;5;3m" + clientClass->getBuffer() + "\033[0m";
         _sendMessage = clientClass->getBuffer();
         _writeLen = send(clientFd
                         , _sendMessage.c_str()
@@ -223,16 +222,10 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
                         , 0);
         if (_writeLen > 0)
         {
-            /*
-            std::cerr << "\033[38;5;3m------ user "<< clientClass->getNickname() 
-                        << " recieve massage ------\n" 
-                        << clientClass->getBuffer()
-                        << "---------- recieve massage -----------\n" << "\033[0m" << std::endl;
-            */
-           std::cerr << "------ user "<< clientClass->getNickname() 
-                        << " recieve massage ------\n" 
-                        << clientClass->getBuffer()
-                        << "---------- recieve massage -----------\n" << "" << std::endl;
+        std::cerr << "------ user "<< clientClass->getNickname() 
+                  << " recieve massage ------\n" 
+                  << clientClass->getBuffer()
+                  << "---------- recieve massage -----------\n" << "" << std::endl;
         }
         clientClass->reduceBuffer(_writeLen);
     }
@@ -243,10 +236,10 @@ void IrcServ::run()
     int acceptFd(0);
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen;
-    int messageLen(0);
     IrcDB db; 
     IrcClient *clientClass;
 
+    std::cout << "*" << _passWord << "*" << std::endl;
     db.setServPass(_passWord);
 
     while (42)
@@ -286,10 +279,9 @@ void IrcServ::run()
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
                     if (passStr.length() != 0) {
-                        // password check
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, passStr.length(), clientClass);
-                        displayServerParam(clientFd, db);
+                        displayServerParam(db);
                     }
                 }
             } else if (FD_ISSET(clientFd, &_cpyWrites)) {

@@ -18,7 +18,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 IrcCommand::~IrcCommand(){}
 
 void IrcCommand::checkRunCMD(){
-	int index = 0;
 	std::map<std::string, commandPtr>::iterator commandIter;
 	for (commandIter = _commandList.begin(); commandIter != _commandList.end(); commandIter++){
 		if (commandIter->first == _command){
