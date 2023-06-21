@@ -22,7 +22,6 @@ IrcServ::IrcServ(int port, std::string passWord)
 
 int IrcServ::on()
 {
-    _passWord.append("\n");
     std::memset(_recvMessage, 0, sizeof(_recvMessage));
     std::memset(&_servAddr, 0, sizeof(_servAddr));
     _servAddr.sin_family = AF_INET;

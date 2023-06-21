@@ -58,7 +58,7 @@ void IrcCommand::parsing(std::string message){
 					return ;
 				std::cout << "**" << _args[0] << "**" << std::endl;
 				std::cout << "&&" << _db->getServPass() << "&&" << std::endl;
-				if (_args[0] == _db->getServPass())
+				if (_args[0] != _db->getServPass())
 					return ;
 				checkRunCMD();
 				client->setPasswordFlag(1);
