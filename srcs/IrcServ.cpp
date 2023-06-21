@@ -248,6 +248,8 @@ void IrcServ::run()
     IrcDB db; 
     IrcClient *clientClass;
 
+    db.setServPass(_passWord);
+
     while (42)
     {
         initSelect();
