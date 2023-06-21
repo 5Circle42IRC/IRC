@@ -154,7 +154,8 @@ void IrcClient::reduceReadBuffer(int result)
 
 void IrcClient::setPasswordFlag(int number)
 {
-    _passwordFlag = number;
+    if (_passwordFlag != 3)
+        _passwordFlag = number;
 }
 
 int IrcClient::getPasswordFlag() const
