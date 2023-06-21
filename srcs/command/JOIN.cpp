@@ -51,10 +51,20 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		if (channel->getGrant() & M_KEY){
 			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 			makeBufferString(channel, client);
+			std::map<int, bool> userList = channel->getUser();
+			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
+				IrcClient *target = _db->findClientByFd(it->first);
+				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			}
 		}
 		else {
 			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
+			std::map<int, bool> userList = channel->getUser();
+			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
+				IrcClient *target = _db->findClientByFd(it->first);
+				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			}
 		}
 	} catch(std::string name){
 		channel = new IrcChannel(name);
