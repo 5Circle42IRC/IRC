@@ -78,7 +78,6 @@ mainjwee.cpp
 a.out.dSYM
 .gitignore
 
-Makefile
 mainysungwon.cpp
 mycommands.cpp
 mainjwee.cpp
