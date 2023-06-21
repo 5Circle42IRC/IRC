@@ -31,6 +31,8 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 		throw ERR_NOTONCHANNEL();
 	}
 	channel->deleteUser(target->getFd());
+	if (channel->getUser().size() == 0)
+		_db->deleteChannel(channel->getName());
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
 	{
