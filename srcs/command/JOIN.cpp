@@ -63,7 +63,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			std::map<int, bool> userList = channel->getUser();
 			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
 				IrcClient *target = _db->findClientByFd(it->first);
-				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName() + "\r\n");
 			}
 		}
 	} catch(std::string name){
