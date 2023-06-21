@@ -41,8 +41,8 @@ void IrcCommand::parsing(std::string message){
 
 	std::cout << "password flag : " << client->getPasswordFlag() << std::endl;
 	if (client->getPasswordFlag() < 3){
-		client->addBackCarriageBuffer("input your password using PASS command");
 		if (client->getPasswordFlag() == 0){
+			client->addBackCarriageBuffer("input your password using PASS command");
 			if (message.substr(0, 5) == "PASS "){
 				message.erase(0, 4);
 				message.erase(0, message.find_first_not_of(delim));
