@@ -35,7 +35,7 @@ void IrcCommand::TOPIC(){
     }
     else if (_args.size() == 2)
     {
-        if (channel->isOperator(_clientFd) == false)
+        if (  (channel->getGrant() & M_TOPIC) && (channel->isOperator(_clientFd) == false))
         {
             std::cout << "Don't have privillege to change topic" << std::endl;
             client->addBackBuffer(":localhost 482 " + client->getNickname() + " " + channel->getName());
