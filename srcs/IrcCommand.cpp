@@ -53,25 +53,25 @@ void IrcCommand::parsing(std::string message){
 				if (message.size() > 0)
 					_args.push_back(message.substr(0, message.find_first_of(endl)));
 				if (_args.size() != 1){
-					client->addBackCarriageBuffer("input server password using PASS command");
+					client->addBackCarriageBuffer("\033[38;5;3minput server password using PASS command \033[0m");
 					return ;
 				}
 				if (_args[0] != _db->getServPass()){
-					client->addBackCarriageBuffer("input server password using PASS command");
+					client->addBackCarriageBuffer("\033[38;5;3minput server password using PASS command \033[0m");
 					return ;
 				}
 				try {
 					checkRunCMD();
 				} catch (std::exception &e){
-					client->addBackCarriageBuffer("input server password using PASS command");
+					client->addBackCarriageBuffer("\033[38;5;3minput server password using PASS command \033[0m");
 					return ;
 				}
 				client->setPasswordFlag(1);
-				client->addBackCarriageBuffer("input your nickname using NICK command");
+				client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
 				return ;
 			}
 			else {
-				client->addBackCarriageBuffer("input server password using PASS command");
+				client->addBackCarriageBuffer("\033[38;5;3minput server password using PASS command \033[0m");
 				return;
 			}
 		}
@@ -90,15 +90,15 @@ void IrcCommand::parsing(std::string message){
 				try {
 					checkRunCMD();
 				} catch (std::exception &e){
-					client->addBackCarriageBuffer("input your nickname using NICK command");
+					client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
 					return ;
 				}
 				client->setPasswordFlag(2);
-				client->addBackCarriageBuffer("input your username using USER command");
+				client->addBackCarriageBuffer("\033[38;5;3minput your username using USER command \033[0m");
 				return ;
 			}
 			else {
-				client->addBackCarriageBuffer("input your nickname using NICK command");
+				client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
 				return ;
 			}
 		}
@@ -116,16 +116,15 @@ void IrcCommand::parsing(std::string message){
 				try {
 					checkRunCMD();
 				} catch (std::exception &e){
-					client->addBackCarriageBuffer("input your username using USER command");
+					client->addBackCarriageBuffer("\033[38;5;3minput your username using USER command");
 					return ;
 				}
 				client->setPasswordFlag(3);
-				std::string test("hi  test   ");
-				client->addBackCarriageBuffer("001 " + test + " :Welcome " + "dldldl" + " to irc ysungwon");
+				client->addBackCarriageBuffer("001 " + client->getNickname() + " :Welcome to Internet Relay Chat By ysungwon, juha, jwee");
 				return ;
 			}
 			else {
-				client->addBackCarriageBuffer("input your username using USER command");
+				client->addBackCarriageBuffer("\033[38;5;3minput your username using USER command");
 				return;
 			}
 		}
