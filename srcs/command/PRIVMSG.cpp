@@ -22,7 +22,11 @@ void IrcCommand::PRIVMSG(){
         std::map<int, bool>::iterator it;
 
         if (!channel->isJoinedUser(_clientFd))
+        {
+            //":localhost 442 " + client + " #" + channel + " 
+            client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
             throw ERR_NOTONCHANNEL();
+        }
         for (it = users.begin();
                 it != users.end();
                 it++)

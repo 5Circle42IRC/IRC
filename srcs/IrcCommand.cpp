@@ -161,7 +161,7 @@ const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return ":Nickn
 const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return ":No nickname given"; }
 const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return ":Erroneus nickname"; }
 //PART
-const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return ":You're not on that channel"; }
+const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return " :You're not on that channel"; }
 //TOPIC
 const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return ":You're not channel operator"; }
 
