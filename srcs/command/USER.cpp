@@ -8,6 +8,7 @@ void IrcCommand::USER(){
     if (getArgs().size() != 4)
     {
         std::cout << "in USER command, args size is not 4. " << std::endl;
+        client->addBackBuffer("461 <" + _command + "> ");
         throw ERR_NEEDMOREPARAMS();
     }
     else    

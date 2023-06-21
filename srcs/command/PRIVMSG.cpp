@@ -7,6 +7,8 @@ void IrcCommand::PRIVMSG(){
 
     if (_args.size() < 2)
     {
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PRIVMSG ");
         throw ERR_NEEDMOREPARAMS();
     }
     std::string firstArg = _args[0];
@@ -22,7 +24,11 @@ void IrcCommand::PRIVMSG(){
         std::map<int, bool>::iterator it;
 
         if (!channel->isJoinedUser(_clientFd))
+        {
+            //":localhost 442 " + client + " #" + channel + " 
+            client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
             throw ERR_NOTONCHANNEL();
+        }
         for (it = users.begin();
                 it != users.end();
                 it++)

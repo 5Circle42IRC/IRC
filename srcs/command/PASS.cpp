@@ -7,6 +7,8 @@ void IrcCommand::PASS(){
 
         if (getArgs().size() != 1)
         {
+            IrcClient* client = _db->findClientByFd(_clientFd);
+		    client->addBackBuffer(":localhost 461 " + client->getNickname() + " PASS ");
             throw ERR_NEEDMOREPARAMS();               
         }
         else

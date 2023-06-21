@@ -13,16 +13,23 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 	//operator 확인
 	std::cout << "2" << std::endl;
 	channel = _db->findChannel(channelName);
-	if (channel->isOperator(_clientFd) == false){
-		
+	if (channel->isOperator(_clientFd) == false)
+	{
+		std::cout << "after 2" << std::endl;
+		client = _db->findClientByFd(_clientFd);
+	    client->addBackBuffer(":localhost 481 " + client->getNickname() + " " + channel->getName());
 		throw ERR_NOPRIVILEGES();
 	}
 	//channel 및 user 유무 확인
+	std::cout << "clinetName : <" << clientName << ">  _cllientFd : <" << _clientFd << ">" << std::endl;
 	target = _db->findClientByName(clientName);
 	client = _db->findClientByFd(_clientFd);
 	std::cout << "3" << std::endl;
 	if (channel->isJoinedUser(target->getFd()) == false)
+	{
+		client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
 		throw ERR_NOTONCHANNEL();
+	}
 	channel->deleteUser(target->getFd());
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
@@ -43,7 +50,12 @@ void IrcCommand::KICK(){
 	int i = 0;
 
 	if(_args.size() > 3 || _args.size() < 2)
+	{
+		//(":localhost 461 " + client + " " + command + " :Not enough parameters.\r\n")
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " KICK ");
 		throw ERR_NEEDMOREPARAMS();
+	}
 	for (int end = _args[0].find(","); end != -1; end = _args[0].find(",")){
 		channelList.push_back(_args[0].substr(0, end));
 		_args[0].erase(0, end + 1);
@@ -59,7 +71,11 @@ void IrcCommand::KICK(){
 	if (userList.back().size() == 0)
 		userList.pop_back();
 	if (userList.size() != channelList.size())
+	{
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " KICK ");
 		throw ERR_NEEDMOREPARAMS();
+	}
 	for (std::deque<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
 		if (_args.size() == 3)
 			kickUser(*it, userList[i], _args[2]);
