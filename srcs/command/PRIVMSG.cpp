@@ -4,10 +4,9 @@
 #include "../../include/IrcDB.hpp"
 
 void IrcCommand::PRIVMSG(){
-
+		IrcClient* client = _db->findClientByFd(_clientFd);
     if (_args.size() < 2)
     {
-		IrcClient* client = _db->findClientByFd(_clientFd);
 		client->addBackBuffer(":localhost 461 " + client->getNickname() + " PRIVMSG ");
         throw ERR_NEEDMOREPARAMS();
     }
