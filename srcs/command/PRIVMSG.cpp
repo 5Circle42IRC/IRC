@@ -36,8 +36,7 @@ void IrcCommand::PRIVMSG(){
                     IrcClient *client = _db->findClientByFd(_clientFd);
                     IrcClient *target = _db->findClientByFd(it->first);                    
                     if (_clientFd != target->getFd())
-                    {
-                         
+                    { 
                         target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
                         client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
                     }
