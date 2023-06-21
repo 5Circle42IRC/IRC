@@ -56,7 +56,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
 		}
-	} catch(IrcDB::ERR_NOSUCHCHANNEL &e){
+	} catch(std::string name){
 		channel = new IrcChannel(name);
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
