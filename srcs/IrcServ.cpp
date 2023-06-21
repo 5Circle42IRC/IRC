@@ -285,7 +285,6 @@ void IrcServ::run()
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    std::cout << "first passStr : <" << passStr << ">" << std::endl;
                     if (passStr.length() != 0) {
                         // password check
                         IrcCommand command1(&db, clientFd);
