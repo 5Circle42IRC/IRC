@@ -8,6 +8,7 @@ void IrcCommand::TOPIC(){
     if (_args.size() > 2)
     {
         std::cout << "TOPIC args size is not 2" << std::endl;   
+        client->addBackBuffer("461 <" + _command + "> ");
         throw ERR_NEEDMOREPARAMS();
     }
     std::string chname = _args[0];

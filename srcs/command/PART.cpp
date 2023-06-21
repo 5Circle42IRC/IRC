@@ -17,6 +17,7 @@ void IrcCommand::PART(){
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"
         */
+        client->addBackBuffer("461 <" + _command + "> ");
         throw ERR_NEEDMOREPARAMS();
     }
 
@@ -58,6 +59,7 @@ void IrcCommand::PART(){
         if (channel->isJoinedUser(_clientFd) == false)
         {
             std::cout << "clientfd : <" << _clientFd << "> is not joinned to <" << channel->getName() << ">" << std::endl;   
+            client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
             throw ERR_NOTONCHANNEL();
         }              
 

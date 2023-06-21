@@ -7,6 +7,7 @@ void IrcCommand::PRIVMSG(){
 
     if (_args.size() < 2)
     {
+        client->addBackBuffer("461 <" + _command + "> ");
         throw ERR_NEEDMOREPARAMS();
     }
     std::string firstArg = _args[0];

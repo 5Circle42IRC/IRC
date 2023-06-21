@@ -281,25 +281,32 @@ void IrcServ::run()
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
+                    std::cout << "first passStr : <" << passStr << ">" << std::endl;
                     if (passStr.length() != 0) {
                         // password check
                         if (!clientClass->getPasswordFlag())
                         {
                             clientClass->reduceReadBuffer(passStr.length() + 1);
                             try {
-                                
+                                std::cout << "in try passStr : <" << passStr << ">" << std::endl;
+                                std::cout << "passStr.compare(0, 4, PASS) : <" << passStr.compare(0, 4, "PASS") << ">" << std::endl;
                                 if (passStr.compare(0, 4, "PASS")) {
                                     std::cerr << "Pass 통과 못함" << std::endl;
                                     break;
                                 }
+                                std::cout << "after if passStr : <" << passStr << ">" << std::endl;
                                 passStr.erase(0, 4);
+                                std::cout << "after erase 4 passStr : <" << passStr << ">" << std::endl;
                                 if (passStr.find("\r\n")) {
+                                    std::cout << "ch1" << std::endl;
                                     passStr.pop_back();
                                     passStr.pop_back();
                                 } else if (passStr.find("\n")) {
+                                    std::cout << "ch2" << std::endl;
                                     passStr.pop_back();
                                 }
-
+                                std::cout << "after if elseif passStr : <" << passStr << ">" << std::endl;
+                                std::cout << "passStr.find_first_not_of( \t\v\f\r) :<" << passStr.find_first_not_of(" \t\v\f\r") << ">" << std::endl;
                                 if (passStr.compare(passStr.find_first_not_of(" \t\v\f\r"), passStr.length(), _passWord)){
                                     clientClass->setPasswordFlag(1);
                                     clientClass->addBackCarriageBuffer("input your Nickname using NICK command");
