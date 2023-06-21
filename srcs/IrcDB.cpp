@@ -11,6 +11,7 @@ const std::map<int, IrcClient*> IrcDB::getAllClients() const
 {
 	return _clients;
 }
+const std::string& IrcDB::getServPass() const { return _servPass; }
 
 IrcDB::IrcDB(){}
 IrcDB::~IrcDB(){}
@@ -29,14 +30,14 @@ IrcClient* IrcDB::findClientByName(std::string name){
 IrcClient* IrcDB::findClientByFd(int clientFd){
 	std::map<int, IrcClient *>::iterator it = _clients.find(clientFd);
 	if (it == _clients.end())
-		throw ERR_CLIENT_NOT_IN_DB();
+		throw ERR_NOSUCHCLIENTFD();
 	return it->second;
 }
 
 IrcChannel* IrcDB::findChannel(std::string name){
 	std::map<std::string, IrcChannel *>::iterator it = _channels.find(name);
 	if (it == _channels.end())
-		throw ERR_CHANNEL_NOT_IN_DB();
+		throw name;
 	return it->second;
 }
 
@@ -62,6 +63,8 @@ void IrcDB::deleteChannel(std::string name){
 	_channels.erase(name);
 }
 
-const char* IrcDB::ERR_CHANNEL_NOT_IN_DB::what() const throw() { return "ERR_CHANNEL_NOT_IN_DB"; }
-const char* IrcDB::ERR_CLIENT_NOT_IN_DB::what() const throw() { return "ERR_CLIENT_NOT_IN_DB"; }
+
+
+const char* IrcDB::ERR_NOSUCHCHANNEL::what() const throw() { return ":No such nick"; }
+const char* IrcDB::ERR_NOSUCHCLIENTFD::what() const throw() { return "ERR_NOSUCHCLIENTFD"; }
 const char* IrcDB::ERR_NOSUCHNICK::what() const throw() { return "ERR_NOSUCHNICK"; }
