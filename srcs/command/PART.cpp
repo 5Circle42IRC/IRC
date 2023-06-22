@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PART.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:23 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:51:49 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcChannel.hpp"
@@ -81,6 +93,5 @@ void IrcCommand::PART(){
         i++;
         
     }
-    //client->addBackBuffer(":" + client->getNickname() + " PART :" + chnameSum + "\r\n");
     return ;
 }

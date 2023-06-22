@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:34 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:50:05 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcServ.hpp"
 #include <iostream>
 #include <unistd.h>
@@ -33,8 +45,3 @@ int main(int argc, char **argv)
     close(hostFd);
     return 0;
 }
-
-/*
-    printf("port : %d\n", port);
-    printf("ip : %d\n", htonl(INADDR_ANY));
-*/

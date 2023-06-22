@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcCommand.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:50:34 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcCommand.hpp"
 #include "../include/IrcClient.hpp"
 
@@ -168,9 +180,6 @@ void IrcCommand::parsing(std::string message){
 		if ((*it).size() > 0)
 			_args.push_back(*it);
 		//파싱 확인 출력
-		// for (std::deque<std::string>::iterator it2 = _args.begin(); it2 != _args.end(); it2++){
-		// 	std::cout << "<" << *it2 << ">" << std::endl;
-		// }
 		if (_args.size() == 1)
 			_command = _args[0];
 		_args.pop_front();
@@ -193,7 +202,6 @@ std::deque<std::string>& IrcCommand::getArgs(){ return _args; }
 std::string IrcCommand::getCommand(){ return _command; }
 IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return *this; }
 
-//에러코드 결정해서 what의 내용은 에러코드를 반환해주도록 수정!
 //JOIN
 const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return " :cannot join channel (+k)"; }
 const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return " :is already on channel"; }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:37 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:52:00 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcChannel.hpp"
@@ -32,7 +44,6 @@ void IrcCommand::PRIVMSG(){
 
             if (!channel->isJoinedUser(_clientFd))
             {
-                //":localhost 442 " + client + " #" + channel + " 
                 client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
                 throw ERR_NOTONCHANNEL();
             }

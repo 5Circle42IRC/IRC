@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   KICK.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:06 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:51:17 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
@@ -53,7 +65,6 @@ void IrcCommand::KICK(){
 
 	if(_args.size() > 3 || _args.size() < 2)
 	{
-		//(":localhost 461 " + client + " " + command + " :Not enough parameters.\r\n")
 		IrcClient* client = _db->findClientByFd(_clientFd);
 		client->addBackBuffer(":localhost 461 " + client->getNickname() + " KICK ");
 		throw ERR_NEEDMOREPARAMS();
