@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:34 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:50:05 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/22 20:46:24 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <cstdlib>
+#include <signal.h>
 
 static void errorHandle(std::string message, int exitCode)
 {
@@ -26,6 +27,7 @@ int main(int argc, char **argv)
     if (argc != 3)
         errorHandle("Usage : ./ircserv [port] [password]", 0);
 
+    signal(SIGTSTP, SIG_IGN);
     char *isError = NULL;
     long port = std::strtol(argv[1], &isError, 10);
     int hostFd;
