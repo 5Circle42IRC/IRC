@@ -284,7 +284,8 @@ void IrcServ::run()
                         displayServerParam(db);
                     }
                 }
-            } else if (FD_ISSET(clientFd, &_cpyWrites)) {
+            }
+            if (FD_ISSET(clientFd, &_cpyWrites)) {
                 writeUserBuffer(clientFd, clientClass);
                 FD_CLR(clientFd, &_activeWrites);
             }
