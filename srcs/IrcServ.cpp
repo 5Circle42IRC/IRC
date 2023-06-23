@@ -162,11 +162,13 @@ void IrcServ::sendTo(int clientFd, std::string message)
 void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
 {
     try {
-        if (messageLen > 1)
-        {
+        (void) messageLen;
+        // if (messageLen > 1)
+        // {
             command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
+            std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
             clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
-        }
+        // }
     } catch (std::exception& e){
     } catch (...) {
         
@@ -189,6 +191,7 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
                   << clientClass->getBuffer()
                   << "---------- recieve massage -----------\n" << "" << std::endl;
         }
+        FD_CLR(clientFd, &_activeWrites);
         clientClass->reduceBuffer(_writeLen);
     }
 }
@@ -240,16 +243,16 @@ void IrcServ::run()
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
+                    std::cout << "passtr:" << passStr << std::endl;
                     if (passStr.length() != 0) {
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, passStr.length(), clientClass);
-                        displayServerParam(db);
                     }
                 }
             }
             if (FD_ISSET(clientFd, &_cpyWrites)) {
                 writeUserBuffer(clientFd, clientClass);
-                FD_CLR(clientFd, &_activeWrites);
+                displayServerParam(db);
             }
         }
     }

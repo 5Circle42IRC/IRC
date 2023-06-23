@@ -97,11 +97,19 @@ const std::string IrcClient::getNextLineReadBuffer()
 {
     std::string ret;
     std::istringstream origin(_readBuffer);
+    if (!_readBuffer.compare("\r\n"))
+    {
+        _readBuffer.erase(0);
+        _readBuffer.erase(0);
+        return "";
+    }
+    else if (!_readBuffer.compare("\n")){
+        _readBuffer.erase(0);
+        return "";
+    }
     if (std::getline(origin, ret).eof())
         return "";
-    if (ret == "")
-        ret = "\r\n";
-    std::cerr << ret << std::endl;
+    std::cerr << "gnl:" << ret << std::endl;//
     return ret;
 }
 
@@ -179,7 +187,6 @@ int IrcClient::getPasswordFlag() const
 
 void IrcClient::Display()
 {
-
     std::cout << "------------Display -------" << std::endl;
     std::cout << "Nick : " << getNickname() << std::endl;
     std::cout << "UserName : " << getUsername() << std::endl;
