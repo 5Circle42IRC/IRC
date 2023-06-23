@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:28 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/22 20:15:43 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/23 20:10:54 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool IrcServ::initSelect()
 {
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
-    _timeout.tv_sec = 10;
+    _timeout.tv_sec = 0;
     _timeout.tv_usec = 100;
 
     _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
