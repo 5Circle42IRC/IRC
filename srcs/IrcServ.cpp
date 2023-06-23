@@ -155,57 +155,8 @@ void IrcServ::displayServerParam(const IrcDB& db)
 
 void IrcServ::sendTo(int clientFd, std::string message)
 {
-    std::string sendMessage("\033[38;5;3m" + message + "\r\n" + "\033[0m");
+    std::string sendMessage("\033[38;5;3m" + message + "\033[0m\r\n");
     send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
-}
-
-void IrcServ::checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db)
-{
-    if (!_passWord.compare(_recvMessage))
-    {
-        clientClass->setPasswordFlag(true);
-        sendTo(clientFd, "input nickname");
-    } else {
-        sendTo(clientFd, "Failed Password, plz connecting again");
-
-        deleteClient(clientFd, db);
-    }
-}
-
-void IrcServ::checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass)
-{
-    if (messageLen < 2|| messageLen > 10) {
-        sendTo(clientFd, "wrong input retry");
-    } else {
-        sendTo(clientFd, "set your password");
-        _recvMessage[messageLen - 1] = '\0';
-        if (!isSameNickname(db, _recvMessage)) {
-            clientClass->setNickname(_recvMessage);
-        } else {
-            sendTo(clientFd, "The name already exists");
-        }
-    }
-}
-
-void IrcServ::checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass)
-{
-    if (messageLen < 2) {
-        sendTo(clientFd, "wrong input retry");
-    } else {
-        _recvMessage[messageLen - 1] = '\0';
-        clientClass->setPassword(_recvMessage);
-        sendTo(clientFd, "input realname");
-    }
-}
-
-void IrcServ::checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass)
-{
-    if (messageLen < 2) {
-        sendTo(clientFd, "wrong input retry");
-    } else {
-        _recvMessage[messageLen - 1] = '\0';
-        clientClass->setUsername(_recvMessage);
-    }
 }
 
 void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
@@ -220,7 +171,6 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
     } catch (...) {
         
     }
-
 }
 
 void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)

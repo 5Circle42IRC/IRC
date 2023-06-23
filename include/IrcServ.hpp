@@ -64,10 +64,6 @@ private:
     bool isSameNickname(IrcDB& db, std::string message);
     void sendTo(int clientFd, std::string message);
 
-    void checkServerPassword(const int clientFd, IrcClient* clientClass, IrcDB& db);
-    void checkNickname(const int clientFd, const int messageLen, IrcDB& db, IrcClient* clientClass);
-    void checkUserPassword(const int messageLen, const int clientFd, IrcClient* clientClass);
-    void checkUserName(const int clientFd, const int messageLen, IrcClient* clientClass);
     void excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass);
     void writeUserBuffer(const int clientFd, IrcClient* clientClass);
 
