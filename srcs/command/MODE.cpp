@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MODE.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:11 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:51:34 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcDB.hpp"
@@ -36,8 +48,7 @@ void IrcCommand::MODE()
     if (option.size() < 2)
         throw ERR_NEEDMOREPARAMS();
 
-    int mustOp = 0;///if mustOp == 0, next char have to be + or -
-                    // if mustOp ==1, next char have to be option character
+    int mustOp = 0;
     int sign = 1;
     
 

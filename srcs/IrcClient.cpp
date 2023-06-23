@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcClient.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:16 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/23 19:35:44 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcClient.hpp"
 #include <string>
 #include <fstream>
@@ -87,6 +99,8 @@ const std::string IrcClient::getNextLineReadBuffer()
     std::istringstream origin(_readBuffer);
     if (std::getline(origin, ret).eof())
         return "";
+    if (ret == "")
+        ret = "\r\n";
     std::cerr << ret << std::endl;
     return ret;
 }

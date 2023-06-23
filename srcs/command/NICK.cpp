@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   NICK.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:15 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:51:42 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 
@@ -33,7 +45,6 @@ void IrcCommand::NICK(){
         if (getArgs().size() != 1)
         {
             std::cout << "no nick given" << std::endl;
-            //":localhost 431 " + client + " :There is no nickname.\r\n"
             client->addBackBuffer(":localhost 431 " + client->getNickname() + " ");            
             throw ERR_NONICKNAMEGIVEN();               
         }

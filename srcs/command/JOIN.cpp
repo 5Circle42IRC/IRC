@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   JOIN.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:02 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:47:04 by ysungwon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
@@ -63,7 +75,7 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			std::map<int, bool> userList = channel->getUser();
 			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
 				IrcClient *target = _db->findClientByFd(it->first);
-				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName() + "\r\n");
 			}
 		}
 	} catch(std::string name){

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcServ.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:28 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/22 20:15:43 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcServ.hpp"
 #include <fcntl.h>
 #include <arpa/inet.h>
@@ -32,7 +44,7 @@ int IrcServ::on()
     if (_servFd == -1)
         throw IrcServ::socketException();
 
-    _error = fcntl(_servFd, O_NONBLOCK);
+    _error = fcntl(_servFd, F_SETFL, O_NONBLOCK);
     if (_error == -1)
         throw IrcServ::fcntlException();
 
@@ -58,7 +70,7 @@ bool IrcServ::initSelect()
 {
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
-    _timeout.tv_sec = 0;
+    _timeout.tv_sec = 10;
     _timeout.tv_usec = 100;
 
     _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
@@ -72,7 +84,7 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     std::memset(&clientAddr, 0, sizeof(clientAddr));
     clientAddrLen = sizeof(clientAddr);
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
-    if (acceptFd == -1 || fcntl(acceptFd, O_NONBLOCK) == -1)
+    if (acceptFd == -1 || fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
         return false;
     sendTo(acceptFd, "input server password");
     db.insertClient(new IrcClient(acceptFd, "", "", ""));

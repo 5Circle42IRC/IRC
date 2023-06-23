@@ -1,11 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcCommand.hpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:45:45 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:52:36 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __IRCCOMMAND_HPP__
 # define __IRCCOMMAND_HPP__
 
 # include "./IrcDB.hpp"
 # include <deque>
 # include <vector>
-
-//_clientFd 또는 _clientPtr을 멤버변수로 추가하는 건에 대하여...
 
 class IrcCommand {
 	public :
@@ -14,13 +24,10 @@ class IrcCommand {
 		~IrcCommand();
 
 		void parsing(std::string message);
-		// void KICK(int clientFd);
 		void INVITE();
 
 		void JOIN();
 		void NICK();
-		// void PASS();
-		// void NAME();
 		void PRIVMSG();
 
 		void TOPIC();
