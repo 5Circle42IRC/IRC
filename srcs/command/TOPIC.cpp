@@ -42,7 +42,7 @@ void IrcCommand::TOPIC(){
 
     if (_args.size() == 1)
     {
-        std::cout << "topic test1" << std::endl;
+        std::cout << "topic test1   : <" << channel->getTopic() << ">" << std::endl;
         client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
     }
     else if (_args.size() == 2)
