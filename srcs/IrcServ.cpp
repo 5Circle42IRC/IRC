@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:28 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/23 20:10:54 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 11:05:53 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
         // if (messageLen > 1)
         // {
             command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
-            std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
+            //std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
             clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
         // }
     } catch (std::exception& e){
@@ -204,7 +204,7 @@ void IrcServ::run()
     IrcDB db; 
     IrcClient *clientClass;
 
-    std::cout << "*" << _passWord << "*" << std::endl;
+    std::cout << "server initiated with password " << _passWord << std::endl;
     db.setServPass(_passWord);
 
     while (42)
@@ -243,7 +243,7 @@ void IrcServ::run()
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    std::cout << "passtr:" << passStr << std::endl;
+                    //std::cout << "passtr:" << passStr << std::endl;
                     if (passStr.length() != 0) {
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, passStr.length(), clientClass);

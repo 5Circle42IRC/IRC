@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:16 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/23 19:35:44 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 11:06:32 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ const std::string IrcClient::getNextLineReadBuffer()
     }
     if (std::getline(origin, ret).eof())
         return "";
-    std::cerr << "gnl:" << ret << std::endl;//
+    //std::cerr << "gnl:" << ret << std::endl;//
     return ret;
 }
 

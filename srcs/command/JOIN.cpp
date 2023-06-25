@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JOIN.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:02 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:47:04 by ysungwon         ###   ########.fr       */
+/*   Updated: 2023/06/25 13:11:59 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		channel->addUser(_clientFd);
 		channel->setOperator(_clientFd, _clientFd);
 		if (channel->getGrant() & M_KEY){
-			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			client->addBackBuffer("332:" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 			makeBufferString(channel, client);
 			std::map<int, bool> userList = channel->getUser();
 			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
 				IrcClient *target = _db->findClientByFd(it->first);
-				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+				target->addBackBuffer("332:" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 			}
 		}
 		else {
@@ -75,7 +75,8 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 			std::map<int, bool> userList = channel->getUser();
 			for (std::map<int,bool>::iterator it = userList.begin(); it != userList.end(); it++){
 				IrcClient *target = _db->findClientByFd(it->first);
-				target->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName() + "\r\n");
+				target->addBackCarriageBuffer("332 " + channel->getName() + " :" + channel->getTopic());
+				target->addBackCarriageBuffer("353 " + channel->getName() + " :[[@]jwee]");
 			}
 		}
 	} catch(std::string name){
@@ -85,12 +86,12 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		if (key.size() != 0){
 			channel->setPassword(key);
 			channel->setGrant(M_KEY, true);
-			client->addBackBuffer(":" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
+			client->addBackBuffer("332:" + client->getNickname() + " JOIN " + channel->getName()+ " using key " + key + "\r\n");
 			makeBufferString(channel, client);
 		}
 		else{
 			
-			client->addBackBuffer(":" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
+			client->addBackBuffer("332:" + client->getNickname() + " JOIN :" + channel->getName()+ "\r\n");
 			makeBufferString(channel, client);
 		}	
 		_db->insertChannel(channel);

@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:45:45 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:52:36 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 12:12:40 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ class IrcCommand {
 		void checkRunCMD();
 		void kickUser(std::string channel, std::string name, std::string comment);
 		void makeBufferString(IrcChannel *channel, IrcClient *client);
+		void login(IrcClient *client);
+		void makeCommand(std::string message);
 
 		class ERR_BADCHANNELKEY: public std::exception {
 			virtual const char *what() const throw();
@@ -109,6 +111,9 @@ class IrcCommand {
 		};
 		class ERR_NOPRIVILEGES : public std::exception {
 			virtual const char *what() const throw();
+		};
+		class ERR_INVALIDMODEVALUE : public std::exception {
+			virtual const char* what() const throw();
 		};
 };
 
