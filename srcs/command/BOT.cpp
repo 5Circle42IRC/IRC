@@ -20,11 +20,11 @@ void IrcCommand::BOT(){
 			std::string mode = "+";
 			if (channel->getGrant() & M_INVITE)
 				mode += "i";
-			else if (channel->getGrant() & M_KEY)
+			if (channel->getGrant() & M_KEY)
 				mode += "k";
-			else if (channel->getGrant() & M_LIMIT)
+			if (channel->getGrant() & M_LIMIT)
 				mode += "l";
-			else if (channel->getGrant() & M_TOPIC)
+			if (channel->getGrant() & M_TOPIC)
 				mode += "t";
 			if (channel->isOperator(_clientFd))
 				mode += "@";
