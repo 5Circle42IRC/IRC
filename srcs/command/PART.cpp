@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:23 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 13:22:44 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 08:07:35 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void IrcCommand::PART(){
     for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
        
         channel =_db->findChannel(*it);
-        chname = channel->getName(); 
+        chname = channel->getName();
+        std::map<int, bool> userList = channel->getUser();
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
@@ -88,7 +89,10 @@ void IrcCommand::PART(){
         }
         chnameSum += (chname + " ");
         client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
-        
+        for (std::map<int, bool>::iterator useriter = userList.begin(); useriter != userList.end(); useriter++){
+            IrcClient *target = _db->findClientByFd(useriter->first);
+            target->addBackCarriageBuffer(":" + client->getNickname() + " PART :" + channel->getName());
+        }        
         if (channel->getUser().size() == 1){
             std::cout << "test1 : <" << channel->getUser().begin()->first << ">" << std::endl;
             channel->setOperator(-1, channel->getUser().begin()->first);
