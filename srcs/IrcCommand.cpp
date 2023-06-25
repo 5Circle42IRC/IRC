@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 12:12:42 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 13:26:52 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ void IrcCommand::parsing(std::string message){
 	IrcClient *client = _db->findClientByFd(_clientFd);
 
 	makeCommand(message);
-	if (!_args.size())
-		return ;
 	if (client->getPasswordFlag() < 3){
 		login(client);
 		return ;

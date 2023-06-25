@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:23 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:51:49 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 13:22:44 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,9 @@ void IrcCommand::PART(){
         }
         chnameSum += (chname + " ");
         client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
+        if (channel->getUser().size() == 1){
+            channel->setOperator(-1, channel->getUser().begin()->first);
+        }
         i++;
         
     }

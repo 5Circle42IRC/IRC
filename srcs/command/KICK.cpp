@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:06 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:51:17 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 13:32:44 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 		client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
 		throw ERR_NOTONCHANNEL();
 	}
+	channel->setRemoveOperater(target->getFd());
 	channel->deleteUser(target->getFd());
 	if (channel->getUser().size() == 0)
 		_db->deleteChannel(channel->getName());

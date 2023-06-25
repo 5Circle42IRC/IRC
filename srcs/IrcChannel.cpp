@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:44 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 12:01:34 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 13:31:49 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,11 @@ void IrcChannel::setOperator(const int clientFd, const int target) {
         _user[target] = true;
         return ;
     }
-    if (isOperator(clientFd))
+    if (isOperator(clientFd) || clientFd == -1)
         _user[target] = true;
+}
+void IrcChannel::setRemoveOperater(const int target){
+    _user[target] = false;
 }
 void IrcChannel::setTopic(std::string& newTopic) { _topic = newTopic; }
 void IrcChannel::setPassword(std::string& newPassword) { _password = newPassword; }
