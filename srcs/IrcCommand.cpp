@@ -96,18 +96,27 @@ void IrcCommand::makeCommand(std::string message){
 
 	if (message.size() > 512)
 		throw ERR_OUTOFBOUNDMESSAGE();
-
 	msg >> _command;
+	
 	if (_command == "PRIVMSG" || _command == "TOPIC" || _command == "KICK") {
+		
 		msg >> temp;
 		_args.push_back(temp);
+		if (_command == "KICK")
+		{
+			msg >> temp;
+			_args.push_back(temp);
+		}
 		std::string temp2;
 		while (msg >> temp){
 			temp2 += temp;
 			temp2 += " ";
+		}		
+		if (temp2.size() != 0)
+		{
+			_args.push_back(temp2);
+			_args.back().pop_back();
 		}
-		_args.push_back(temp2);
-		_args.back().pop_back();
 	}
 	else {
 		while (msg >> temp)

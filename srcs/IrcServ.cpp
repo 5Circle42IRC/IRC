@@ -166,7 +166,7 @@ void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int message
         // if (messageLen > 1)
         // {
             command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
-            //std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
+            std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
             clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
         // }
     } catch (std::exception& e){
@@ -242,8 +242,9 @@ void IrcServ::run()
                         break;
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
+                    std::cout << "_recvMessage : <" << _recvMessage << ">" << std::endl;
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    //std::cout << "passtr:" << passStr << std::endl;
+                    std::cout << "passtr:" << passStr << std::endl;
                     if (passStr.length() != 0) {
                         IrcCommand command1(&db, clientFd);
                         excuteCommand(command1, clientFd, passStr.length(), clientClass);

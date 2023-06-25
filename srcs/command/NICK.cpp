@@ -18,7 +18,7 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
     std::string newNick = args[0]; 
     std::string oldNick = _db->findClientByFd(_clientFd)->getNickname();
     IrcClient* client = _db->findClientByFd(_clientFd);
-    if (newNick.size() > 9)
+    if (newNick.size() > 9 || newNick == ":")
     {
         client->addBackBuffer(":localhost 432 " + client->getNickname() + " " + newNick);
         throw ERR_ERRONEUSNICKNAME();  
