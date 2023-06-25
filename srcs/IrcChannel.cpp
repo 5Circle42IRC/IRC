@@ -6,14 +6,14 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:44 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 13:31:49 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 23:59:12 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/IrcChannel.hpp"
 
 IrcChannel::IrcChannel()
-    : _name("no Name"), _topic("any thing"), _grant(0), _limit(0) {}
+    : _name("no Name"), _topic(":any thing"), _grant(0), _limit(0) {}
  
 IrcChannel::IrcChannel(std::string name)
     : _name(name), _topic("any thing"), _grant(0), _limit(0) {}

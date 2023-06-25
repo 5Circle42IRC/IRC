@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 13:26:52 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 04:11:46 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandList["KICK"] = &IrcCommand::KICK;
 	_commandList["PASS"] = &IrcCommand::PASS;
+	_commandList["BOT"] = &IrcCommand::BOT;
 }
 IrcCommand::~IrcCommand(){}
 
@@ -98,7 +99,7 @@ void IrcCommand::makeCommand(std::string message){
 		throw ERR_OUTOFBOUNDMESSAGE();
 	msg >> _command;
 	
-	if (_command == "PRIVMSG" || _command == "TOPIC" || _command == "KICK") {
+	if (_command == "PRIVMSG" || _command == "TOPIC" || _command == "KICK" || _command == "BOT") {
 		
 		msg >> temp;
 		_args.push_back(temp);
@@ -128,6 +129,7 @@ void IrcCommand::parsing(std::string message){
 	IrcClient *client = _db->findClientByFd(_clientFd);
 
 	makeCommand(message);
+	std::cout << "here" << std::endl;
 	if (client->getPasswordFlag() < 3){
 		login(client);
 		return ;
