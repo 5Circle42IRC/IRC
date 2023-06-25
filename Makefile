@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CXX			= c++
-CXXFLAGS	= -g3 -Wall -Werror -Wextra -std=c++98  #-fsanitize=address
+CXXFLAGS	= -g3 -Wall -Werror -Wextra -std=c++98  -fsanitize=address
 TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
