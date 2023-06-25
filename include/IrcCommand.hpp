@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:45:45 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 12:12:40 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 04:01:44 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class IrcCommand {
 		void PASS();
 		void DISPLAY();
 		void KICK();
+		void BOT();
 
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
