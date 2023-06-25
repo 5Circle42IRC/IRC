@@ -102,6 +102,8 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
     {
         if (it->second->isJoinedUser(clientFd))
             it->second->deleteUser(clientFd);
+        if (it->second->getUser().size() == 0)
+            db.deleteChannel(it->second->getName());
     }    
     db.deleteClient(clientFd);
     FD_CLR(clientFd, &_activeReads);

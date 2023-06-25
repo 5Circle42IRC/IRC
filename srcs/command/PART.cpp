@@ -80,8 +80,6 @@ void IrcCommand::PART(){
         if (channel->deleteUser(_clientFd) == true)
         {
             std::cout << "PART success <" << _clientFd << "> from <" << channel->getName() << ">" << std::endl;
-            if (channel->getUser().size() == 0)
-                _db->deleteChannel(channel->getName());
         }
         else
         {
@@ -90,9 +88,13 @@ void IrcCommand::PART(){
         }
         chnameSum += (chname + " ");
         client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
+        
         if (channel->getUser().size() == 1){
+            std::cout << "test1 : <" << channel->getUser().begin()->first << ">" << std::endl;
             channel->setOperator(-1, channel->getUser().begin()->first);
         }
+        if (channel->getUser().size() == 0)
+            _db->deleteChannel(channel->getName());        
         i++;
         
     }

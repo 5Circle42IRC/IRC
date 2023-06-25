@@ -16,6 +16,12 @@
 #include <cstdlib>
 #include <signal.h>
 
+/*
+void	check_leak(void)
+{
+	system("leaks --list -- ircserv");
+}
+*/
 static void errorHandle(std::string message, int exitCode)
 {
     std::cout << message << std::endl;
