@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   KICK.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:06 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/25 13:32:44 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcChannel.hpp"
 #include "../../include/IrcClient.hpp"
@@ -30,9 +42,9 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 		client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
 		throw ERR_NOTONCHANNEL();
 	}
+	channel->setRemoveOperater(target->getFd());
 	channel->deleteUser(target->getFd());
-	if (channel->getUser().size() == 0)
-		_db->deleteChannel(channel->getName());
+
 	std::cout << "4" << std::endl;
 	if (comment.size() > 0)
 	{
@@ -44,6 +56,8 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 		target->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname()+ "\r\n");
 		client->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
 	}
+	if (channel->getUser().size() == 0)
+		_db->deleteChannel(channel->getName());	
 }
 
 void IrcCommand::KICK(){
@@ -53,7 +67,6 @@ void IrcCommand::KICK(){
 
 	if(_args.size() > 3 || _args.size() < 2)
 	{
-		//(":localhost 461 " + client + " " + command + " :Not enough parameters.\r\n")
 		IrcClient* client = _db->findClientByFd(_clientFd);
 		client->addBackBuffer(":localhost 461 " + client->getNickname() + " KICK ");
 		throw ERR_NEEDMOREPARAMS();

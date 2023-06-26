@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MODE.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:11 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/25 12:26:56 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcDB.hpp"
@@ -7,6 +19,7 @@
 
 void IrcCommand::MODE()
 {
+    IrcClient *client = _db->findClientByFd(_clientFd);
 
     std::cout << " ---------start MODE---------" << std::endl;
     
@@ -23,21 +36,24 @@ void IrcCommand::MODE()
     
     if (channel->isJoinedUser(_clientFd) == false)
     {
+        client->addBackBuffer("442 <" + channel->getName() + ">");
         throw ERR_NOTONCHANNEL();
     }
     //channel operator check
     if (channel->isOperator(_clientFd) == false)
     {
         std::cout << "<" << _db->findClientByFd(_clientFd)->getNickname() << "> is not a operator to <" << channel->getName() << ">" << std::endl;
+        client->addBackBuffer("482 <" + channel->getName() + ">");
         throw ERR_CHANOPRIVSNEEDED();
     }
 
     std::string option = _args[1];
-    if (option.size() < 2)
+    if (option.size() < 2){
+        client->addBackBuffer("461 <" + _command + ">");
         throw ERR_NEEDMOREPARAMS();
+    }
 
-    int mustOp = 0;///if mustOp == 0, next char have to be + or -
-                    // if mustOp ==1, next char have to be option character
+    int mustOp = 0;
     int sign = 1;
     
 
@@ -53,6 +69,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
+                client->addBackBuffer("472 <>");
                 throw ERR_UNKNOWNMODE();
             }                  
             std::cout << "mode +" << std::endl;
@@ -64,6 +81,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
+                client->addBackBuffer("472 <>");
                 throw ERR_UNKNOWNMODE();
             }                 
             std::cout << "mode -" << std::endl;
@@ -78,6 +96,7 @@ void IrcCommand::MODE()
             if (option[i] == '+' || option[i] == '-')
             {
                 std::cout << "there is no option+- : <" << option[i] << ">" << std::endl;
+                client->addBackBuffer("472 <>");
                 throw ERR_UNKNOWNMODE();  
             }
             else if (option[i] == 'i')
@@ -105,7 +124,11 @@ void IrcCommand::MODE()
                 {
                     int tmp = 0;
                     std::stringstream ssInt(_args[argCount++]);
-                    ssInt >> tmp;                    
+                    ssInt >> tmp;
+                    if (tmp < 1){
+                        client->addBackBuffer("501 <>");
+                        throw ERR_INVALIDMODEVALUE();        
+                    }      
                     std::cout << "setlimit fn need" << std::endl;      
                     channel->setLimit(tmp);
                 }
@@ -118,12 +141,12 @@ void IrcCommand::MODE()
             else
             {
                 std::cout << "there is no option : <" << option[i] << ">" << std::endl;
+                client->addBackBuffer("472 <>");
                 throw ERR_UNKNOWNMODE();
             }  
         }
         i++;
     }
-    IrcClient* client = _db->findClientByFd(_clientFd);  
     std::string stringSum;
     std::deque<std::string>::iterator it;
     for (it = _args.begin(); it!= _args.end(); it++)

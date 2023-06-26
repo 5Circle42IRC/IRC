@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   TOPIC.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:47:41 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:47:42 by ysungwon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcDB.hpp"
@@ -30,7 +42,7 @@ void IrcCommand::TOPIC(){
 
     if (_args.size() == 1)
     {
-        std::cout << "topic test1" << std::endl;
+        std::cout << "topic test1   : <" << channel->getTopic() << ">" << std::endl;
         client->addBackBuffer(":"+client->getNickname() +" 332 " + client->getNickname() + " " + channel->getName()+ " " + channel->getTopic() +"\r\n");
     }
     else if (_args.size() == 2)

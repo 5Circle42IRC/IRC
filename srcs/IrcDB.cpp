@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcDB.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:23 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:50:19 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcDB.hpp"
 #include "../include/IrcClient.hpp"
 #include "../include/IrcChannel.hpp"
@@ -46,14 +58,10 @@ IrcChannel* IrcDB::findChannel(std::string name){
 	return it->second;
 }
 
-//ㄷㅡㄹ어 오오는  애애가가
-// Client A   Fd 4
-// old    Client B Fd 4
 void IrcDB::insertClient(IrcClient *client){
 	_clients[client->getFd()] = client;
 }
 void IrcDB::insertChannel(IrcChannel *channel){
-	//std::string teststring("tttt");
 	std::string teststring = channel->getName();
 	_channels.insert(std::make_pair(teststring, channel));
 

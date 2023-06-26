@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcClient.cpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:16 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/25 11:06:32 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcClient.hpp"
 #include <string>
 #include <fstream>
@@ -85,9 +97,19 @@ const std::string IrcClient::getNextLineReadBuffer()
 {
     std::string ret;
     std::istringstream origin(_readBuffer);
+    if (!_readBuffer.compare("\r\n"))
+    {
+        _readBuffer.erase(0);
+        _readBuffer.erase(0);
+        return "";
+    }
+    else if (!_readBuffer.compare("\n")){
+        _readBuffer.erase(0);
+        return "";
+    }
     if (std::getline(origin, ret).eof())
         return "";
-    std::cerr << ret << std::endl;
+    //std::cerr << "gnl:" << ret << std::endl;//
     return ret;
 }
 
@@ -165,7 +187,6 @@ int IrcClient::getPasswordFlag() const
 
 void IrcClient::Display()
 {
-
     std::cout << "------------Display -------" << std::endl;
     std::cout << "Nick : " << getNickname() << std::endl;
     std::cout << "UserName : " << getUsername() << std::endl;

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcChannel.cpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:44 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/25 23:59:12 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/IrcChannel.hpp"
 
 IrcChannel::IrcChannel()
-    : _name("no Name"), _topic("any thing"), _grant(0), _limit(0) {}
+    : _name("no Name"), _topic(":any thing"), _grant(0), _limit(0) {}
  
 IrcChannel::IrcChannel(std::string name)
     : _name(name), _topic("any thing"), _grant(0), _limit(0) {}
@@ -46,8 +58,11 @@ void IrcChannel::setOperator(const int clientFd, const int target) {
         _user[target] = true;
         return ;
     }
-    if (isOperator(clientFd))
+    if (isOperator(clientFd) || clientFd == -1)
         _user[target] = true;
+}
+void IrcChannel::setRemoveOperater(const int target){
+    _user[target] = false;
 }
 void IrcChannel::setTopic(std::string& newTopic) { _topic = newTopic; }
 void IrcChannel::setPassword(std::string& newPassword) { _password = newPassword; }

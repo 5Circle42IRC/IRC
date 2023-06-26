@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   DISPLAY.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:46:53 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/21 18:46:54 by ysungwon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/IrcCommand.hpp"
 #include "../../include/IrcClient.hpp"
 #include "../../include/IrcChannel.hpp"
@@ -29,6 +41,17 @@ void IrcCommand::DISPLAY(){
                 std::cout << "all chname : <" << it->second->getName() << ">" << std::endl;
                 std::cout << "all cchname topic  : <" << it->second->getTopic() << ">" << std::endl;
                 std::cout << "all ch operator  : <" << it->second->isOperator(_clientFd) << ">" << std::endl;
+
+                std::map<int, bool>users;
+                users = it->second->getUser();
+                std::map<int, bool>::iterator it2;
+                
+                std::cout << "ch registerd clients" << std::endl;
+                for (it2 = users.begin(); it2 != users.end(); it2++)
+                {
+                    std::cout << "   nick : <" << _db->findClientByFd(it2->first)->getNickname() << ">   fd :<" << it2->first << ">" << std::endl;
+                    std::cout << "   oper : <" << it->second->isOperator(it2->first) << ">" << std::endl;
+                }                
         }
 
     std::cout << "///registered channel///" << std::endl;

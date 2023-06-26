@@ -1,5 +1,17 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/06/21 18:45:57 by ysungwon          #+#    #+#              #
+#    Updated: 2023/06/26 04:08:18 by jwee             ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 CXX			= c++
-CXXFLAGS	= -g3 -Wall -Werror -Wextra -std=c++98  #-fsanitize=address
+CXXFLAGS	= -g3 -Wall -Werror -Wextra -std=c++98  -fsanitize=address
 TARGET		= ircserv
 SRCDIR		= ./srcs
 OBJDIR		= ./objs
@@ -21,7 +33,8 @@ SRCS		= main.cpp \
 			  command/MODE.cpp\
 			  command/DISPLAY.cpp \
 			  command/KICK.cpp \
-			  command/PASS.cpp
+			  command/PASS.cpp \
+			  command/BOT.cpp
 OBJS		= $(patsubst %.cpp,$(OBJDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)

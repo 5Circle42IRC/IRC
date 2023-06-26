@@ -1,11 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IrcCommand.hpp                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/21 18:45:45 by ysungwon          #+#    #+#             */
+/*   Updated: 2023/06/26 04:01:44 by jwee             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef __IRCCOMMAND_HPP__
 # define __IRCCOMMAND_HPP__
 
 # include "./IrcDB.hpp"
 # include <deque>
 # include <vector>
-
-//_clientFd 또는 _clientPtr을 멤버변수로 추가하는 건에 대하여...
 
 class IrcCommand {
 	public :
@@ -14,13 +24,10 @@ class IrcCommand {
 		~IrcCommand();
 
 		void parsing(std::string message);
-		// void KICK(int clientFd);
 		void INVITE();
 
 		void JOIN();
 		void NICK();
-		// void PASS();
-		// void NAME();
 		void PRIVMSG();
 
 		void TOPIC();
@@ -32,6 +39,7 @@ class IrcCommand {
 		void PASS();
 		void DISPLAY();
 		void KICK();
+		void BOT();
 
 		IrcCommand& setClientFd(int clientFd);
 		std::deque<std::string>& getArgs();
@@ -55,6 +63,8 @@ class IrcCommand {
 		void checkRunCMD();
 		void kickUser(std::string channel, std::string name, std::string comment);
 		void makeBufferString(IrcChannel *channel, IrcClient *client);
+		void login(IrcClient *client);
+		void makeCommand(std::string message);
 
 		class ERR_BADCHANNELKEY: public std::exception {
 			virtual const char *what() const throw();
@@ -102,6 +112,9 @@ class IrcCommand {
 		};
 		class ERR_NOPRIVILEGES : public std::exception {
 			virtual const char *what() const throw();
+		};
+		class ERR_INVALIDMODEVALUE : public std::exception {
+			virtual const char* what() const throw();
 		};
 };
 
