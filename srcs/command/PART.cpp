@@ -22,9 +22,9 @@ void IrcCommand::PART(){
 
     std::vector<std::string> channelList;
 
-    if (_args.size() != 1)
+    if (_args.size() < 1)
     {
-        std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
+        //std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
         /*
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"

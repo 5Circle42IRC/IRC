@@ -244,7 +244,7 @@ void IrcServ::run()
                         break;
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
-                    std::cout << "_recvMessage : <" << _recvMessage << ">" << std::endl;
+                    std::cout << "_recvMessage_inserv : <" << _recvMessage << ">" << std::endl;
                     std::string passStr = clientClass->getNextLineReadBuffer();
                     std::cout << "passtr:" << passStr << std::endl;
                     if (passStr.length() != 0) {
