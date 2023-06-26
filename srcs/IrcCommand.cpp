@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/26 04:11:46 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 08:36:45 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void IrcCommand::checkRunCMD(){
 			return ;
 		}
 	}
-	_db->findClientByFd(_clientFd)->addBackCarriageBuffer("ERR_UNKNOWNCOMMAND\n");
+	_db->findClientByFd(_clientFd)->addBackCarriageBuffer(":localhost 421 " + _db->findClientByFd(_clientFd)->getNickname() + " " + _command + " :Unknown command");
 }
 void IrcCommand::login(IrcClient *client){
 
