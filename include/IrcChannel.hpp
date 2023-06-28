@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IrcChannel.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:45:32 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:45:33 by ysungwon         ###   ########.fr       */
+/*   Updated: 2023/06/25 13:31:57 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ public:
 
     void setGrant(typeMode grant, bool on);
     void setOperator(const int clientFd, const int target);
+    void setRemoveOperater(const int target);
     void setTopic(std::string& newTopic);
     void setPassword(std::string& newPassword);
     void setLimit(int limit);

@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:23 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:51:49 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 08:07:35 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void IrcCommand::PART(){
 
     std::vector<std::string> channelList;
 
-    if (_args.size() != 1)
+    if (_args.size() < 1)
     {
-        std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
+        //std::cout << "PART need more than 1 args.  args size : <" << _args[0].size() << ">" << std::endl;
         /*
             ERR_NEEDMOREPARAMS (461) 
             "<client> <command> :Not enough parameters"
@@ -53,7 +53,8 @@ void IrcCommand::PART(){
     for (std::vector<std::string>::iterator it = channelList.begin(); it != channelList.end(); it++){
        
         channel =_db->findChannel(*it);
-        chname = channel->getName(); 
+        chname = channel->getName();
+        std::map<int, bool> userList = channel->getUser();
         /*
             ERR_NOSUCHCHANNEL (403) 
             "<client> <channel> :No such channel"        
@@ -80,8 +81,6 @@ void IrcCommand::PART(){
         if (channel->deleteUser(_clientFd) == true)
         {
             std::cout << "PART success <" << _clientFd << "> from <" << channel->getName() << ">" << std::endl;
-            if (channel->getUser().size() == 0)
-                _db->deleteChannel(channel->getName());
         }
         else
         {
@@ -90,6 +89,16 @@ void IrcCommand::PART(){
         }
         chnameSum += (chname + " ");
         client->addBackBuffer(":" + client->getNickname() + " PART :" + chname + "\r\n");
+        for (std::map<int, bool>::iterator useriter = userList.begin(); useriter != userList.end(); useriter++){
+            IrcClient *target = _db->findClientByFd(useriter->first);
+            target->addBackCarriageBuffer(":" + client->getNickname() + " PART :" + channel->getName());
+        }        
+        if (channel->getUser().size() == 1){
+            std::cout << "test1 : <" << channel->getUser().begin()->first << ">" << std::endl;
+            channel->setOperator(-1, channel->getUser().begin()->first);
+        }
+        if (channel->getUser().size() == 0)
+            _db->deleteChannel(channel->getName());        
         i++;
         
     }

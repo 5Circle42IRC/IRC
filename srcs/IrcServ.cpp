@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:28 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/23 20:10:54 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/25 11:05:53 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
     {
         if (it->second->isJoinedUser(clientFd))
             it->second->deleteUser(clientFd);
+        if (it->second->getUser().size() == 0)
+            db.deleteChannel(it->second->getName());
     }    
     db.deleteClient(clientFd);
     FD_CLR(clientFd, &_activeReads);
@@ -194,7 +196,7 @@ void IrcServ::run()
     IrcDB db; 
     IrcClient *clientClass;
 
-    std::cout << "*" << _passWord << "*" << std::endl;
+    std::cout << "server initiated with password " << _passWord << std::endl;
     db.setServPass(_passWord);
 
     while (42)
@@ -232,6 +234,7 @@ void IrcServ::run()
                         break;
                     }
                     clientClass->addBackReadBuffer(_recvMessage);
+                    std::cout << "_recvMessage_inserv : <" << _recvMessage << ">" << std::endl;
                     std::string passStr = clientClass->getNextLineReadBuffer();
                     if (passStr.length() != 0) {
                         IrcCommand command(&db, clientFd);
