@@ -27,22 +27,20 @@ int main(int argc, char **argv)
     if (argc != 3)
         errorHandle("Usage : ./ircserv [port] [password]", 0);
 
-    signal(SIGTSTP, SIG_IGN);
     char *isError = NULL;
     long port = std::strtol(argv[1], &isError, 10);
     int hostFd;
 
     if (*isError || (0 > port || 65535 < port))
-        errorHandle("port error", -1);
+        errorHandle("port error", 1);
     try {
         IrcServ serv(port, argv[2]);
         hostFd = serv.on();
         serv.run();
     } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
-        return -1;
+        errorHandle(e.what(), 1);
     } catch (...) {
-        std::cout << "unkown exception" << std::endl;
+        errorHandle("unkown exception", 1);
     }
     close(hostFd);
     return 0;

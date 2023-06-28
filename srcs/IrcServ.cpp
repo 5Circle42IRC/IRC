@@ -71,12 +71,12 @@ bool IrcServ::initSelect()
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
     _timeout.tv_sec = 0;
-    _timeout.tv_usec = 100;
+    _timeout.tv_usec = 0;
 
     _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
     if (_fdNum == -1)
-        return true;
-    return false;
+        return false;
+    return true;
 }
 
 bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db)
@@ -98,6 +98,7 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
 {
     std::map<std::string , IrcChannel*>_channels = db.getAllChannels();
     std::map<std::string , IrcChannel*>::iterator it;
+
     for (it = _channels.begin(); it != _channels.end(); it++)
     {
         if (it->second->isJoinedUser(clientFd))
@@ -233,8 +234,8 @@ void IrcServ::run()
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::string passStr = clientClass->getNextLineReadBuffer();
                     if (passStr.length() != 0) {
-                        IrcCommand command1(&db, clientFd);
-                        excuteCommand(command1, clientFd, clientClass);
+                        IrcCommand command(&db, clientFd);
+                        excuteCommand(command, clientFd, clientClass);
                     }
                 }
             }
