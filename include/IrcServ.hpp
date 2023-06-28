@@ -62,9 +62,8 @@ private:
     void deleteClient(int fd, IrcDB& db);
     void displayServerParam(const IrcDB& db);
     bool isSameNickname(IrcDB& db, std::string message);
-    void sendTo(int clientFd, std::string message);
 
-    void excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass);
+    void excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass);
     void writeUserBuffer(const int clientFd, IrcClient* clientClass);
 
     enum e_active

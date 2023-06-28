@@ -56,7 +56,7 @@ int IrcServ::on()
     if (_error)
         throw IrcServ::bindException();
 
-    _error = listen(_servFd, 5);
+    _error = listen(_servFd, 1000);
     if (_error)
         throw IrcServ::listenException();
     FD_ZERO(&_activeReads);
@@ -71,12 +71,12 @@ bool IrcServ::initSelect()
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
     _timeout.tv_sec = 0;
-    _timeout.tv_usec = 100;
+    _timeout.tv_usec = 0;
 
     _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
     if (_fdNum == -1)
-        return true;
-    return false;
+        return false;
+    return true;
 }
 
 bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db)
@@ -86,8 +86,8 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
     if (acceptFd == -1 || fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
         return false;
-    sendTo(acceptFd, "input server password");
     db.insertClient(new IrcClient(acceptFd, "", "", ""));
+    db.findClientByFd(acceptFd)->addBackCarriageBuffer("input password");
     FD_SET(acceptFd, &_activeReads);
     if (_fdMax < acceptFd)
         _fdMax = acceptFd;
@@ -98,6 +98,7 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
 {
     std::map<std::string , IrcChannel*>_channels = db.getAllChannels();
     std::map<std::string , IrcChannel*>::iterator it;
+
     for (it = _channels.begin(); it != _channels.end(); it++)
     {
         if (it->second->isJoinedUser(clientFd))
@@ -155,25 +156,14 @@ void IrcServ::displayServerParam(const IrcDB& db)
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 }
 
-void IrcServ::sendTo(int clientFd, std::string message)
-{
-    std::string sendMessage("\033[38;5;3m" + message + "\033[0m\r\n");
-    send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
-}
-
-void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
+void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass)
 {
     try {
-        (void) messageLen;
-        // if (messageLen > 1)
-        // {
-            command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
-            std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
-            clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
-        // }
+        command.setClientFd(clientFd).parsing(clientClass->getNextLineReadBuffer());
+        std::cout <<"check:" << clientClass->getBuffer()<<std::endl;
+        clientClass->reduceReadBuffer(clientClass->getNextLineReadBuffer().size() + 1);
     } catch (std::exception& e){
     } catch (...) {
-        
     }
 }
 
@@ -246,10 +236,9 @@ void IrcServ::run()
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::cout << "_recvMessage_inserv : <" << _recvMessage << ">" << std::endl;
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    std::cout << "passtr:" << passStr << std::endl;
                     if (passStr.length() != 0) {
-                        IrcCommand command1(&db, clientFd);
-                        excuteCommand(command1, clientFd, passStr.length(), clientClass);
+                        IrcCommand command(&db, clientFd);
+                        excuteCommand(command, clientFd, clientClass);
                     }
                 }
             }
