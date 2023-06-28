@@ -71,8 +71,7 @@ bool IrcServ::initSelect()
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
     _timeout.tv_sec = 0;
-    _timeout.tv_usec = 100;
-
+    _timeout.tv_usec = 0;
     _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
     if (_fdNum == -1)
         return true;
