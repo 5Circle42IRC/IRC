@@ -99,7 +99,7 @@ const std::string IrcClient::getNextLineReadBuffer()
     try {
         if (!_readBuffer.compare("\r\n"))
             throw "null";
-        else if (!_readBuffer.compare("\n"))
+        if (!_readBuffer.compare("\n"))
             throw "null";
         ret.erase(ret.find_first_of("\n"), ret.length());
     } catch (...) {
