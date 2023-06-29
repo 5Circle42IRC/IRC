@@ -31,7 +31,22 @@ void IrcDB::setServPass(const std::string& pass)
 }
 
 IrcDB::IrcDB(){}
-IrcDB::~IrcDB(){}
+IrcDB::~IrcDB()
+{
+	std::map<std::string , IrcChannel*>::iterator it_ch;
+	std::map<int, IrcClient *>::iterator it_cl;
+
+	for (it_ch = _channels.begin(); it_ch != _channels.end(); it_ch++)
+	{
+		delete _channels[it_ch->first];
+		_channels.erase(it_ch->first);
+	}
+	for (it_cl = _clients.begin(); it_cl != _clients.end(); it_cl++)
+	{
+		delete _clients[it_cl->first];
+		_clients.erase(it_cl->first);
+	}
+}
 
 IrcClient* IrcDB::findClientByName(std::string name){
 	std::map<int, IrcClient *>::iterator it;

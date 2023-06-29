@@ -66,6 +66,7 @@ void IrcCommand::PRIVMSG(){
                 IrcClient *target = _db->findClientByName(*it3);        
             if (_clientFd != target->getFd())
             {
+                std::cout << "no error in prv" << std::endl;
                 target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
                 client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
             }

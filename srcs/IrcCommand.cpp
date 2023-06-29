@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/26 12:05:18 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/IrcCommand.hpp"
 #include "../include/IrcClient.hpp"
 #include <sstream>

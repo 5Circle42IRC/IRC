@@ -61,6 +61,12 @@ void IrcChannel::setOperator(const int clientFd, const int target) {
     if (isOperator(clientFd) || clientFd == -1)
         _user[target] = true;
 }
+void IrcChannel::deleteOperator(const int clientFd, const int target) {
+    if (isOperator(clientFd) && isJoinedUser(clientFd) && isJoinedUser(target) ) {
+        _user[target] = false;
+        return ;
+    }
+}
 void IrcChannel::setRemoveOperater(const int target){
     _user[target] = false;
 }

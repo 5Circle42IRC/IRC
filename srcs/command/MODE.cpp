@@ -135,8 +135,32 @@ void IrcCommand::MODE()
             }
             else if (option[i] == 'o')
             {
-                std::cout << "mode o" << std::endl;
-                channel->setOperator(_clientFd, _db->findClientByName(_args[argCount++])->getFd());
+                if (sign)
+                {
+                    std::cout << "mode +o" << std::endl;
+                    int target = _db->findClientByName(_args[argCount++])->getFd();
+                    std::cout << "target+o : <" << target << ">" << std::endl;
+                    if (channel->isJoinedUser(target))
+                    {
+                        std::cout << "channel->isJoinedUser(target) : <" << channel->isJoinedUser(target) << ">" << std::endl;
+                        channel->setOperator(_clientFd, target);
+                    }
+                    else
+                        std::cout << "there is no taget in channel +o" << std::endl;
+                }
+                else
+                {
+                    std::cout << "mode -o" << std::endl;
+                    int target = _db->findClientByName(_args[argCount++])->getFd();
+                    std::cout << "target+- : <" << target << ">" << std::endl;
+                    if (channel->isJoinedUser(target))                    
+                    {
+                        std::cout << "channel->isJoinedUser(target) : <" << channel->isJoinedUser(target) << ">" << std::endl;
+                        channel->deleteOperator(_clientFd, target);
+                    }
+                    else
+                        std::cout << "there is no taget in channel -o" << std::endl;                        
+                }
             }
             else
             {
