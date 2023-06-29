@@ -9,183 +9,178 @@
 /*   Updated: 2023/06/26 12:05:18 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "../include/IrcCommand.hpp"
 #include "../include/IrcClient.hpp"
-#include <string>
-#include <fstream>
-#include <iostream>
 #include <sstream>
 
-IrcClient::IrcClient(int fd
-                    , std::string nickname
-                    , std::string password
-                    , std::string buffer)
-    : _fd(fd)
-    , _passwordFlag(false)
-    , _nickname(nickname)
-    , _password(password)
-    , _buffer(buffer)
-{ }
+IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
+	_commandList["INVITE"] = &IrcCommand::INVITE;
+	_commandList["JOIN"] = &IrcCommand::JOIN;
+	_commandList["NICK"] = &IrcCommand::NICK;
+	_commandList["PART"] = &IrcCommand::PART;
+	_commandList["PING"] = &IrcCommand::PING;
+	_commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
+	_commandList["TOPIC"] = &IrcCommand::TOPIC;
+	_commandList["USER"] = &IrcCommand::USER;
+	_commandList["MODE"] = &IrcCommand::MODE;
+	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
+	_commandList["KICK"] = &IrcCommand::KICK;
+	_commandList["PASS"] = &IrcCommand::PASS;
+	_commandList["BOT"] = &IrcCommand::BOT;
+}
+IrcCommand::~IrcCommand(){}
 
-IrcClient::IrcClient()
-    : _fd(0)
-{ }
+void IrcCommand::checkRunCMD(){
+	std::map<std::string, commandPtr>::iterator commandIter;
+	for (commandIter = _commandList.begin(); commandIter != _commandList.end(); commandIter++){
+		if (commandIter->first == _command){
+			commandPtr funcPtr = commandIter->second;
+			(this->*funcPtr)();
+			return ;
+		}
+	}
+	_db->findClientByFd(_clientFd)->addBackCarriageBuffer(":localhost 421 " + _db->findClientByFd(_clientFd)->getNickname() + " " + _command + " :Unknown command");
+}
+void IrcCommand::login(IrcClient *client){
 
-IrcClient::~IrcClient() {}
+	if (client->getPasswordFlag() == 0){
+		if (_command == "PASS" && _args.size() == 1 && _db->getServPass() == _args.front()){
+			checkRunCMD();
+			client->setPasswordFlag(1);
+			client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
+			return ;
+		}
+		else {
+			client->addBackCarriageBuffer("\033[38;5;3minput server password using PASS command \033[0m");
+			return;
+		}
+	}
+	if (client->getPasswordFlag() == 1 ){
+		if (_command == "NICK" && _args.size() == 1){
+			try{
+				checkRunCMD();
+				client->setPasswordFlag(2);
+				client->addBackCarriageBuffer("\033[38;5;3minput your nickname using USER command \033[0m");
+				return ;
+			} catch (std::exception &e){
+				client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
+				return ;
+			}
+		}
+		else {
+			client->addBackCarriageBuffer("\033[38;5;3minput your nickname using NICK command \033[0m");
+			return ;
+		}
+	}
+	if (client->getPasswordFlag() == 2){
+		if (_command == "USER" && _args.size() == 4){
+			try {
+				checkRunCMD();
+				client->setPasswordFlag(3);
+				client->addBackCarriageBuffer("001 " + client->getNickname() + " :Welcome to Internet Relay Chat By ysungwon, juha, jwee");
+				return ;
+			} catch (std::exception &e){
+				client->addBackCarriageBuffer("\033[38;5;3minput your userinfo using USER command \033[0m");
+				return ;
+			}
+		}
+		else {
+			client->addBackCarriageBuffer("\033[38;5;3minput your userinfo using USER command \033[0m");
+			return ;
+		}
+	}
+}
+void IrcCommand::makeCommand(std::string message){
+	std::stringstream msg(message);
+	std::string temp;
 
-IrcClient::IrcClient(const IrcClient &copy)
-    : _fd(copy._fd)
-    , _passwordFlag(false)
-    , _nickname(copy._nickname)
-    , _password(copy._password)
-    , _buffer(copy._buffer)
-{ }
+	if (message.size() > 512)
+		throw ERR_OUTOFBOUNDMESSAGE();
+	msg >> _command;
+	
+	if (_command == "PRIVMSG" || _command == "TOPIC" || _command == "KICK" || _command == "BOT") {
+		
+		msg >> temp;
+		_args.push_back(temp);
+		if (_command == "KICK")
+		{
+			msg >> temp;
+			_args.push_back(temp);
+		}
+		std::string temp2;
+		while (msg >> temp){
+			temp2 += temp;
+			temp2 += " ";
+		}		
+		if (temp2.size() != 0)
+		{
+			_args.push_back(temp2);
+			_args.back().pop_back();
+		}
+	}
+	else {
+		while (msg >> temp)
+			_args.push_back(temp);
+	}
+}
+void IrcCommand::parsing(std::string message){
 
-const IrcClient &IrcClient::operator=(const IrcClient &copy)
-{
-    if (this == &copy)
-    {
-        this->_fd = copy._fd;
-        this->_nickname = copy._nickname;
-        this->_password = copy._password;
-        this->_buffer = copy._buffer;
-        this->_passwordFlag = copy._passwordFlag;
-    }
-    return (*this);
+	IrcClient *client = _db->findClientByFd(_clientFd);
+
+	makeCommand(message);
+	std::cout << "here" << std::endl;
+	if (client->getPasswordFlag() < 3){
+		login(client);
+		return ;
+	}
+	try {
+		checkRunCMD();
+	} catch (std::string name) {
+		client->addBackCarriageBuffer(":localhost 403 " + client->getNickname() + " " + name + ":No permission to perform this operation");
+	} catch (char *name){
+		std::string temp = name;
+		client->addBackBuffer(":localhost 401 " + client->getNickname() + " " + name + ":No such nick/channel");
+	}
+		catch (std::exception &e){
+		client->addBackCarriageBuffer(e.what());
+	}
 }
 
-int IrcClient::getFd() const
-{
-    return _fd;
-}
 
-const std::string &IrcClient::getNickname() const
-{
-    return _nickname;
-}
 
-const std::string &IrcClient::getUsername() const
-{
-    return _username;
-}
 
-const std::string &IrcClient::getHostname() const
-{
-    return _hostname;
-}
 
-const std::string &IrcClient::getServername() const
-{
-    return _servername;
-}
 
-const std::string &IrcClient::getRealname() const
-{
-    return _realname;
-}
-const std::string &IrcClient::getPassword() const
-{
-    return _password;
-}
 
-const std::string &IrcClient::getBuffer() const
-{
-    return _buffer;
-}
 
-const std::string IrcClient::getNextLineReadBuffer() 
-{
-    std::string ret = _readBuffer;
-    try {
-        if (!_readBuffer.compare("\r\n"))
-            throw "null";
-        else if (!_readBuffer.compare("\n"))
-            throw "null";
-        ret.erase(ret.find_first_of("\n"), ret.length());
-    } catch (...) {
-        return "";
-    }
-    std::cerr << "gnl:" << ret << std::endl;//
-    return ret;
-}
+std::deque<std::string>& IrcCommand::getArgs(){ return _args; }
+std::string IrcCommand::getCommand(){ return _command; }
+IrcCommand& IrcCommand::setClientFd(int clientFd){ _clientFd = clientFd; return *this; }
 
-void IrcClient::setNickname(std::string newNickname)
-{
-    _nickname = newNickname;
-    return;
-}
+//JOIN
+const char* IrcCommand::ERR_BADCHANNELKEY::what() const throw() { return " :cannot join channel (+k)"; }
+const char* IrcCommand::ERR_USERONCHANNEL::what() const throw() { return " :is already on channel"; }
+const char* IrcCommand::ERR_NEEDMOREPARAMS::what() const throw() { return " :Not enough parameters"; }
+const char* IrcCommand::ERR_CHANNELISFULL::what() const throw() { return " :cannot join channel (+l)";}
+const char* IrcCommand::ERR_INVITEONLYCHAN::what() const throw() { return " :cannot join channel (+i)";}
 
-void IrcClient::setUsername(std::string newUsername)
-{
-    _username = newUsername;
-    return;
-}
+//PARSING
+const char* IrcCommand::ERR_UNKNOWNCOMMAND::what() const throw() { return " :Unknown command";}
+const char* IrcCommand::ERR_OUTOFBOUNDMESSAGE::what() const throw() { return " :command is too long"; }
+const char* IrcCommand::ERR_BADCHANNELNAME::what() const throw() { return " :invalid channel name";}
 
-void IrcClient::setHostname(std::string newHostname)
-{
-    _hostname = newHostname;
-    return;
-}
+//NICK
+const char* IrcCommand::ERR_NICKNAMEINUSE::what() const throw() { return " :Nickname is already in use"; }
+const char* IrcCommand::ERR_NONICKNAMEGIVEN::what() const throw() { return " :No nickname given"; }
+const char* IrcCommand::ERR_ERRONEUSNICKNAME::what() const throw() { return " :Erroneus nickname"; }
+//PART
+const char* IrcCommand::ERR_NOTONCHANNEL::what() const throw() { return " :You're not on that channel"; }
+//TOPIC
+const char* IrcCommand::ERR_CHANOPRIVSNEEDED::what() const throw() { return " :You're not channel operator"; }
 
-void IrcClient::setServername(std::string newServername)
-{
-    _servername = newServername;
-    return;
-}
+//MODE
+const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return " :is unknwon mode char to me"; }
+const char* IrcCommand::ERR_INVALIDMODEVALUE::what() const throw() { return " :is invalid value to mode"; }
 
-void IrcClient::setRealname(std::string newRealname)
-{
-    _realname = newRealname;
-    return;
-}
-
-void IrcClient::setPassword(std::string newPassword)
-{
-    _password = newPassword;
-    return;
-}
-
-void IrcClient::addBackBuffer(const std::string str)
-{
-    _buffer += str;
-}
-
-void IrcClient::addBackReadBuffer(std::string readMassage)
-{
-    _readBuffer += readMassage;
-}
-
-void IrcClient::addBackCarriageBuffer(const std::string str)
-{
-    _buffer += str + "\r\n";
-}
-
-void IrcClient::reduceBuffer(int result)
-{
-    _buffer.erase(0, result);
-}
-
-void IrcClient::reduceReadBuffer(int result)
-{
-    _readBuffer.erase(0, result);
-}
-
-void IrcClient::setPasswordFlag(int number)
-{
-    if (_passwordFlag != 3)
-        _passwordFlag = number;
-}
-
-int IrcClient::getPasswordFlag() const
-{
-    return _passwordFlag;
-}
-
-void IrcClient::Display()
-{
-    std::cout << "------------Display -------" << std::endl;
-    std::cout << "Nick : " << getNickname() << std::endl;
-    std::cout << "UserName : " << getUsername() << std::endl;
-    std::cout << "HostName : " << getHostname() << std::endl;
-    std::cout << "ServerName : " << getServername() << std::endl;
-    std::cout << "RealName : " << getRealname() << std::endl;
-}
+//KICK
+const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return " :Permission Denied- You're not an IRC operator"; }s
