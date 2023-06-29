@@ -37,6 +37,8 @@ public:
 
     void setGrant(typeMode grant, bool on);
     void setOperator(const int clientFd, const int target);
+
+    void deleteOperator(const int clientFd, const int target);
     void setRemoveOperater(const int target);
     void setTopic(std::string& newTopic);
     void setPassword(std::string& newPassword);

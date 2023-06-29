@@ -16,7 +16,7 @@ IrcChannel::IrcChannel()
     : _name("no Name"), _topic(":any thing"), _grant(0), _limit(0) {}
  
 IrcChannel::IrcChannel(std::string name)
-    : _name(name), _topic("any thing"), _grant(0), _limit(0) {}
+    : _name(name), _topic(":any thing"), _grant(0), _limit(0) {}
 
 IrcChannel::~IrcChannel() {}
 
@@ -61,6 +61,15 @@ void IrcChannel::setOperator(const int clientFd, const int target) {
     if (isOperator(clientFd) || clientFd == -1)
         _user[target] = true;
 }
+
+void IrcChannel::deleteOperator(const int clientFd, const int target) {
+    if (isOperator(clientFd) && isJoinedUser(clientFd) && isJoinedUser(target) ) {
+        _user[target] = false;
+        return ;
+    }
+}
+
+
 void IrcChannel::setRemoveOperater(const int target){
     _user[target] = false;
 }

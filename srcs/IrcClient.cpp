@@ -95,17 +95,20 @@ const std::string &IrcClient::getBuffer() const
 
 const std::string IrcClient::getNextLineReadBuffer() 
 {
-    std::string ret = _readBuffer;
-    try {
-        if (!_readBuffer.compare("\r\n"))
-            throw "null";
-        else if (!_readBuffer.compare("\n"))
-            throw "null";
-        ret.erase(ret.find_first_of("\n"), ret.length());
-    } catch (...) {
+    std::string ret;
+    std::istringstream origin(_readBuffer);
+    if (!_readBuffer.compare("\r\n"))
+    {
+        _readBuffer.erase(0);
+        _readBuffer.erase(0);
         return "";
     }
-    std::cerr << "gnl:" << ret << std::endl;//
+    else if (!_readBuffer.compare("\n")){
+        _readBuffer.erase(0);
+        return "";
+    }
+    if (std::getline(origin, ret).eof())
+        return "";
     return ret;
 }
 
@@ -181,12 +184,3 @@ int IrcClient::getPasswordFlag() const
     return _passwordFlag;
 }
 
-void IrcClient::Display()
-{
-    std::cout << "------------Display -------" << std::endl;
-    std::cout << "Nick : " << getNickname() << std::endl;
-    std::cout << "UserName : " << getUsername() << std::endl;
-    std::cout << "HostName : " << getHostname() << std::endl;
-    std::cout << "ServerName : " << getServername() << std::endl;
-    std::cout << "RealName : " << getRealname() << std::endl;
-}

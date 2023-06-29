@@ -46,7 +46,6 @@ public:
     void reduceBuffer(int result);
     void reduceReadBuffer(int result);
 
-    void Display();
     
     IrcClient(const IrcClient &copy);
     const IrcClient &operator=(const IrcClient &copy);
