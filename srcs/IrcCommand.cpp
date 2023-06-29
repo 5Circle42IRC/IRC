@@ -137,10 +137,10 @@ void IrcCommand::parsing(std::string message){
 	try {
 		checkRunCMD();
 	} catch (std::string name) {
-		client->addBackCarriageBuffer(":localhost 403 " + client->getNickname() + " " + name + ":No permission to perform this operation");
+		client->addBackCarriageBuffer(":localhost 403 " + client->getNickname() + " " + name + " :No such channel");
 	} catch (char *name){
 		std::string temp = name;
-		client->addBackBuffer(":localhost 401 " + client->getNickname() + " " + name + ":No such nick/channel");
+		client->addBackBuffer(":localhost 401 " + client->getNickname() + " " + name + " :No such nick/channel");
 	}
 		catch (std::exception &e){
 		client->addBackCarriageBuffer(e.what());

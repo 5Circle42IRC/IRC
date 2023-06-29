@@ -55,8 +55,13 @@ void IrcCommand::TOPIC(){
         }
         else
         {
-
-            channel->setTopic(topic);
+            if (topic.at(0) != ':') {
+                std::string temp = " :";
+                temp += topic;
+                channel->setTopic(temp);
+            }
+            else
+                channel->setTopic(topic);
             if (channel->getTopic().size() == 0)//채널 생성시 토픽의 사이즈는???
                 {
                     client->addBackBuffer(client->getNickname() + " " + channel->getName() + " :No topic is set" + "\r\n");
