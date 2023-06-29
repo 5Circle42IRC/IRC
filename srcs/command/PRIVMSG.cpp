@@ -37,7 +37,6 @@ void IrcCommand::PRIVMSG(){
     for (std::deque<std::string>::iterator it3 = clientList.begin(); it3 != clientList.end(); it3++){
         if (it3->at(0) == '#')
         {
-            std::cout << "In PRIVMSG # start, so channel" << std::endl;
             IrcChannel* channel = _db->findChannel(*it3);
             std::map<int, bool>	users = channel->getUser();
             std::map<int, bool>::iterator it;

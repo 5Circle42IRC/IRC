@@ -21,14 +21,12 @@ void IrcCommand::MODE()
 {
     IrcClient *client = _db->findClientByFd(_clientFd);
 
-    std::cout << " ---------start MODE---------" << std::endl;
     
     
     
     //size check
     if (_args.size() < 2)
     {
-        std::cout << "need more than 2 arguments" << std::endl;
         return;
     }
     //channel find check
@@ -42,7 +40,6 @@ void IrcCommand::MODE()
     //channel operator check
     if (channel->isOperator(_clientFd) == false)
     {
-        std::cout << "<" << _db->findClientByFd(_clientFd)->getNickname() << "> is not a operator to <" << channel->getName() << ">" << std::endl;
         client->addBackBuffer(":localhost 482 " + client->getNickname() + " " + channel->getName());
         throw ERR_CHANOPRIVSNEEDED();
     }
@@ -62,17 +59,14 @@ void IrcCommand::MODE()
     int i = 0;
     while(option[i])
     {
-        std::cout << "option[" << i << "] : <" << option[i] << ">" << std::endl;
 
         if (option[i] == '+')
         {
             if (mustOp==1)
             {
-                std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
                 client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }                  
-            std::cout << "mode +" << std::endl;
             sign = 1;
             mustOp = 1; //we have +, mustOP is setted to 1, then, next char have to be option char.
         }
@@ -80,45 +74,36 @@ void IrcCommand::MODE()
         {
             if (mustOp==1)
             {
-                std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
                 client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }                 
-            std::cout << "mode -" << std::endl;
             sign = 0;
             mustOp = 1;//we have -, mustOP is setted to 1, then, next char have to be option char.
         }
         else
         {
             mustOp = 0;
-            //in case, no + or -
-            std::cout << "in else" << std::endl;
             if (option[i] == '+' || option[i] == '-')
             {
-                std::cout << "there is no option+- : <" << option[i] << ">" << std::endl;
                 client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();  
             }
             else if (option[i] == 'i')
             {
-                std::cout << "mode i" << std::endl;
                 channel->setGrant(M_INVITE, sign);
             }          
             else if (option[i] == 't')
             {
-                std::cout << "mode t" << std::endl;
                 channel->setGrant(M_TOPIC, sign);
             }
             else if (option[i] == 'k')
             {
-                std::cout << "mode k" << std::endl;
                 channel->setGrant(M_KEY, sign);
                 if (sign && static_cast<int> (_args.size()) > argCount)
                     channel->setPassword(_args[argCount++]);
             }
             else if (option[i] == 'l')
             {
-                std::cout << "mode l" << std::endl;
                 channel->setGrant(M_LIMIT, sign);
                 if (sign && static_cast<int> (_args.size()) > argCount)
                 {
@@ -129,7 +114,6 @@ void IrcCommand::MODE()
                         client->addBackBuffer(":localhost 501 " + client->getNickname());
                         throw ERR_INVALIDMODEVALUE();        
                     }      
-                    std::cout << "setlimit fn need" << std::endl;      
                     channel->setLimit(tmp);
                 }
             }
@@ -139,38 +123,27 @@ void IrcCommand::MODE()
                 {
                     if (static_cast<int> (_args.size()) > argCount)
                     {
-                        std::cout << "mode +o" << std::endl;
                         int target = _db->findClientByName(_args[argCount++])->getFd();
-                        std::cout << "target+o : <" << target << ">" << std::endl;
                         if (channel->isJoinedUser(target))
                         {
-                            std::cout << "channel->isJoinedUser(target) : <" << channel->isJoinedUser(target) << ">" << std::endl;
                             channel->setOperator(_clientFd, target);
                         }
-                        else
-                            std::cout << "there is no taget in channel +o" << std::endl;
                     }
                 }
                 else
                 {
                     if (static_cast<int> (_args.size()) > argCount)
                     {                    
-                        std::cout << "mode -o" << std::endl;
                         int target = _db->findClientByName(_args[argCount++])->getFd();
-                        std::cout << "target+- : <" << target << ">" << std::endl;
                         if (channel->isJoinedUser(target))                    
                         {
-                            std::cout << "channel->isJoinedUser(target) : <" << channel->isJoinedUser(target) << ">" << std::endl;
                             channel->deleteOperator(_clientFd, target);
                         }
-                        else
-                            std::cout << "there is no taget in channel -o" << std::endl;                        
                     }
                 }
             }
             else
             {
-                std::cout << "there is no option : <" << option[i] << ">" << std::endl;
                 client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }  
@@ -182,5 +155,4 @@ void IrcCommand::MODE()
     for (it = _args.begin(); it!= _args.end(); it++)
         stringSum += *it + " ";
     client->addBackCarriageBuffer(":" + client->getNickname() + " MODE " + channel->getName() + " " + stringSum);
-    std::cout << "------MODE end------" << std::endl; 
 }

@@ -14,7 +14,6 @@
 #include "../../include/IrcClient.hpp"
 
 void IrcCommand::PONG(){
-    std::cout << "IN PONG" << std::endl;
     IrcClient* client = _db->findClientByFd(_clientFd);
     client->addBackBuffer(client->getNickname() + " PING" + "\r\n");
 }

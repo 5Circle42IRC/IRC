@@ -25,7 +25,6 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["TOPIC"] = &IrcCommand::TOPIC;
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
-	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandList["KICK"] = &IrcCommand::KICK;
 	_commandList["PASS"] = &IrcCommand::PASS;
 	_commandList["BOT"] = &IrcCommand::BOT;
@@ -131,7 +130,6 @@ void IrcCommand::parsing(std::string message){
 	IrcClient *client = _db->findClientByFd(_clientFd);
 
 	makeCommand(message);
-	std::cout << "here" << std::endl;
 	if (client->getPasswordFlag() < 3){
 		login(client);
 		return ;

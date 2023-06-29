@@ -24,7 +24,7 @@
 
 static void errorHandle(std::string message, int exitCode)
 {
-    std::cout << message << std::endl;
+    (void)message;
     exit(exitCode);
 }
 
@@ -45,10 +45,8 @@ int main(int argc, char **argv)
         hostFd = serv.on();
         serv.run();
     } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
         return -1;
     } catch (...) {
-        std::cout << "unkown exception" << std::endl;
     }
     close(hostFd);
     return 0;

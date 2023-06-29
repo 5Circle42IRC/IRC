@@ -38,7 +38,6 @@ class IrcCommand {
 		void PONG();
 		void USER();
 		void PASS();
-		void DISPLAY();
 		void KICK();
 		void BOT();
 

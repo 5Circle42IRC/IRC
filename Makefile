@@ -32,7 +32,6 @@ SRCS		= main.cpp \
 			  command/PING.cpp \
 			  command/PONG.cpp \
 			  command/MODE.cpp\
-			  command/DISPLAY.cpp \
 			  command/KICK.cpp \
 			  command/PASS.cpp \
 			  command/BOT.cpp
