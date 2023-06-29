@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:02 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/26 08:18:55 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/29 18:50:17 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,27 @@
 void IrcCommand::joinChannel(std::string name, std::string key){
 	IrcChannel *channel;
 	IrcClient *client = _db->findClientByFd(_clientFd);
-	if (name.at(0) != '#'){
-		client->addBackBuffer("432 <" + name + "> ");
-		throw ERR_BADCHANNELNAME();
-		}
-	if (name.size() > 200){
+	if (name.at(0) != '#' || name == "#" || name.size() > 200){
 		client->addBackBuffer("432 <" + name + "> ");
 		throw ERR_BADCHANNELNAME();
 	}
 	try {
 		channel =_db->findChannel(name);
 		if (channel->isJoinedUser(_clientFd)){
-			client->addBackBuffer("443 <" + client->getNickname() + "> <" + channel->getName() + "> ");
+			client->addBackBuffer(":localhost 443 " + client->getNickname() + " " + channel->getName());
 			throw ERR_USERONCHANNEL();
 		}
 		// grant 검사(mode)
 		if ((channel->getGrant() & M_KEY) && channel->getPassword().compare(key)){
-			client->addBackBuffer("475 <" + channel->getName() + "> ");
+			client->addBackBuffer(":localhost 475 " + client->getNickname() + " " + channel->getName());
 			throw ERR_BADCHANNELKEY();
 		}
 		if ((channel->getGrant() & M_LIMIT) && static_cast<unsigned long>(channel->getLimit()) <= channel->getUser().size()){
-			client->addBackBuffer("471 <" + channel->getName() + "> ");
+			client->addBackBuffer(":localhost 471 " + client->getNickname() + " " + channel->getName());
 			throw ERR_CHANNELISFULL();
 		}
 		if ((channel->getGrant() & M_INVITE)){
-			client->addBackBuffer("473 <" + channel->getName() + "> ");
+			client->addBackBuffer(":localhost 473 " + client->getNickname() + " " + channel->getName());
 			throw ERR_INVITEONLYCHAN();
 		}
 
@@ -73,7 +69,6 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		client->addBackCarriageBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName() + " :" + channel->getTopic());
 		client->addBackCarriageBuffer(":localhost 324 " + client->getNickname() + " " + channel->getName() + " " + mode);
 		client->addBackCarriageBuffer(":localhost 353 " + client->getNickname() + " =" + channel->getName() + " :" + userListStr);
-		client->addBackCarriageBuffer(":localhost 366 " + client->getNickname() + " " + channel->getName() + " :End of /NAMES list");
 	} catch(std::string name){
 		// channel 생성 후 클라이언트에 알림
 		channel = new IrcChannel(name);
