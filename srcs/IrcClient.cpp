@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/25 11:06:32 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/IrcClient.hpp"
 #include <string>
 #include <fstream>
