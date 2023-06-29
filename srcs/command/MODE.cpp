@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:11 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 12:26:56 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 13:23:49 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,20 @@ void IrcCommand::MODE()
     
     if (channel->isJoinedUser(_clientFd) == false)
     {
-        client->addBackBuffer("442 <" + channel->getName() + ">");
+        client->addBackBuffer(":localhost 442 " + client->getNickname() + " " + channel->getName());
         throw ERR_NOTONCHANNEL();
     }
     //channel operator check
     if (channel->isOperator(_clientFd) == false)
     {
         std::cout << "<" << _db->findClientByFd(_clientFd)->getNickname() << "> is not a operator to <" << channel->getName() << ">" << std::endl;
-        client->addBackBuffer("482 <" + channel->getName() + ">");
+        client->addBackBuffer(":localhost 482 " + client->getNickname() + " " + channel->getName());
         throw ERR_CHANOPRIVSNEEDED();
     }
 
     std::string option = _args[1];
     if (option.size() < 2){
-        client->addBackBuffer("461 <" + _command + ">");
+        client->addBackBuffer(":localhost 461 " + client->getNickname() + " " + _command);
         throw ERR_NEEDMOREPARAMS();
     }
 
@@ -69,7 +69,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
-                client->addBackBuffer("472 <>");
+                client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }                  
             std::cout << "mode +" << std::endl;
@@ -81,7 +81,7 @@ void IrcCommand::MODE()
             if (mustOp==1)
             {
                 std::cout << "there is no option +-: <" << option[i] << ">" << std::endl;
-                client->addBackBuffer("472 <>");
+                client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }                 
             std::cout << "mode -" << std::endl;
@@ -96,7 +96,7 @@ void IrcCommand::MODE()
             if (option[i] == '+' || option[i] == '-')
             {
                 std::cout << "there is no option+- : <" << option[i] << ">" << std::endl;
-                client->addBackBuffer("472 <>");
+                client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();  
             }
             else if (option[i] == 'i')
@@ -126,7 +126,7 @@ void IrcCommand::MODE()
                     std::stringstream ssInt(_args[argCount++]);
                     ssInt >> tmp;
                     if (tmp < 1){
-                        client->addBackBuffer("501 <>");
+                        client->addBackBuffer(":localhost 501 " + client->getNickname());
                         throw ERR_INVALIDMODEVALUE();        
                     }      
                     std::cout << "setlimit fn need" << std::endl;      
@@ -141,7 +141,7 @@ void IrcCommand::MODE()
             else
             {
                 std::cout << "there is no option : <" << option[i] << ">" << std::endl;
-                client->addBackBuffer("472 <>");
+                client->addBackBuffer(":localhost 472 " + client->getNickname());
                 throw ERR_UNKNOWNMODE();
             }  
         }
