@@ -39,6 +39,7 @@ public:
     void setOperator(const int clientFd, const int target);
     void setTopic(std::string& newTopic);
     void setPassword(std::string& newPassword);
+    void deleteOperator(const int clientFd, const int target);
     void setLimit(int limit);
     bool isOperator(const int clientFd) const;
 
