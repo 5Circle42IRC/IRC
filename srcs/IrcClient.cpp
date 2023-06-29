@@ -96,11 +96,13 @@ const std::string &IrcClient::getBuffer() const
 const std::string IrcClient::getNextLineReadBuffer() 
 {
     std::string ret = _readBuffer;
+        std::cout << _readBuffer.compare("\r\n") << std::endl;
+        std::cout << _readBuffer.compare("\n") << std::endl;
+    if (!_readBuffer.compare("\r\n"))
+        return "\r\n";
+    if (!_readBuffer.compare("\n"))
+        return "\n";
     try {
-        if (!_readBuffer.compare("\r\n"))
-            throw "null";
-        else if (!_readBuffer.compare("\n"))
-            throw "null";
         ret.erase(ret.find_first_of("\n"), ret.length());
     } catch (...) {
         return "";

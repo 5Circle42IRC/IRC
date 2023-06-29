@@ -224,6 +224,7 @@ void IrcServ::run()
 
                 default:
                     memset(_recvMessage, 0, sizeof(_recvMessage));
+
                     _readLen = recv(clientFd, _recvMessage, BUFFER_SIZE, 0);
                     if (clientClass->getPasswordFlag() && _readLen == -1) {
                         std::cerr << "failed recv" << std::endl;
@@ -236,7 +237,9 @@ void IrcServ::run()
                     clientClass->addBackReadBuffer(_recvMessage);
                     std::cout << "_recvMessage_inserv : <" << _recvMessage << ">" << std::endl;
                     std::string passStr = clientClass->getNextLineReadBuffer();
-                    if (passStr.length() != 0) {
+                    if (!passStr.compare("\r\n") || !passStr.compare("\n"))
+                        clientClass->reduceReadBuffer(passStr.size() + 1);
+                    else if (passStr.length() != 0) {
                         IrcCommand command(&db, clientFd);
                         excuteCommand(command, clientFd, clientClass);
                     }
