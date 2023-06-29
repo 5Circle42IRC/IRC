@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   USER.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysungwon <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:45 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:47:46 by ysungwon         ###   ########.fr       */
+/*   Updated: 2023/06/29 18:57:05 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void IrcCommand::USER(){
     std::string oldNick = client->getNickname();
     if (getArgs().size() != 4)
     {
-        client->addBackBuffer("461 <" + _command + "> ");
+        client->addBackBuffer(":localhost 461 * " + _command);
         throw ERR_NEEDMOREPARAMS();
     }
     else    
