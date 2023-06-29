@@ -183,4 +183,4 @@ const char* IrcCommand::ERR_UNKNOWNMODE::what() const throw() { return " :is unk
 const char* IrcCommand::ERR_INVALIDMODEVALUE::what() const throw() { return " :is invalid value to mode"; }
 
 //KICK
-const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return " :Permission Denied- You're not an IRC operator"; }s
+const char* IrcCommand::ERR_NOPRIVILEGES::what() const throw() { return " :Permission Denied- You're not an IRC operator"; }
