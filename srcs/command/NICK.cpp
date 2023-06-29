@@ -40,23 +40,23 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
 }
 
 void IrcCommand::NICK(){
-        std::cout << "start NICK" << std::endl;
+        //std::cout << "start NICK" << std::endl;
         IrcClient* client = _db->findClientByFd(_clientFd);
         if (getArgs().size() != 1)
         {
-            std::cout << "no nick given" << std::endl;
+            //std::cout << "no nick given" << std::endl;
             client->addBackBuffer(":localhost 431 " + client->getNickname() + " ");            
             throw ERR_NONICKNAMEGIVEN();               
         }
         else
         {
-            std::cout << "n1" << std::endl;
+            //std::cout << "n1" << std::endl;
             std::string oldNick = client->getNickname();
-            std::cout << "n2" << std::endl;
+            //std::cout << "n2" << std::endl;
             checkValidNICK(getArgs(), _db);
-            std::cout << "n3" << std::endl;
+            //std::cout << "n3" << std::endl;
             _db->findClientByFd(_clientFd)->setNickname(getArgs()[0]);
-            std::cout << "n4" << std::endl;
+            //std::cout << "n4" << std::endl;
             //:WiZ NICK Kilroy 
             client->addBackBuffer(":" + oldNick + " NICK :" + client->getNickname() + "\r\n");
             client->setPasswordFlag(true);

@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/26 12:05:18 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 13:24:49 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ IrcCommand::IrcCommand(IrcDB *db, int clientFd): _db(db), _clientFd(clientFd) {
 	_commandList["NICK"] = &IrcCommand::NICK;
 	_commandList["PART"] = &IrcCommand::PART;
 	_commandList["PING"] = &IrcCommand::PING;
+	_commandList["PONG"] = &IrcCommand::PONG;
 	_commandList["PRIVMSG"] = &IrcCommand::PRIVMSG;
 	_commandList["TOPIC"] = &IrcCommand::TOPIC;
 	_commandList["USER"] = &IrcCommand::USER;
 	_commandList["MODE"] = &IrcCommand::MODE;
-	_commandList["DISPLAY"] = &IrcCommand::DISPLAY;
 	_commandList["KICK"] = &IrcCommand::KICK;
 	_commandList["PASS"] = &IrcCommand::PASS;
 	_commandList["BOT"] = &IrcCommand::BOT;
@@ -79,6 +79,7 @@ void IrcCommand::login(IrcClient *client){
 				checkRunCMD();
 				client->setPasswordFlag(3);
 				client->addBackCarriageBuffer("001 " + client->getNickname() + " :Welcome to Internet Relay Chat By ysungwon, juha, jwee");
+				PONG();
 				return ;
 			} catch (std::exception &e){
 				client->addBackCarriageBuffer("\033[38;5;3minput your userinfo using USER command \033[0m");
@@ -129,7 +130,6 @@ void IrcCommand::parsing(std::string message){
 	IrcClient *client = _db->findClientByFd(_clientFd);
 
 	makeCommand(message);
-	std::cout << "here" << std::endl;
 	if (client->getPasswordFlag() < 3){
 		login(client);
 		return ;

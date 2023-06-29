@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:23 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:50:19 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/29 18:47:06 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,6 @@ void IrcDB::deleteChannel(std::string name){
 
 
 
-const char* IrcDB::ERR_NOSUCHCHANNEL::what() const throw() { return ":No such nick"; }
-const char* IrcDB::ERR_NOSUCHCLIENTFD::what() const throw() { return "ERR_NOSUCHCLIENTFD"; }
-const char* IrcDB::ERR_NOSUCHNICK::what() const throw() { return "ERR_NOSUCHNICK"; }
+const char* IrcDB::ERR_NOSUCHCHANNEL::what() const throw() { return " :No such channel"; }
+const char* IrcDB::ERR_NOSUCHCLIENTFD::what() const throw() { return " :not such fd"; }
+const char* IrcDB::ERR_NOSUCHNICK::what() const throw() { return " :No such nick/channel"; }

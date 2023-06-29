@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:37 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/21 18:52:00 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/29 18:44:57 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void IrcCommand::PRIVMSG(){
     for (std::deque<std::string>::iterator it3 = clientList.begin(); it3 != clientList.end(); it3++){
         if (it3->at(0) == '#')
         {
-            std::cout << "In PRIVMSG # start, so channel" << std::endl;
             IrcChannel* channel = _db->findChannel(*it3);
             std::map<int, bool>	users = channel->getUser();
             std::map<int, bool>::iterator it;
@@ -50,20 +49,20 @@ void IrcCommand::PRIVMSG(){
             for (it = users.begin();
                     it != users.end();
                     it++)
-                    {
-                        IrcClient *client = _db->findClientByFd(_clientFd);
-                        IrcClient *target = _db->findClientByFd(it->first);                    
-                        if (_clientFd != target->getFd())
-                        { 
-                            target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
-                            client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
-                        }
-                    }      
+            {
+                IrcClient *client = _db->findClientByFd(_clientFd);
+                IrcClient *target = _db->findClientByFd(it->first);                    
+                if (_clientFd != target->getFd())
+                { 
+                    target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+                    client->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);
+                }
+            }      
         }
         else
         {
-                IrcClient *client = _db->findClientByFd(_clientFd);
-                IrcClient *target = _db->findClientByName(*it3);        
+            IrcClient *client = _db->findClientByFd(_clientFd);
+            IrcClient *target = _db->findClientByName(*it3);        
             if (_clientFd != target->getFd())
             {
                 target->addBackCarriageBuffer(":" + client->getNickname() + " PRIVMSG " + target->getNickname() + " :" + msg);

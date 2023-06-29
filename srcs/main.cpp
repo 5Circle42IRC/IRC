@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:34 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/22 20:46:24 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 13:08:17 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@
 #include <signal.h>
 
 
-void	check_leak(void)
-{
-	system("leaks --list -- ircserv");
-}
+// void	check_leak(void)
+// {
+// 	system("leaks --list -- ircserv");
+// }
 
 static void errorHandle(std::string message, int exitCode)
 {
-    std::cout << message << std::endl;
+    (void)message;
     exit(exitCode);
 }
 
@@ -45,10 +45,8 @@ int main(int argc, char **argv)
         hostFd = serv.on();
         serv.run();
     } catch (std::exception& e) {
-        std::cout << e.what() << std::endl;
         return -1;
     } catch (...) {
-        std::cout << "unkown exception" << std::endl;
     }
     close(hostFd);
     return 0;
