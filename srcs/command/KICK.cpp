@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:06 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/29 18:57:03 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/29 19:15:12 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void IrcCommand::kickUser(std::string channelName, std::string clientName, std::
 
 	if (comment.size() > 0)
 	{
-		target->addBackBuffer(":localhost 404 " + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
-		client->addBackBuffer(":localhost 404 " + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+		target->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+		client->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
 	}
 	else
 	{
-		target->addBackBuffer(":localhost 404 " + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname()+ "\r\n");
-		client->addBackBuffer(":localhost 404 " + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
+		target->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname()+ "\r\n");
+		client->addBackBuffer(":" + client->getNickname() + " KICK " + channel->getName() + " " + target->getNickname() + " :" + comment+ "\r\n");
 	}
 	if (channel->getUser().size() == 0)
 		_db->deleteChannel(channel->getName());	
