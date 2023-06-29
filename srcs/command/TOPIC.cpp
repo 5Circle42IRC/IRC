@@ -19,10 +19,19 @@ void IrcCommand::TOPIC(){
      
     if (_args.size() > 2)
     {
+        std::cout << "topic size 2" << std::endl;
 		IrcClient* client = _db->findClientByFd(_clientFd);
 		client->addBackBuffer(":localhost 461 " + client->getNickname() + " TOPIC ");
         throw ERR_NEEDMOREPARAMS();
     }
+
+    if (_args.size() == 0)
+    {
+        std::cout << "topic size 0" << std::endl;
+		IrcClient* client = _db->findClientByFd(_clientFd);
+		client->addBackBuffer(":localhost 461 " + client->getNickname() + " TOPIC ");
+        throw ERR_NEEDMOREPARAMS();
+    }    
     std::string chname = _args[0];
     std::string topic = _args[1];
     IrcChannel* channel = _db->findChannel(chname);

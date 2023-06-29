@@ -86,8 +86,9 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     acceptFd = accept(_servFd, (struct sockaddr *)&clientAddr, &clientAddrLen);
     if (acceptFd == -1 || fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
         return false;
-    sendTo(acceptFd, "input server password");
+    
     db.insertClient(new IrcClient(acceptFd, "", "", ""));
+    db.findClientByFd(acceptFd)->addBackCarriageBuffer("input password");
     FD_SET(acceptFd, &_activeReads);
     if (_fdMax < acceptFd)
         _fdMax = acceptFd;
@@ -155,11 +156,7 @@ void IrcServ::displayServerParam(const IrcDB& db)
     std::cout << "--------------------------------------" << "\033[0m" << std::endl;
 }
 
-void IrcServ::sendTo(int clientFd, std::string message)
-{
-    std::string sendMessage("\033[38;5;3m" + message + "\033[0m\r\n");
-    send(clientFd, sendMessage.c_str(), sendMessage.length(), 0);
-}
+
 
 void IrcServ::excuteCommand(IrcCommand& command, const int clientFd, int messageLen, IrcClient* clientClass)
 {
