@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:15 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/25 10:58:01 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 12:06:46 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
     IrcClient* client = _db->findClientByFd(_clientFd);
     if (newNick.size() > 9 || newNick == ":")
     {
-        client->addBackBuffer(":localhost 432 " + client->getNickname() + " " + newNick);
+        client->addBackBuffer(":localhost 432 " + client->getNickname() + " :Erroneous " + newNick);
         throw ERR_ERRONEUSNICKNAME();  
     }
 
@@ -31,7 +31,7 @@ int IrcCommand::checkValidNICK(std::deque<std::string> args, IrcDB *_db)
         
         if (it->second->getNickname() == newNick)
         {        
-            client->addBackBuffer(":localhost 433 " + client->getNickname() + " " + newNick);   
+            client->addBackBuffer(":localhost 433 * " + client->getNickname() + " :Nickname is already in use ");   
             throw ERR_NICKNAMEINUSE();
         }         
     }

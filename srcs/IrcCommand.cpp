@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:46:39 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/26 04:11:46 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 12:05:18 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void IrcCommand::checkRunCMD(){
 			return ;
 		}
 	}
-	_db->findClientByFd(_clientFd)->addBackCarriageBuffer("ERR_UNKNOWNCOMMAND\n");
+	_db->findClientByFd(_clientFd)->addBackCarriageBuffer(":localhost 421 " + _db->findClientByFd(_clientFd)->getNickname() + " " + _command + " :Unknown command");
 }
 void IrcCommand::login(IrcClient *client){
 
@@ -137,10 +137,10 @@ void IrcCommand::parsing(std::string message){
 	try {
 		checkRunCMD();
 	} catch (std::string name) {
-		client->addBackCarriageBuffer("403 <" + name + "> :No such channel");
+		client->addBackCarriageBuffer(":localhost 403 " + client->getNickname() + " " + name + ":No permission to perform this operation");
 	} catch (char *name){
 		std::string temp = name;
-		client->addBackBuffer("401 <" + temp + "> :No such nick/channel");
+		client->addBackBuffer(":localhost 401 " + client->getNickname() + " " + name + ":No such nick/channel");
 	}
 		catch (std::exception &e){
 		client->addBackCarriageBuffer(e.what());

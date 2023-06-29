@@ -6,7 +6,7 @@
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 18:47:02 by ysungwon          #+#    #+#             */
-/*   Updated: 2023/06/26 08:01:56 by jwee             ###   ########.fr       */
+/*   Updated: 2023/06/26 08:18:55 by jwee             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,16 @@ void IrcCommand::joinChannel(std::string name, std::string key){
 		std::string mode = "+";
 		if (channel->getGrant() & M_INVITE)
 			mode += "i";
-		else if (channel->getGrant() & M_KEY)
+		if (channel->getGrant() & M_KEY)
 			mode += "k";
-		else if (channel->getGrant() & M_LIMIT)
+		if (channel->getGrant() & M_LIMIT)
 			mode += "l";
-		else if (channel->getGrant() & M_TOPIC)
+		if (channel->getGrant() & M_TOPIC)
 			mode += "t";
 		client->addBackCarriageBuffer(":localhost 332 " + client->getNickname() + " " + channel->getName() + " :" + channel->getTopic());
 		client->addBackCarriageBuffer(":localhost 324 " + client->getNickname() + " " + channel->getName() + " " + mode);
 		client->addBackCarriageBuffer(":localhost 353 " + client->getNickname() + " =" + channel->getName() + " :" + userListStr);
-		client->addBackCarriageBuffer(":localhost 366 " + client->getNickname() + " " + channel->getName() + " :End of NAMES list");
+		client->addBackCarriageBuffer(":localhost 366 " + client->getNickname() + " " + channel->getName() + " :End of /NAMES list");
 	} catch(std::string name){
 		// channel 생성 후 클라이언트에 알림
 		channel = new IrcChannel(name);
