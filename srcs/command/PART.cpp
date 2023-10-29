@@ -39,9 +39,6 @@ void IrcCommand::PART(){
 
     client = _db->findClientByFd(_clientFd);
 
-    int i = 0;
-
-
     std::string chname;
     std::string chnameSum;
 
@@ -82,8 +79,6 @@ void IrcCommand::PART(){
         }
         if (channel->getUser().size() == 0)
             _db->deleteChannel(channel->getName());        
-        i++;
-        
     }
     return ;
 }

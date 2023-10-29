@@ -66,17 +66,14 @@ int IrcServ::on()
     return _servFd;
 }
 
-bool IrcServ::initSelect()
+int IrcServ::initSelect()
 {
     FD_COPY(&_activeReads, &_cpyReads);
     FD_COPY(&_activeWrites, &_cpyWrites);
     _timeout.tv_sec = 0;
     _timeout.tv_usec = 0;
 
-    _fdNum = select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
-    if (_fdNum == -1)
-        return true;
-    return false;
+    return select(_fdMax + 1, &_cpyReads, &_cpyWrites, 0, &_timeout);
 }
 
 bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db)
@@ -87,9 +84,10 @@ bool IrcServ::acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen
     if (acceptFd == -1 || fcntl(acceptFd, F_SETFL, O_NONBLOCK) == -1)
         return false;
     
-    db.insertClient(new IrcClient(acceptFd, "", "", ""));
+    db.insertClient(new IrcClient(acceptFd, "", "", "", &_activeWrites));
     db.findClientByFd(acceptFd)->addBackCarriageBuffer("input password");
     FD_SET(acceptFd, &_activeReads);
+    FD_SET(acceptFd, &_activeWrites);
     if (_fdMax < acceptFd)
         _fdMax = acceptFd;
     return true;
@@ -108,6 +106,7 @@ void IrcServ::deleteClient(int clientFd, IrcDB& db)
     }    
     db.deleteClient(clientFd);
     FD_CLR(clientFd, &_activeReads);
+    FD_CLR(clientFd, &_activeWrites);
     close(clientFd);
 }
 
@@ -140,14 +139,17 @@ void IrcServ::writeUserBuffer(const int clientFd, IrcClient* clientClass)
     if (clientClass->getBuffer().size())
     {
         _sendMessage = clientClass->getBuffer();
-        _writeLen = send(clientFd
-                        , _sendMessage.c_str()
-                        , _sendMessage.size()
-                        , 0);
-        if (_writeLen > 0)
-        {
-        }
-        FD_CLR(clientFd, &_activeWrites);
+        _writeLen = send
+        (
+            clientFd,
+            _sendMessage.c_str(),
+            _sendMessage.size(), 
+            0
+        );
+        if (_writeLen == -1) 
+            return;
+        if (_writeLen == static_cast<ssize_t>(_sendMessage.size()))
+            FD_CLR(clientFd, &_activeWrites);
         clientClass->reduceBuffer(_writeLen);
     }
 }
@@ -159,13 +161,14 @@ void IrcServ::run()
     socklen_t clientAddrLen;
     IrcDB db; 
     IrcClient *clientClass;
+    int selectResult = 0;
 
     db.setServPass(_passWord);
 
     while (42)
     {
-        initSelect();
-        for (int clientFd = 0; clientFd < _fdMax + 1; clientFd++)
+        selectResult = initSelect();
+        for (int clientFd = 0; 0 < selectResult; clientFd++)
         {
             try {
                 clientClass = db.findClientByFd(clientFd);
@@ -201,9 +204,11 @@ void IrcServ::run()
                         excuteCommand(command1, clientFd, clientClass);
                     }
                 }
+                selectResult--;
             }
             if (FD_ISSET(clientFd, &_cpyWrites)) {
                 writeUserBuffer(clientFd, clientClass);
+                selectResult--;
             }
         }
     }

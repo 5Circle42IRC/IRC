@@ -57,7 +57,7 @@ private:
     sockaddr_in _servAddr;
     struct timeval _timeout;
 
-    bool initSelect();
+    int initSelect();
     bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
     void deleteClient(int fd, IrcDB& db);
     bool isSameNickname(IrcDB& db, std::string message);
