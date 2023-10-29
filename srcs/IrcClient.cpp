@@ -19,12 +19,15 @@
 IrcClient::IrcClient(int fd
                     , std::string nickname
                     , std::string password
-                    , std::string buffer)
+                    , std::string buffer
+                    , fd_set *activeWrites
+                    )
     : _fd(fd)
     , _passwordFlag(false)
     , _nickname(nickname)
     , _password(password)
     , _buffer(buffer)
+    , _activeWrites(activeWrites)
 { }
 
 IrcClient::IrcClient()
@@ -39,6 +42,7 @@ IrcClient::IrcClient(const IrcClient &copy)
     , _nickname(copy._nickname)
     , _password(copy._password)
     , _buffer(copy._buffer)
+    , _activeWrites(copy._activeWrites)
 { }
 
 const IrcClient &IrcClient::operator=(const IrcClient &copy)
@@ -50,6 +54,7 @@ const IrcClient &IrcClient::operator=(const IrcClient &copy)
         this->_password = copy._password;
         this->_buffer = copy._buffer;
         this->_passwordFlag = copy._passwordFlag;
+        this->_activeWrites = copy._activeWrites;
     }
     return (*this);
 }
@@ -151,16 +156,19 @@ void IrcClient::setPassword(std::string newPassword)
 void IrcClient::addBackBuffer(const std::string str)
 {
     _buffer += str;
+    FD_SET(_fd, _activeWrites);
 }
 
 void IrcClient::addBackReadBuffer(std::string readMassage)
 {
     _readBuffer += readMassage;
+    FD_SET(_fd, _activeWrites);
 }
 
 void IrcClient::addBackCarriageBuffer(const std::string str)
 {
     _buffer += str + "\r\n";
+    FD_SET(_fd, _activeWrites);
 }
 
 void IrcClient::reduceBuffer(int result)
