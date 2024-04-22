@@ -14,12 +14,13 @@
 #define __IrcCLIENT__
 
 #include <string>
+#include <sys/select.h>
 
 class IrcClient
 {
 public:
     IrcClient();
-    IrcClient(int fd, std::string nickname, std::string password, std::string buffer);
+    IrcClient(int fd, std::string nickname, std::string password, std::string buffer, fd_set *activeWrites);
     ~IrcClient();
 
     int getFd() const;
@@ -62,6 +63,8 @@ protected:
 
 	std::string _password;
 	std::string _buffer;
+    
+    fd_set *_activeWrites;
 
 private :
 
