@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IrcServ.hpp                                        :+:      :+:    :+:   */
+/*   IrcEngine.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jwee <jwee@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __IrcServ_hpp__
-#define __IrcServ_hpp__
+#ifndef __IrcEngine_hpp__
+#define __IrcEngine_hpp__
 
 #define BUFFER_SIZE 512
 
@@ -20,25 +20,38 @@
 
 #include "../include/IrcClient.hpp"
 #include "../include/IrcChannel.hpp"
-#include "../include/IrcDB.hpp"
 #include "../include/IrcCommand.hpp"
 
-class IrcServ 
+class IrcEngine
 {
 public:
-    IrcServ();
-    virtual ~IrcServ();
-    IrcServ(int port, std::string passWord);
+    virtual ~IrcEngine();
+    IrcEngine(int port);
 
     int on();
     void run();
 
 private:
-    int _error;
+    enum e_active
+    {
+        EXIT_CLIENT = 0,
+        ENTER_CLIENT = 1,
+        EMPTY = 0,
+    };
+
+    struct s_fd
+    {
+        bool is_in;
+        std::string output;
+        std::string input;
+
+        s_fd() : is_in(false), output(""), input("") {}
+    };
+
+    s_fd fd_array[1024];
 
     int _port;
-    std::string _passWord;
-
+    int _error;
     int _servFd;
     int _fdMax;
     int _fdNum;
@@ -58,23 +71,16 @@ private:
     struct timeval _timeout;
 
     int initSelect();
-    bool acceptClient(int acceptFd, struct sockaddr_in& clientAddr, socklen_t& clientAddrLen, IrcDB& db);
-    void deleteClient(int fd, IrcDB& db);
-    bool isSameNickname(IrcDB& db, std::string message);
+    bool acceptClient(int acceptFd, struct sockaddr_in &clientAddr, socklen_t &clientAddrLen, IrcDB &db);
+    void deleteClient(int fd, IrcDB &db);
+    bool isSameNickname(IrcDB &db, std::string message);
 
-    void excuteCommand(IrcCommand& command, const int clientFd, IrcClient* clientClass);
-    void writeUserBuffer(const int clientFd, IrcClient* clientClass);
+    void excuteCommand(IrcCommand &command, const int clientFd, IrcClient *clientClass);
+    void writeUserBuffer(const int clientFd, IrcClient *clientClass);
 
-    enum e_active
-    {
-        EXIT_CLIENT = 0,
-        ENTER_CLIENT = 1,
-        EMPTY = 0,
-    };
-    
-
-    IrcServ(const IrcServ &copy);
-    const IrcServ &operator=(const IrcServ &copy);
+    IrcEngine();
+    IrcEngine(const IrcEngine &copy);
+    const IrcEngine &operator=(const IrcEngine &copy);
 
     class socketException : public std::exception
     {

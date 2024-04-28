@@ -16,7 +16,6 @@
 #include <cstdlib>
 #include <signal.h>
 
-
 // void	check_leak(void)
 // {
 // 	system("leaks --list -- ircserv");
@@ -28,6 +27,7 @@ static void errorHandle(std::string message, int exitCode)
     exit(exitCode);
 }
 
+// TODO :  PW 체크 -> cmd 에서 체크
 int main(int argc, char **argv)
 {
     if (argc != 3)
@@ -40,13 +40,16 @@ int main(int argc, char **argv)
 
     if (*isError || (0 > port || 65535 < port))
         errorHandle("port error", -1);
-    try {
+    try
+    {
         IrcServ serv(port, argv[2]);
         hostFd = serv.on();
         serv.run();
-    } catch (std::exception& e) {
+    }
+    catch (std::exception &e)
+    {
+        std::cout << e.what << std::endl;
         return -1;
-    } catch (...) {
     }
     close(hostFd);
     return 0;
